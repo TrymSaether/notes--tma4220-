@@ -1,0 +1,17 @@
+\begin{tikzpicture}
+		% Original circle
+		\draw[blue] (0,0) circle (1cm);
+
+		% Coordinate axes
+		\draw[->] (-1.75,0) -- (2.5,0) node[right] {$x$};
+		\draw[->] (0,-1.75) -- (0,1.75) node[above] {$y$};
+
+		% Eigenvectors
+		\draw[->, thick, red] (0,0) -- (1.5, 0) node[right] {$v_1$};
+		\draw[->, thick, red] (0,0) -- (0, 1) node[above] {$v_2$};
+
+		% Transformed circle (using eigenvalues 2 and 0.5)
+		\draw[blue, dashed] (0,0) ellipse (2cm and 0.5cm);
+
+		\node at (0,-2) {Symmetrisk transformasjon: $A = \begin{pmatrix} 2 & 0 \\ 0 & 0.5 \end{pmatrix}$};
+	\end{tikzpicture}

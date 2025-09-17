@@ -1,0 +1,10 @@
+\begin{tikzpicture}
+		% Coordinate system
+		\draw[->] (-4,0) -- (4,0) node[right] {$x$};
+		\draw[->] (0,-0.2) -- (0,4) node[above] {$f(x,y)$};
+
+		% Positiv definitt funksjon
+		\draw[domain=-3:3,smooth,variable=\x,blue,thick] plot ({\x},{0.25*\x*\x});
+		\node at (3,2.5) {$f(x,0) = x^T A x$};
+		\node at (0,-0.5) {Positiv definitt kvadratisk form};
+	\end{tikzpicture}

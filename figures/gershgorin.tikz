@@ -1,0 +1,22 @@
+\begin{tikzpicture}
+    % Coordinate system
+    \draw[->] (-6,0) -- (6,0) node[right] {Re};
+    \draw[->] (0,-4) -- (0,4) node[above] {Im};
+
+    % Gershgorin circles
+    \draw[blue] (3,0) circle (2cm);
+    \draw[red] (-2,0) circle (3cm);
+    \draw[green] (0,1) circle (1.5cm);
+
+    % Centers (diagonal elements)
+    \fill[blue] (3,0) circle (2pt) node[above right] {$a_{11}$};
+    \fill[red] (-2,0) circle (2pt) node[above left] {$a_{22}$};
+    \fill[green] (0,1) circle (2pt) node[above] {$a_{33}$};
+
+    % Example eigenvalues (imaginary)
+    \fill[black] (2.5,0.5) circle (3pt) node[right] {$\lambda_1$};
+    \fill[black] (-1.2,-0.8) circle (3pt) node[below] {$\lambda_2$};
+    \fill[black] (0.7,0.9) circle (3pt) node[above] {$\lambda_3$};
+
+    \node at (0,-3.5) {Gershgorin-sirkler for en $3 \times 3$ matrise};
+\end{tikzpicture}

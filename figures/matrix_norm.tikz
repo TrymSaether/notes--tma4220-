@@ -1,0 +1,16 @@
+\begin{tikzpicture}
+		% Coordinate system
+		\draw[->] (-2.5,0) -- (2.5,0) node[right] {$x$};
+		\draw[->] (0,-1.5) -- (0,1.5) node[above] {$y$};
+
+		% Unit circle
+		\draw[state-blue, thick] (0,0) circle (1cm);
+
+		% Transformed ellipse (for matrix A)
+		\draw[state-red, thick] (0,0) ellipse (2cm and 0.5cm);
+
+		% Labels
+		\draw[|-|] (0,-0.75) -- (2,-0.75) node[midway, below] {$\|A\|_2$};
+
+		\node at (0,3.5) {Visualisering av matrise-2-norm};
+	\end{tikzpicture}

@@ -1,0 +1,14 @@
+\begin{tikzpicture}[scale=0.8]
+		% Coordinate system
+		\draw[->] (-3,0) -- (3,0) node[right] {$x$};
+		\draw[->] (0,-3) -- (0,3) node[above] {$y$};
+
+		% Contour ellipses for positive definite case
+		\draw[blue] (0,0) ellipse (2cm and 1cm);
+		\draw[blue] (0,0) ellipse (1.5cm and 0.75cm);
+		\draw[blue] (0,0) ellipse (1cm and 0.5cm);
+		\draw[blue] (0,0) ellipse (0.5cm and 0.25cm);
+
+		\node at (0,3.5) {Positiv definitt};
+		\node at (0,-3.5) {$A = \begin{pmatrix} 1 & 0 \\ 0 & 4 \end{pmatrix}$};
+	\end{tikzpicture}

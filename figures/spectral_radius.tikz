@@ -1,0 +1,17 @@
+\begin{tikzpicture}
+		% Complex plane
+		\draw[->] (-2,0) -- (2,0) node[right] {$\Re$};
+		\draw[->] (0,-2) -- (0,2) node[above] {$\Im$};
+
+		% Unit circle
+		\draw[state-blue] (0,0) circle (1cm);
+
+		% Eigenvalues inside unit circle
+		\fill[state-red] (0.5,0.1) circle (2pt) node[above right, black] {$\lambda_1$};
+		\fill[state-red] (-0.1,0.9) circle (2pt) node[above left, black] {$\lambda_2$};
+		\fill[state-red] (-0.3,-0.3) circle (2pt) node[below left,black] {$\lambda_3$};
+
+		% Spectral radius (largest |λ|)
+		\draw[->, thick] (0,0) -- (-0.1,0.9);
+		\node at (-1,2) {$\rho(A) = \max_i|\lambda_i| \approx 0.76$};
+	\end{tikzpicture}

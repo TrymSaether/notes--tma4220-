@@ -1,0 +1,425 @@
+\chapter{Matematiske Forutsetninger}
+\label{chap:preliminaries}
+
+\section{Linær Algebra}
+\label{sec:linear_algebra}
+
+\subsection{Indre Produkt og Hilbert-rom}
+La $V$ være et vektorrom over $\mathbb{R}$ (eller $\mathbb{C}$). Et \emph{indre produkt} på $V$ er en funksjon $\langle \cdot, \cdot \rangle : V \times V \to \mathbb{R}$ som oppfyller:
+\begin{enumerate}
+	\item \textbf{Symmetri:} $\langle u, v \rangle = \langle v, u \rangle$ for alle $u, v \in V$
+	\item \textbf{Linearitet:} $\langle \alpha u + \beta w, v \rangle = \alpha \langle u, v \rangle + \beta \langle w, v \rangle$ for alle $u, v, w \in V$ og $\alpha, \beta \in \mathbb{R}$
+	\item \textbf{Positivitet:} $\langle v, v \rangle \geq 0$ for alle $v \in V$, og $\langle v, v \rangle = 0$ hvis og bare hvis $v = 0$
+\end{enumerate}
+
+Det indre produktet induserer en norm gjennom:
+\begin{equation}
+	\|v\| = \sqrt{\langle v, v \rangle}
+\end{equation}
+
+\begin{definition}{Hilbert-rom}{hilbert_space}
+	Et \emph{Hilbert-rom} $H$ er et vektorrom med indre produkt som er komplett med hensyn til normen indusert av det indre produktet.
+
+	Komplett betyr at enhver Cauchy-følge i $H$ konvergerer til et element i $H$.
+\end{definition}
+
+\subsection{Ortogonalitet og Projeksjoner}
+
+Et sentralt konsept i Hilbert-rom er ortogonalitet, som generaliserer ideen om vinkelrette vektorer.
+
+\begin{definition}{Ortogonalitet}{orthogonality}
+	To elementer $u, v$ i et Hilbert-rom $H$ er \emph{ortogonale} hvis $\langle u, v \rangle = 0$. Vi skriver $u \perp v$.
+
+	For et delsett $S \subseteq H$, definerer vi det ortogonale komplementet:
+	\begin{equation}
+		S^\perp = \{v \in H : \langle v, s \rangle = 0 \text{ for alle } s \in S\}
+	\end{equation}
+\end{definition}
+
+\begin{theorem}{Projeksjonsteoremet}{projection_theorem}
+	La $H$ være et Hilbert-rom og $V \subseteq H$ være et lukket delrom. For ethvert element $u \in H$ eksisterer det en unik \emph{ortogonal projeksjon} $P_V u \in V$ slik at:
+	\begin{equation}
+		\|u - P_V u\| = \min_{v \in V} \|u - v\|
+	\end{equation}
+
+	Projeksjonen karakteriseres av:
+	\begin{equation}
+		u - P_V u \perp V \quad \Leftrightarrow \quad \langle u - P_V u, v \rangle = 0 \text{ for alle } v \in V
+	\end{equation}
+\end{theorem}
+
+% \begin{figure}[htb]
+%   \centering
+%   \input{figures/01/projeksjon.tikz}
+%   \caption{Ortogonal projeksjon i Hilbert-rom}
+% \end{figure}
+
+\subsection{Riesz-representasjonsteorem}
+
+Et resultatet som kommer fra Hilbert-rom er Riesz-representasjonsteoremet. Det  etablerer en sammenheng mellom lineære funksjonaler og elementer i rommet.
+
+\begin{theorem}{Riesz-representasjonsteoremet}{riesz_representation}
+	La $H$ være et Hilbert-rom og $F : H \to \mathbb{R}$ være en begrenset lineær funksjonell. Da eksisterer det et unikt element $u_F \in H$ slik at:
+	\begin{equation}
+		F(v) = \langle u_F, v \rangle \quad \text{for alle } v \in H
+	\end{equation}
+
+	Videre gjelder $\|F\|_{H'} = \|u_F\|_H$, der $\|\cdot\|_{H'}$ er normen på dualrommet $H'$.
+\end{theorem}
+
+\begin{definition}{Riesz-kartet}{riesz_map}
+	\emph{Riesz-kartet} $\mathcal{R} : H' \to H$ er kartet som til hver begrenset lineær funksjonell $F \in H'$ tilordner det unike elementet $u_F \in H$ gitt av Riesz-representasjonsteoremet:
+	\begin{equation}
+		\mathcal{R}(F) = u_F \quad \text{der } F(v) = \langle u_F, v \rangle
+	\end{equation}
+
+	Riesz-kartet er en isometrisk isomorfi mellom $H'$ og $H$.
+\end{definition}
+
+\subsection{Spesielle Matriser}
+\subsubsection{Symmetriske matriser}
+Symmetriske matriser er sentrale i anvendelser grunnet deres egenskaper, spesielt innen lineær algebra og numeriske metoder som brukes i løsning av differensialligninger.
+
+\begin{definition}{Symmetrisk matrise}{symmetric_matrix}
+	En matrise $A \in \mathbb{R}^{n \times n}$ er \emph{symmetrisk} hvis $A = A^T$, dvs. $a_{ij} = a_{ji}$ for alle $i,j$.
+\end{definition}
+
+Symmetriske matriser har flere viktige egenskaper:
+\begin{itemize}
+	\item Alle egenverdier er reelle: $\lambda_i \in \mathbb{R}$ for alle $i$.
+	\item Egenvektorer tilhørende forskjellige egenverdier er ortogonale: $v_i \perp v_j$ hvis $\lambda_i \neq \lambda_j$.
+	\item Matrisen er positivt definit hvis alle egenverdier er positive.
+\end{itemize}
+
+\begin{theorem}{Spektralteoremet for symmetriske matriser}{spectral_theorem}
+	Symmetriske matriser er ortogonalt diagonaliserbare: Det finnes en ortogonal matrise $Q$ ($Q^T Q = I$) slik at
+	\[
+		Q^T A Q = \Lambda = \diag(\lambda_1, \dots, \lambda_n),
+	\]
+	hvor $\Lambda$ er en diagonalmatrise med de reelle egenverdiene $\lambda_1, \dots, \lambda_n$ på diagonalen, og kolonnene i $Q$ er de tilsvarende ortonormerte egenvektorene.
+\end{theorem}
+
+Dette teoremet er grunnleggende for mange numeriske algoritmer, da det tillater diagonaliseringsbaserte løsninger.
+
+\begin{example}{Diagonaliserings av en symmetrisk matrise}{symmetric_example}
+	La
+	\[
+		A = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix}.
+	\]
+	Denne matrisen er symmetrisk. Egenverdiene er $\lambda_1 = 3$ og $\lambda_2 = 1$, med egenvektorer $v_1 = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$ og $v_2 = \begin{pmatrix} 1 \\ -1 \end{pmatrix}$. Normalisering gir ortonormal basis, og diagonaliseringsmatrisen $Q$ fører til $\Lambda = \diag(3, 1)$.
+\end{example}
+
+\begin{figure}
+	\centering
+	\input{figures/symmetric_action.tikz}
+	\caption{Virkningen av en symmetrisk matrise på en sirkel. Transformasjonen strekker og komprimerer kun langs ortogonale akser (egenvektorene), uten rotasjon eller skjæring.}
+	\label{fig:symmetric_action}
+\end{figure}
+
+\subsection{Normer og spektrale egenskaper}
+
+\subsubsection{Vektornormer}
+Normer gir oss en måte å måle \emph{størrelsen} av vektorer og matriser.
+
+\begin{definition}{Vektornorm}{vector_norm}
+	En vektornorm på $\mathbb{R}^n$ er en funksjon $\|\cdot\| : \mathbb{R}^n \to \mathbb{R}$ som tilfredsstiller:
+	\begin{enumerate}
+		\item \textbf{Positivitet:} $\|x\| \geq 0$ for alle $x \in \mathbb{R}^n$, og $\|x\| = 0$ hvis og bare hvis $x = 0$.
+		\item \textbf{Homogenitet:} $\|\alpha x\| = |\alpha| \cdot \|x\|$ for alle $x \in \mathbb{R}^n$ og $\alpha \in \mathbb{R}$.
+		\item \textbf{Trekantulikheten:} $\|x + y\| \leq \|x\| + \|y\|$ for alle $x,y \in \mathbb{R}^n$ (trekantulikheten)
+	\end{enumerate}
+\end{definition}
+
+De mest vanlige vektornormene er $p$-normene:
+
+\begin{align*}
+	\|x\|_1      & = \sum_{i=1}^n |x_i| \tag{taxicab}                 \\
+	\|x\|_2      & = \sqrt{\sum_{i=1}^n x_i^2} \tag{euklidisk}           \\
+	\|x\|_\infty & = \max_{1 \leq i \leq n} |x_i| \tag{maksnorm}
+\end{align*}
+
+
+\begin{figure}[h]
+	\centering
+	\input{figures/vector_norms.tikz}
+	\caption{Blå: 1-norm (diamant). Rød: 2-norm (sirkel). Grønn: $\infty$-norm (kvadrat).}
+	\label{fig:vector_norms}
+\end{figure}
+
+\subsubsection{Matrisenormer}
+
+\begin{definition}{Matrisenorm}{matrix_norm}
+	En matrisenorm på $\mathbb{R}^{m \times n}$ er en funksjon $\|\cdot\| : \mathbb{R}^{m \times n} \to \mathbb{R}$ som tilfredsstiller:
+	\begin{enumerate}
+		\item \textbf{Positivitet:} $\|A\| \geq 0$ for alle $A \in \mathbb{R}^{m \times n}$, og $\|A\| = 0$ hvis og bare hvis $A = 0$.
+		\item \textbf{Homogenitet:}
+		$\|\alpha A\| = |\alpha| \cdot \|A\|$ for alle $A \in \mathbb{R}^{m \times n}$ og $\alpha \in \mathbb{R}$.
+		\item \textbf{Trekantulikheten:}
+		$\|A + B\| \leq \|A\| + \|B\|$ for alle $A,B \in \mathbb{R}^{m \times n}$.
+	\end{enumerate}
+\end{definition}
+
+En vanlig matrisenorm er \emph{Frobenius-normen}, som måler matrisen som om den var en \enquote{lang} vektor:
+\[
+	\|A\|_F = \sqrt{\sum_{i=1}^m \sum_{j=1}^n |a_{ij}|^2} = \sqrt{\text{tr}(A^T A)}
+\]
+
+\begin{definition}{Konsistent matrisenorm}{consistent_norm}
+	En matrisenorm $\|\cdot\|$ på $\mathbb{R}^{n \times n}$ kalles konsistent (eller sub-multiplikativ) hvis
+	\[
+		\|AB\| \leq \|A\| \cdot \|B\|
+	\]
+	for alle $A, B \in \mathbb{R}^{n \times n}$.
+\end{definition}
+
+Denne egenskapen er viktig fordi den lar oss \enquote{ta ut} normen når vi har produkter av matriser, noe som er grunnleggende for mange konvergensbevis.
+
+\begin{definition}{Underordnet matrisenorm}{subordinate_norm}
+	Gitt en vektornorm $\|\cdot\|_v$ på $\mathbb{R}^n$, defineres den underordnede matrisenormen $\|\cdot\|_M$ på $\mathbb{R}^{n \times n}$ som
+	\[
+		\|A\|_M = \max_{\|x\|_v = 1} \|Ax\|_v = \max_{x \neq 0} \frac{\|Ax\|_v}{\|x\|_v}
+	\]
+\end{definition}
+
+Intuitivt måler den underordnede normen den maksimale strekningen som matrisen $A$ kan påføre enhver enhetsvektor.
+
+De vanligste underordnede matrisenormene er:
+\begin{align*}
+	\|A\|_1      & = \max_{1 \leq j \leq n} \sum_{i=1}^n |a_{ij}| \quad \text{(maksimal kolonnesum)} \\
+	\|A\|_2      & = \sqrt{\lambda_{\max}(A^T A)} \quad \text{(største singulærverdi)}               \\
+	\|A\|_\infty & = \max_{1 \leq i \leq n} \sum_{j=1}^n |a_{ij}| \quad \text{(maksimal radsum)}
+\end{align*}
+
+Disse normene er praktiske fordi de er relativt enkle å beregne og har direkte tolkninger.
+
+\begin{theorem}{Egenskaper ved underordnede normer}{subordinate_properties}
+	\begin{enumerate}
+		\item Enhver underordnet matrisenorm er konsistent.
+		\item For enhver matrise $A \in \mathbb{R}^{n \times n}$ og vektor $x \in \mathbb{R}^n$, gjelder
+		      \[
+			      \|Ax\|_v \leq \|A\|_M \cdot \|x\|_v
+		      \]
+	\end{enumerate}
+\end{theorem}
+
+\begin{figure}
+	\centering
+	\input{figures/matrix_norm.tikz}
+	\caption{Den blå sirkelen er enhetskulen i 2-norm, og den røde ellipsen er resultatet av å anvende $A$ på denne enhetskulen. Normen $\|A\|_2 = 2$ er den maksimale strekningen som $A$ påfører.}
+	\label{fig:matrix_norm}
+\end{figure}
+
+\subsubsection{Spektralradius}
+
+\begin{definition}{Spektralradius}{spectral_radius}
+	Spektralradiusen til en matrise $A \in \mathbb{C}^{n \times n}$ er definert som
+	\[
+		\rho(A) = \max\{|\lambda| : \lambda \text{ er en egenverdi av } A\}
+	\]
+	altså den største absoluttverdien av egenverdiene til $A$.
+\end{definition}
+
+Spektralradiusen er et fundamentalt mål på hvordan en matrise oppfører seg ved gjentatt anvendelse.
+
+\begin{theorem}{Spektralradius og matrisenormer}{spectral_radius_norms}
+	La $A \in \mathbb{C}^{n \times n}$ og $\|\cdot\|$ være en konsistent matrisenorm. Da gjelder:
+	\begin{enumerate}
+		\item $\rho(A) \leq \|A\|$
+		\item For enhver $\varepsilon > 0$ finnes det en konsistent matrisenorm $\|\cdot\|_\varepsilon$ slik at $\|A\|_\varepsilon \leq \rho(A) + \varepsilon$
+	\end{enumerate}
+\end{theorem}
+
+Dette betyr at spektralradiusen er den \enquote{best mulige nedre grense} for enhver konsistent matrisenorm.
+
+\begin{remark}{Konvergens av matrisepotenser}{matrix_power_convergence}
+	La $A \in \mathbb{C}^{n \times n}$. Da gjelder følgende:
+	\begin{enumerate}
+		\item $\lim_{k \to \infty} A^k = 0$ hvis og bare hvis $\rho(A) < 1$
+		\item For enhver konsistent matrisenorm $\|\cdot\|$, hvis $\|A\| < 1$, så er $\lim_{k \to \infty} A^k = 0$
+	\end{enumerate}
+\end{remark}
+
+\begin{figure}
+	\centering
+	\input{figures/spectral_radius.tikz}
+	\caption{Spektralradius og konvergens. Når alle egenverdiene ligger innenfor enhetssirkelen ($\rho(A) < 1$), konvergerer sekvensen $A^k$ mot nullmatrisen når $k \to \infty$. Dette er grunnleggende for stabilitetsanalyse av iterative metoder.}
+	\label{fig:spectral_radius}
+\end{figure}
+
+\subsubsection{Gershgorins sirkelteorem}
+Gershgorins sirkelteorem er en praktisk metode for å finne egenverdiene til en matrise ved å konstruere sirkler i det komplekse planet.
+
+\begin{theorem}{Gershgorin's sirkelteorem}{gershgorin}
+	La $A = [a_{ij}] \in \mathbb{C}^{n \times n}$. For hver $i \in \{1,2,\ldots,n\}$, definer Gershgorin-sirkelen
+	\[
+		D_i = \{z \in \mathbb{C} : |z - a_{ii}| \leq r_i\}
+	\]
+	hvor $r_i = \sum_{j=1,j\neq i}^{n} |a_{ij}|$ er summen av absoluttverdiene til de ikke-diagonale elementene i rad $i$.
+
+	Enhver egenverdi av $A$ ligger i minst én av Gershgorin-sirklene, dvs. i unionen
+	\[
+		\cup_{i=1}^{n} D_i
+	\]
+
+	Videre, hvis $k$ av sirklene danner et sammenhengende område som er separert fra de andre $n-k$ sirklene, da inneholder dette området nøyaktig $k$ egenverdier av $A$ (telt med multiplisitet).
+\end{theorem}
+
+Intuitivt forteller dette teoremet oss at diagonalelementene i en matrise gir en god indikasjon på hvor egenverdiene ligger, og at de ikke-diagonale elementene bestemmer hvor langt egenverdiene kan avvike fra diagonalelementene.
+
+\begin{figure}
+	\centering
+	\input{figures/gershgorin.tikz}
+	\caption{Gershgorin-sirkler for en $3 \times 3$ matrise. Hver sirkel er sentrert i et diagonalt element $a_{ii}$ og har radius lik summen av absoluttverdiene til de ikke-diagonale elementene i rad $i$. Egenverdiene $\lambda_1, \lambda_2, \lambda_3$ må ligge innenfor minst én av sirklene.}
+	\label{fig:gershgorin}
+\end{figure}
+
+\begin{example}{Anvendelse av Gershgorin's teorem}{gershgorin_example}
+	For matrisen
+	\[
+		A = \begin{pmatrix} 3 & 1 & 0 \\ 0.5 & 5 & 2 \\ 0 & 1 & 4 \end{pmatrix}
+	\]
+	kan vi for hver rad $i$ beregne radiusene $r_i$ og sentrene $a_{ii}$:
+	\begin{align*}
+		r_1 & = |1| + |0| = 1,     & \quad a_{11} = 3 \\
+		r_2 & = |0.5| + |2| = 2.5, & \quad a_{22} = 5 \\
+		r_3 & = |1| + |0| = 1,     & \quad a_{33} = 4
+	\end{align*}
+	slik at vi får de tre Gershgorin-sirklene:
+	\begin{align*}
+		D_1 & = \{z \in \mathbb{C} : |z - 3| \leq 1\}   \\
+		D_2 & = \{z \in \mathbb{C} : |z - 5| \leq 2.5\} \\
+		D_3 & = \{z \in \mathbb{C} : |z - 4| \leq 1\}
+	\end{align*}
+	Dette betyr at enhver egenverdi av $A$ må ligge i intervallet $[2,7.5]$ på den reelle aksen.
+\end{example}
+
+
+\section{Funksjonsrom}
+Funksjonsrom er samlinger av funksjoner med bestemte egenskaper. De danner grunnlaget for å analysere differensialligninger i en generalisert ramme.
+
+\paragraph{Funksjonsrommet \(V\)} Rommet av funksjoner som tilfredsstiller randbetingelsene.
+\[ V = \{ v \in C^2(\Omega) \, | \, v(a) = \alpha, v(b) = \beta \} \]
+Dette rommet representerer alle mulige funksjoner som kan være løsninger på problemet vårt.
+
+\paragraph{Testfunksjoner \(v(x)\)} Funksjoner i \(V\) som brukes til å formulere den svake formen.
+Testfunksjoner lar oss \enquote{teste} en mulig løsning ved å integrere mot disse funksjonene.
+
+\paragraph{Basisfunksjoner \(\phi_i(x)\)} Lokale funksjoner som spenner ut løsningsrommet.
+\begin{itemize}
+	\item Har kompakt støtte (er null utenfor et lite område)
+	\item Oppfyller \(\phi_i(x_j) = \delta_{ij}\) (Kronecker delta)
+\end{itemize}
+
+Basisfunksjoner er byggesteinene vi bruker til å konstruere numeriske løsninger. I endelig element-metoden er disse typisk \enquote{hatt-funksjoner} eller polynomer som er positive i små områder og null ellers.
+
+\begin{lemma}{Fundamental lemma of calculus of variations}{fundlemma}
+	La $\Omega \subset \mathbb{R}^n$ være et åpent område med regulær rand og $f: \Omega \rightarrow \mathbb{R}$ være en kontinuerlig funksjon.
+	Hvis
+	\begin{equation}
+		\int_{\Omega} \omega(x) \varphi(x) \, dx = 0
+	\end{equation}
+	holder for alle $\varphi \in \mathcal{C}_c^{\infty}(\Omega)$ (dvs. uendelig differensierbare funksjoner med kompakt støtte i $\Omega$), da er $\omega(x) = 0$ for alle $x \in \Omega$.
+\end{lemma}
+
+Dette lemmaet er grunnleggende for variasjonelle formuleringer av differensialligninger. Det forteller oss at hvis integralet av et produkt er null for alle testfunksjoner, så må funksjonen selv være null nesten overalt.
+
+\subsection{Energifunksjoner}
+La \(F: V \mapsto \mathbb{R}\) være en funksjon som tar inn en funksjon \(v\) og gir ut et reelt tall. Energien til en funksjon \(v\) er gitt ved:
+\[
+	F(v) = \frac{1}{2} \langle v, v \rangle - \langle f, v \rangle
+\]
+
+I mange fysiske problemer representerer dette faktisk den fysiske energien i systemet. Minimering av denne energifunksjonen gir oss løsningen på det tilsvarende differensialligningsmessige problemet, noe som er bakgrunnen for variasjonelle formuleringer.
+
+\section{Funksjonalanalyse}
+
+\subsection{Svak derivasjon}
+Svak derivasjon er et konsept som lar oss definere derivasjon av funksjoner som ikke nødvendigvis er klassisk deriverbare.
+\begin{definition}{Svak derivasjon}{weak_derivative}
+	En funksjon $u \in L^2(\Omega)$ har en svak derivasjon $Du \in L^2(\Omega)$ hvis for alle testfunksjoner $\varphi \in C_c^\infty(\Omega)$ gjelder:
+	\[
+		\int_\Omega u \frac{\partial \varphi}{\partial x} \, dx = -\int_\Omega Du \varphi \, dx.
+	\]
+\end{definition}
+
+\subsection{Bilinær form}
+\begin{definition}{Bilinær form}{bilinear_form}
+	En bilinær form $a: V \times V \to \mathbb{R}$ er en funksjon som er lineær i begge argumentene, dvs. for alle $u,v,w \in V$ og $\alpha, \beta \in \mathbb{R}$ gjelder:
+	\begin{align*}
+		a(\alpha u + \beta v, w) & = \alpha a(u,w) + \beta a(v,w)  \\
+		a(u, \alpha v + \beta w) & = \alpha a(u,v) + \beta a(u,w).
+	\end{align*}
+\end{definition}
+
+For eksempel i Poisson-ligningen blir den bilinære formen:
+\begin{equation}
+	a(u,v) = \int_\Omega \nabla u \cdot \nabla v \, dx
+\end{equation}
+
+Bilinære former er byggeklossene i variasjonelle formuleringer og representerer typisk energien eller arbeidet i det fysiske systemet.
+
+\subsubsection{Lax-Milgram teoremet}
+\label{sec:lax_milgram}
+Lax-Milgram-teoremet er et fundamentalt resultat som garanterer eksistens og entydighet av løsninger til bilinære variasjonsproblemer i Hilbert-rom.
+\begin{theorem}{Lax-Milgram}{lax_milgram}
+	La $V$ være et Hilbert-rom, og la $a: V \times V \to \mathbb{R}$ være en bilinær form som er \emph{kontinuerlig} og \emph{koersiv}. Anta at $F: V \to \mathbb{R}$ er en begrenset lineær funksjonell. Da finnes det en entydig løsning $u \in V$ slik at
+	\[
+		a(u,v) = F(v) \quad \forall v \in V.
+	\]
+\end{theorem}
+
+For at teoremet skal gjelde, må bilinærformen $a(\cdot, \cdot)$ oppfylle to viktige egenskaper:
+
+\paragraph{Kontinuitet:} Det finnes en konstant $M > 0$ slik at
+\[
+	|a(u,v)| \leq M\, \|u\|_V\, \|v\|_V \quad \text{for alle } u,v\in V.
+\]
+Dette betyr at små endringer i inngangsfunksjonene resulterer i små endringer i bilinærformen.
+
+\paragraph{Koersivitet:} Det finnes en konstant $\alpha > 0$ slik at
+\[
+	a(v,v) \geq \alpha\, \|v\|_V^2 \quad \text{for alle } v\in V.
+\]
+Dette er en slags \enquote{positiv definitthet} for bilinærformen og sikrer at problemet er veldefinert.
+
+Når $F$ er en begrenset lineær funksjonell på $V$ (altså $F \in V'$), garanterer teoremet at:
+\begin{itemize}
+	\item Det finnes en entydig løsning $u \in V$ til variasjonsproblemet
+	      \[
+		      a(u,v)=F(v) \quad \text{for alle } v\in V.
+	      \]
+
+	\item Løsningen oppfyller den stabile estimeringen
+	      \[
+		      \|u\|_V \leq \frac{1}{\alpha}\, \|F\|_{V'}.
+	      \]
+	      Dette betyr at løsningen avhenger kontinuerlig av dataene, en viktig egenskap for numeriske metoder.
+\end{itemize}
+
+\subsubsection{Galerkins ortogonalitet}
+
+\begin{definition}{Galerkins Ortogonalitet}{galerkins_ortogonalitet}
+	\[
+		a(u - u_h, v) = 0 \quad \forall v \in V_h
+	\]
+	hvor $u_h$ er den approksimerte løsningen, $u$ er den eksakte løsningen, og $V_h$ er det endelige elementrommet.
+\end{definition}
+
+Galerkins ortogonalitet betyr at feilen $u - u_h$ er \enquote{ortogonal} til hele approksiamasjonsrommet $V_h$ med hensyn til bilinærformen $a(\cdot,\cdot)$. Dette er en fundamental egenskap ved Galerkins metode, og betyr at approksiamasjonen $u_h$ er optimal i en viss forstand.
+
+\subsection{Céas lemma}
+Céas lemma sier at feilen mellom den eksakte løsningen $u$ og den numeriske løsningen $u_h$ kan estimeres ved hjelp av en konstant som avhenger av bilinærformen og koersivitetskonstanten.
+
+\begin{lemma}{Céas lemma}{ceas_lemma}
+	La $u \in V$ være den eksakte løsningen og $u_h \in V_h$ være den numeriske løsningen. Da gjelder:
+	\[
+		\norm*{u - u_h} \leq \frac{M}{\alpha} \inf_{v \in V_h} \norm*{u - v}
+	\]
+	hvor $M$ er en konstant som avhenger av den kontinuerlige delen av bilinærformen, og $\alpha$ er koersivitetskonstanten for $a(\cdot,\cdot)$.
+\end{lemma}
+
+Dette lemmaet forteller oss at feilen i den numeriske løsningen $u_h$ er begrenset av den best mulige approksimasjonen av den eksakte løsningen $u$ i rommet $V_h$, multiplisert med forholdet $\frac{M}{\alpha}$.
+
+Dette er et viktig resultat fordi det lar oss fokusere på approksiamasjonsegenskapene til rommet $V_h$ når vi analyserer konvergensen av endelig element-metoder. For eksempel, hvis vi vet at $V_h$ består av stykkevis lineære funksjoner, kan vi bruke klassisk approksimasjonsteori til å vise at $\inf_{v \in V_h} \norm*{u - v} = O(h^2)$ når $u$ er glatt nok, og dermed at $\norm*{u - u_h} = O(h^2)$.
+
+

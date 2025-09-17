@@ -1,0 +1,87 @@
+\begin{titlepage}
+  \thispagestyle{empty}
+
+  % ========= Vibrant palette (local to this page) =========
+  \definecolor{v-ink}{HTML}{0F172A}       % deep slate
+  \definecolor{v-primary}{HTML}{6D28D9}   % vivid violet
+  \definecolor{v-accent}{HTML}{06B6D4}    % cyan
+  \definecolor{v-highlight}{HTML}{F97316} % orange
+  \definecolor{v-soft}{HTML}{F8FAFC}      % very light background
+
+  % --------- Page background accents (TikZ overlay) ----------
+  \begin{tikzpicture}[remember picture, overlay]
+    % soft wash
+    % \fill[v-soft] (current page.north west) rectangle (current page.south east);
+
+    % vertical accent bar (left)
+    \fill[v-primary!12] (current page.north west)
+      rectangle ($(current page.south west)+(1.3cm,0)$);
+
+  \end{tikzpicture}
+
+  % --------- Page vars (edit here) ----------
+  \newcommand{\CourseCode}{TMA4220}
+  \newcommand{\CourseName}{Finite Element Methods}
+  \newcommand{\DocTitle}{Study Notes}
+  \newcommand{\Tagline}{Variational formulations, conforming FEM, a priori/a posteriori analysis, and time discretization.}
+  \newcommand{\AuthorName}{Trym Sæther}
+  \newcommand{\AuthorEmail}{trym.saether@ntnu.no}
+  \newcommand{\Semester}{Autumn 2025}
+
+  % Chip helper
+  \newcommand{\chip}[2][v-primary]{%
+    \tikz[baseline=(c.base)]\node[rectangle, rounded corners=7pt,
+      inner xsep=10pt, inner ysep=4pt, font=\sffamily\bfseries\small,
+      text=white, fill=#1] (c) {#2};}
+
+  % --------- Top badge ----------
+  \vspace*{1.8cm}
+  {\raggedright \chip{\CourseCode} \hspace{4pt} \chip[v-highlight]{Notes} \par}
+
+  % --------- Main title ----------
+  \vspace{1.1cm}
+  {\raggedright
+    {\fontsize{34}{40}\selectfont \bfseries \textcolor{v-ink}{\CourseName}\par}
+    \vspace{0.45cm}
+    {\Large \textcolor{v-primary!90}{\DocTitle}\par}
+  }
+
+  % divider
+  \vspace{1.0cm}
+  {\rule{\textwidth}{0.9pt}}
+
+  % --------- Tagline ----------
+  \vspace{0.6cm}
+  {\raggedright
+    \large \color{v-ink!85}\Tagline\par
+  }
+
+  % lower divider
+  \vfill
+  \vspace{1.1cm}
+  {\rule{\textwidth}{0.9pt}}
+
+  % --------- Meta (author / semester) ----------
+  \noindent
+  \begin{minipage}[t]{0.5\textwidth}
+    \raggedright
+    {\color{v-primary}\sffamily\bfseries Author}\par\vspace{0.25cm}
+    {\Large \sffamily \AuthorName}\par
+    \vspace{0.2cm}
+    {\sffamily \small \href{mailto:\AuthorEmail}{\AuthorEmail}}
+  \end{minipage}%
+  \begin{minipage}[t]{0.5\textwidth}
+    \raggedleft
+    {\color{v-primary}\sffamily\bfseries Semester}\par\vspace{0.25cm}
+    {\Large \sffamily \Semester}\par
+    \vspace{0.2cm}
+    {\sffamily \small Last updated: \today}
+  \end{minipage}
+
+% --------- Footer ----------
+%   \vspace{1cm}
+%   {\centering
+%     {\sffamily\large \textcolor{v-ink!90}{Department of Mathematical Sciences}}\par
+%     {\sffamily\bfseries\textcolor{ntnu-blue!90}{Norwegian University of Science and Technology}}\par
+%   }
+\end{titlepage}

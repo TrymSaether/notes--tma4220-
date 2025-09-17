@@ -1,0 +1,16 @@
+\begin{tikzpicture}
+		% Coordinate system
+		\draw[->] (-0.1,0) -- (3,0) node[right] {$x$};
+		\draw[->] (0,-0.1) -- (0,3) node[above] {$y$};
+
+		% Original vectors
+		\draw[->,thick,blue] (0,0) -- (1,0) node[midway,below] {$v_1$};
+		\draw[->,thick,red] (0,0) -- (0,1) node[midway,left] {$v_2$};
+
+		% Transformed vectors (assuming lambda = 2)
+		\draw[->,thick,blue,dashed] (0,0) -- (2,0) node[midway,above] {$Av_1$};
+		\draw[->,thick,red,dashed] (0,0) -- (1,2) node[midway,right] {$Av_2$};
+
+		% Arrow showing the shear effect
+		\draw[->,thick,red,dotted] (0,2) -- (1,2);
+	\end{tikzpicture}

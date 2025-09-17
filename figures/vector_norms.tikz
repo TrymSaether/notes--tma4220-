@@ -1,0 +1,10 @@
+\begin{tikzpicture}
+		% Coordinate system
+		\draw[->] (-1.5,0) -- (1.5,0) node[right] {$x$};
+		\draw[->] (0,-1.5) -- (0,1.5) node[above] {$y$};
+
+		% Unit balls for different norms
+		\draw[state-blue] (1,0) -- (0,1) -- (-1,0) -- (0,-1) -- cycle;
+		\draw[state-red] (0,0) circle (1cm);
+		\draw[state-green] (1,1) -- (1,-1) -- (-1,-1) -- (-1,1) -- cycle;
+	\end{tikzpicture}

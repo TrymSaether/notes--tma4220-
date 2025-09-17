@@ -1,0 +1,49 @@
+% projeksjon.tikz
+% TikZ illustration of orthogonal projection P_V(x) in a (finite-dimensional) visualization of a Hilbert space.
+\usetikzlibrary{calc,arrows.meta}
+\begin{tikzpicture}[scale=1.5,>=Stealth]
+    % Parameters
+    \def\x{2.2} \def\y{1.6}        % coordinates of x
+    \def\ang{20}                  % direction of the subspace V = span{u} (degrees)
+    \pgfmathsetmacro{\s}{\x*cos(\ang)+\y*sin(\ang)} % scalar projection x·u
+    \pgfmathsetmacro{\a}{0.23}    % size for right-angle marker
+
+    % Key points
+    \coordinate (O) at (0,0);
+    \coordinate (x) at (\x,\y);
+    \coordinate (p) at ({\s*cos(\ang)},{\s*sin(\ang)}); % projection P_V(x)
+    \coordinate (u) at ({cos(\ang)},{sin(\ang)});
+    \coordinate (perp) at ({-sin(\ang)},{cos(\ang)});
+
+    % Extended subspace line (V)
+    \draw[thick, color=gray!80] ($(O)-1.2*(u)$) -- ($(O)+3.2*(u)$);
+    \node[above right, color=gray!80] at ($(O)+1.6*(u)$) {$V=\overline{\operatorname{span}\{u\}}$};
+
+    % Axes
+    \draw[->] (0,-0.4) -- (0,2.6) node[above] {};
+
+    % Vectors
+    \draw[->, thick, color=blue] (O) -- (x) node[pos=0.92, above left] {$x$};
+    \draw[->, thick, color=teal!70!black] (O) -- (p) node[pos=0.9, below right] {$P_V(x)$};
+    \draw[->, thick, color=red] (p) -- (x) node[midway, right] {$x-P_V(x)$};
+
+    % Projection foot marker (right angle)
+    \coordinate (pa) at ($(p)+\a*(u)$);
+    \coordinate (pb) at ($(p)+\a*(perp)$);
+    \coordinate (pc) at ($(p)+\a*(u)+\a*(perp)$);
+    \draw[fill=black] (p) circle (0.6pt);
+    \draw[line width=0.9pt] (pa) -- (pc) -- (pb);
+
+    % Labels and small annotations
+    \node[anchor=south west] at (O) {$0$};
+    \node[below right] at (p) {$P_V(x)$};
+    \node[above right, text=blue] at (x) {$x$};
+    \node[above left, text=red] at ($(p)!0.55!(x)$) {$x-P_V(x)$};
+
+    % Optional dotted helper: perpendicular hint
+    \draw[densely dashed, gray] (x) -- (p);
+
+    % Small caption-like note
+    \node[below left, font=\footnotesize] at (3.0, -0.4) {Orthogonality: $x-P_V(x) \perp V$, i.e. $x-P_V(x)\perp u$.};
+
+\end{tikzpicture}

@@ -1,0 +1,14 @@
+\begin{tikzpicture}[scale=0.8]
+		% Coordinate system
+		\draw[->] (-3,0) -- (3,0) node[right] {$x$};
+		\draw[->] (0,-3) -- (0,3) node[above] {$y$};
+
+		% Contour hyperbolas for indefinite case
+		\draw[red] plot[domain=-2:2,samples=100] ({sqrt(1+\x*\x)},\x);
+		\draw[red] plot[domain=-2:2,samples=100] ({-sqrt(1+\x*\x)},\x);
+		\draw[red] plot[domain=-2:2,samples=100] ({sqrt(4+\x*\x)},\x);
+		\draw[red] plot[domain=-2:2,samples=100] ({-sqrt(4+\x*\x)},\x);
+
+		\node at (0,3.5) {Indefinitt};
+		\node at (0,-3.5) {$A = \begin{pmatrix} -1 & 0 \\ 0 & 1 \end{pmatrix}$};
+	\end{tikzpicture}
