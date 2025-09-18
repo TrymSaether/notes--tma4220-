@@ -48,33 +48,58 @@ Et sentralt konsept i Hilbert-rom er ortogonalitet, som generaliserer ideen om v
 	\end{equation}
 \end{theorem}
 
-% \begin{figure}[htb]
-%   \centering
-%   \input{figures/01/projeksjon.tikz}
-%   \caption{Ortogonal projeksjon i Hilbert-rom}
-% \end{figure}
-
 \subsection{Riesz-representasjonsteorem}
-
-Et resultatet som kommer fra Hilbert-rom er Riesz-representasjonsteoremet. Det  etablerer en sammenheng mellom lineære funksjonaler og elementer i rommet.
-
-\begin{theorem}{Riesz-representasjonsteoremet}{riesz_representation}
-	La $H$ være et Hilbert-rom og $F : H \to \mathbb{R}$ være en begrenset lineær funksjonell. Da eksisterer det et unikt element $u_F \in H$ slik at:
+Riesz-representasjonsteoremet er et fundamentalt resultat som karakteriserer strukturen til Hilbert-rom og etablerer en fullstendig isomorfi mellom et Hilbert-rom og dets dualrom.
+\begin{theorem}{Riesz-representasjonsteorem}{riesz_representation}
+	La $H$ være et Hilbert-rom med indre produkt $\langle x, y \rangle$ som er \emph{sesquilineært}.
+	For enhver kontinuerlig lineær funksjonell $\varphi \in H^\ast$ eksisterer det et unikt element $f_\varphi \in H$, kalt \emph{Riesz-representasjonen} av $\varphi$, slik at:
 	\begin{equation}
-		F(v) = \langle u_F, v \rangle \quad \text{for alle } v \in H
+		\varphi(x) = \langle x, f_\varphi \rangle \quad \text{for alle } x \in H
 	\end{equation}
-
-	Videre gjelder $\|F\|_{H'} = \|u_F\|_H$, der $\|\cdot\|_{H'}$ er normen på dualrommet $H'$.
+	Videre gjelder:
+	\begin{enumerate}
+		\item \(\|\varphi\|_{H^\ast} = \|f_\varphi\|_H\) (isometrisk egenskap)
+		\item \(f_\varphi \in (\ker \varphi)^\perp\) er unik vektor, bestemt ved \(\varphi(f_\varphi) = \|\varphi\|^2\)
+		\item Det er også det unike elementet med minimal norm i \( C := \varphi^{-1}(\|\varphi\|^2) \); det vil si at \( f_\varphi \) er det unike elementet i \( C \) som tilfredsstiller \( \|f_\varphi\| = \inf_{c \in C} \|c\| \).
+	\end{enumerate}
 \end{theorem}
 
-\begin{definition}{Riesz-kartet}{riesz_map}
-	\emph{Riesz-kartet} $\mathcal{R} : H' \to H$ er kartet som til hver begrenset lineær funksjonell $F \in H'$ tilordner det unike elementet $u_F \in H$ gitt av Riesz-representasjonsteoremet:
+\begin{definition}{Kanonisk Riesz-kart}{riesz_map}
+	\emph{Riesz-kartet} $\Phi : H \to H^\ast$ er den antilineære isometrien definert ved:
 	\begin{equation}
-		\mathcal{R}(F) = u_F \quad \text{der } F(v) = \langle u_F, v \rangle
+		\Phi(y)(x) = \langle x, y \rangle \quad \text{for alle } x \in H
 	\end{equation}
 
-	Riesz-kartet er en isometrisk isomorfi mellom $H'$ og $H$.
+	Riesz-representasjonsteoremet fastslår at $\Phi$ er bijektiv når $H$ er komplett, og det inverse kartet er:
+	\begin{equation}
+		\Phi^{-1} : H^\ast \to H, \quad \varphi \mapsto f_\varphi
+	\end{equation}
 \end{definition}
+
+\begin{remark}{Geometrisk tolkning}{riesz_geometry}
+	For en ikke-null lineær funksjonell $\varphi$, danner mengden $C = \varphi^{-1}(\|\varphi\|^2)$ et affint hyperplan parallelt med $\ker \varphi$. Siden $C = f_\varphi + \ker \varphi$, er Riesz-representasjonen $f_\varphi$ det unike punktet i $C$ som ligger nærmest origo.
+
+	For enhver $q \in (\ker \varphi)^\perp \setminus \{0\}$ gjelder:
+	\begin{equation}
+		q = \frac{\|q\|^2}{\overline{\varphi(q)}} \cdot f_\varphi
+	\end{equation}
+\end{remark}
+
+\begin{figure}[h]
+	\centering
+	\input{figures/riesz_representation.tikz}
+	\caption{Geometrisk tolkning av Riesz-representasjonsteoremet. Det affine hyperplanet $C = \varphi^{-1}(\|\varphi\|^2)$ (blå linje) er parallelt med kjernekjernen $\ker \varphi$ (grå linje). Riesz-representasjonen $f_\varphi$ (rød punkt) er det unike punktet i $C$ med minimal avstand til origo.}
+	\label{fig:riesz_representation}
+\end{figure}
+
+\begin{example}{Riesz-representasjon i $L^2$}{riesz_l2_example}
+	I Hilbert-rommet $L^2([0,1])$ med det vanlige indre produktet $\langle f, g \rangle = \int_0^1 f(x)g(x) \, dx$, betrakt den lineære funksjonellen $\varphi(f) = f(1/2)$ (punktevaluering i $x = 1/2$).
+
+	Riesz-representasjonen er Dirac-deltafunksjonen $f_\varphi = \delta_{1/2}$, slik at:
+	\begin{equation}
+		\varphi(f) = f(1/2) = \int_0^1 f(x) \delta_{1/2}(x) \, dx = \langle f, \delta_{1/2} \rangle
+	\end{equation}
+\end{example}
 
 \subsection{Spesielle Matriser}
 \subsubsection{Symmetriske matriser}
@@ -133,8 +158,8 @@ Normer gir oss en måte å måle \emph{størrelsen} av vektorer og matriser.
 De mest vanlige vektornormene er $p$-normene:
 
 \begin{align*}
-	\|x\|_1      & = \sum_{i=1}^n |x_i| \tag{taxicab}                 \\
-	\|x\|_2      & = \sqrt{\sum_{i=1}^n x_i^2} \tag{euklidisk}           \\
+	\|x\|_1      & = \sum_{i=1}^n |x_i| \tag{taxicab}            \\
+	\|x\|_2      & = \sqrt{\sum_{i=1}^n x_i^2} \tag{euklidisk}   \\
 	\|x\|_\infty & = \max_{1 \leq i \leq n} |x_i| \tag{maksnorm}
 \end{align*}
 
@@ -153,9 +178,9 @@ De mest vanlige vektornormene er $p$-normene:
 	\begin{enumerate}
 		\item \textbf{Positivitet:} $\|A\| \geq 0$ for alle $A \in \mathbb{R}^{m \times n}$, og $\|A\| = 0$ hvis og bare hvis $A = 0$.
 		\item \textbf{Homogenitet:}
-		$\|\alpha A\| = |\alpha| \cdot \|A\|$ for alle $A \in \mathbb{R}^{m \times n}$ og $\alpha \in \mathbb{R}$.
+		      $\|\alpha A\| = |\alpha| \cdot \|A\|$ for alle $A \in \mathbb{R}^{m \times n}$ og $\alpha \in \mathbb{R}$.
 		\item \textbf{Trekantulikheten:}
-		$\|A + B\| \leq \|A\| + \|B\|$ for alle $A,B \in \mathbb{R}^{m \times n}$.
+		      $\|A + B\| \leq \|A\| + \|B\|$ for alle $A,B \in \mathbb{R}^{m \times n}$.
 	\end{enumerate}
 \end{definition}
 

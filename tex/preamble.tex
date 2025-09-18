@@ -22,7 +22,7 @@
 \setsansfont{IBM Plex Sans Condensed}
 \setmonofont{Fira Code}
 \setmathfont{Fira Math}
-\setmathfont[range={\mathbb,\mathcal,\Re,\Im,\top,\bigcup,\cup,\vdots,\ddots}]{STIX Two Math}
+\setmathfont[range={\mathbb,\mathcal,\Re,\Im,\top,\bigcup,\cup,\vdots,\ddots,\star,\setminus}]{STIX Two Math}
 
 % ---------- Typography & lists ----------
 \usepackage[final]{microtype}
@@ -146,10 +146,12 @@
   fonttitle=\sffamily\bfseries,
   attach boxed title to top left={yshift=-\tcboxedtitleheight},
   boxed title style={boxrule=0pt,boxsep=2pt,interior code={\fill[lem-color, smooth] (interior.north west)--(interior.south west)--([xshift=-2mm]interior.south east)--([xshift=2mm]interior.north east)--cycle;}},
-  separator sign=.,label separator={},borderline north={1pt}{0pt}{lem-color},
+  separator sign=.,
+  label separator={},
+  borderline north={1pt}{0pt}{lem-color},
   before upper={\hspace{\tcboxedtitlewidth}},
   sharp corners,top=2pt,bottom=2pt,left=4pt,right=4pt
-}{lem}
+}{lem:}
 
 \newtcbtheorem{example}{\examplename}{%
   base theorem style,

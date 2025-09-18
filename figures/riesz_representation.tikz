@@ -1,0 +1,37 @@
+% riesz_representation.tikz
+% Geometric visualization of the Riesz representation theorem.
+\usetikzlibrary{calc,arrows.meta}
+\begin{tikzpicture}[scale=2.5, >=Stealth]
+    \pgfmathsetmacro{\marklen}{0.15}
+
+    \coordinate (O) at (0,0);
+    \coordinate (dir) at (1,0.35);
+    \coordinate (perpdir) at (-0.35,1);
+    \coordinate (fphi) at ($(O)+0.85*(perpdir)$);
+    \coordinate (q) at ($(fphi)+1.2*(dir)$);
+
+    % Kernel line through the origin
+    \draw[thick] ($(O)-1.7*(dir)$) -- ($(O)+1.7*(dir)$) node[pos=0.05, above, sloped] {$\ker \varphi$};
+
+    % Affine hyperplane C parallel to the kernel line
+    \draw[thick] ($(fphi)-1.7*(dir)$) -- ($(fphi)+1.7*(dir)$) node[pos=0.225, above, sloped] {$C = \varphi^{-1}(\|\varphi\|^2) = f_\varphi + \ker \varphi$};
+
+    % Riesz representative and orthogonal direction
+    \draw[->, thick, state-red] (O) -- (fphi) node[pos=0.45, left] {$f_\varphi$};
+
+    % Right-angle marker at the foot of the perpendicular
+    \coordinate (r1) at ($(fphi)-\marklen*(dir)$);
+    \coordinate (r2) at ($(r1)-\marklen*(perpdir)$);
+    \coordinate (r3) at ($(fphi)-\marklen*(perpdir)$);
+    \draw[gray!50!black] (r1) -- (r2) -- (r3);
+
+    % A generic point on C illustrating the translation by ker(phi)
+    \draw[->, thick, color=state-green] (fphi) -- (q) node[pos=0.5, above, sloped] {$k \in \ker \varphi$};
+
+    % q = f_phi + k
+    \draw[->, thick, color=state-blue] (O) -- (q) node[pos=0.5, below, sloped] {$q = f_\varphi + k$};
+
+    % Mark the origin
+    \draw[fill=black] (O) circle (0.5pt);
+    \node[below] at (O) {$0$};
+\end{tikzpicture}
