@@ -265,6 +265,8 @@ As $V_h \subset V$ through restricting the weak form and:
 \[
     a(u - u_h, v) = \langle f, v \rangle - \langle f, v \rangle = 0 \quad \forall v \in V_h
 \]
+
+\subsection{Cea's Lemma Vol. 1 (Optimality of Ritz-Galerkin approximation)}
 \begin{lemma}{Cea's Lemma}{ceas-lemma}
     If $u \in V$ solves the weak form and $u_h \in V_h$ the Ritz-Galerkin approximation, then:
     \[
@@ -934,7 +936,7 @@ For \textbf{coercivity} we use the Poincaré inequality \ref{lem:poincare-inequa
 We can employ \emph{Lax-Milgram \ref{thm:lax-milgram}} and conclude there's a unique solution to (MP2).
 
 We have existence/uniqueness, now we want to know how accurate a discrete approximation $u_h \in V_h \subset V$ is, which leads to \emph{Céa's lemma}.
-
+\subsection{Céa's lemma Vol. 2 (Approximation error)}
 \begin{theorem}{Céa's lemma}{cea-lemma}
     Let $a(\cdot, \cdot)$ be $V$-elliptic and $g(\cdot)$ be a BLF on $V$. Let $u \in V$ satisfy:
     \[
@@ -954,19 +956,19 @@ We have existence/uniqueness, now we want to know how accurate a discrete approx
     \[
         a(u - u_h, v_h) = 0 \quad \forall v_h \in V_h
     \]
+
     So we have \emph{Galerkin orthogonality}:
+
     \[
         a(u - u_h,v_h) = 0 \quad \forall v_h \in V_h
     \]
 
-    \medskip
-
     For any $v_h \in V_h$ we have:
     \begin{align*}
-        C_0 \|u - u_h\|_V^2 & \leq a(u - u_h, u - u_h) &\text{ by coercivity} \\
-                            & = a(u - u_h, u - v_h) + \overbrace{a(u - u_h, v_h - u_h)}^{= 0} &\text{ since } v_h - u_h \in V_h \\
-                            & \leq C_1 \|u - u_h\|_V \|u - v_h\|_V &\text{ by continuity}
+        C_0 \|u - u_h\|_V^2 & \leq a(u - u_h, u - u_h) \tag{coercivity} = a(u - u_h, u - v_h) + \overbrace{a(u - u_h, v_h - u_h)}^{= 0, \text{ since } v_h - u_h \in V_h} \\
+                            & \leq C_1 \|u - u_h\|_V \|u - v_h\|_V \tag{continuity}
     \end{align*}
+
     Thus:
     \[
         \|u - u_h\|_V \leq \frac{C_1}{C_0} \|u - v_h\|_V \quad \forall v_h \in V_h
