@@ -759,7 +759,7 @@ The weak form is given by seeking $u \in V$ s.t.
     a(u, v) & = g(v) \quad \forall v \in V \tag{MP2}
 \end{align*}
 
-\subsection{$V$-ellipticity}
+\subsection{V-ellipticity}
 
 Given a Hilbert space $V$ consider a bilinear form $a: V \times V \to \mathbb{R}$. Then:
 \begin{itemize}
@@ -975,3 +975,223 @@ We have existence/uniqueness, now we want to know how accurate a discrete approx
     \]
     Allowing us to conclude.\qed
 \end{proof}
+
+
+\section{Lecture 11: 24.09.2025}
+
+\subsection{Topic 4: 2D finite element spaces}
+
+Our finite element spaces can be viewed as a finite sum of elements which when combined describe functions over the domain, which raises two questions:
+\begin{itemize}
+    \item What does a function look like over a single element?
+    \item How are the functions restricted between elements?
+\end{itemize}
+
+\subsection{Definition of a Finite Element}
+\begin{enumerate}
+    \item Let $K \subseteq \mathbb{R}^n$ be a bounded closed set with non-empty interior and piecewise smooth boundary $\partial K$ -- the \emph{element domain/simplex}.
+    \item $\mathcal{P}$ is a finite-dimensional space of functions on $\mathcal{K}$ -- the space of \emph{shape functions}.
+    \item $\mathcal{N} = \{N_1, N_2, \ldots, N_k\}$ is a basis for $\mathcal{P}^\star$ (the dual space of $\mathcal{P}$) -- the set of \emph{nodal variables}.
+\end{enumerate}
+Then, the Ciarlet triple is defined as:
+\[
+    (\mathcal{K}, \mathcal{P}, \mathcal{N})
+\]
+is a \textbf{finite element}.
+
+\subsection{Definition of Nodal basis}
+\begin{definition}{Nodal basis}{nodal-basis}
+    Let $(\mathcal{K}, \mathcal{P}, \mathcal{N})$ be a finite element.
+
+    The \emph{nodal basis} $\{\phi_1, \phi_2, \ldots\}$ is nodal if $N_i(\phi_j) = \delta_{ij}$.
+
+    \[
+        \phi_j = \sum_{i=1}^k \alpha_i N_i, \text{ where } \alpha_i = N_i(\phi_j)
+    \]
+\end{definition}
+
+\begin{example}{1D finite element}{}
+    Let $\mathcal{K} = [a, b]$, $\mathcal{P}$ be the set of polynomials of degree up to $q$, and let $\mathcal{N}_k = \{N_1, N_2, \ldots, N_q\}$ where
+    \[
+        N_i(v) = v(a + \frac{(b - a)i}{q}), \, \forall v \in \mathcal{P}, i = 0, 1, \ldots, q
+    \]
+    This is a 1D finite element.
+\end{example}
+\begin{center}
+    \begin{tikzpicture}
+        \draw[->, thick] (-2, 0) -- (2, 0) node[anchor=north west] {$x$};
+
+        \node[below] at (-1, 0) {$a$};
+        \node[below] at (1, 0) {$b$};
+        \draw[dashed, thick, color=blue] (-1, 0) -- (1, 0);
+    \end{tikzpicture}
+\end{center}
+
+\subsection{Definition of Unisolvence}
+Unisolvence is a property that ensures the existence of a unique nodal basis.
+\begin{definition}{Unisolvence}{unisolvence}
+    $\mathcal{N}$ determines $\mathcal{P}$ if for $\psi \in \mathcal{P}$ with $N(\psi) = 0$ for all $N \in \mathcal{N}$ implies $\psi = 0$.
+\end{definition}
+
+\subsection{Definition of a Hyperplane}
+\begin{definition}{Hyperplane}{hyperplane}
+    We call $\{x \, : \, L(x) = 0\}$ a hyperplane if $L$ is a non-degenerate.
+\end{definition}
+
+We abuse notation referring to $L$ as \emph{the hyperplane}.
+
+\begin{lemma}{Deconstruction Lemma (DL)}{deconstruction-lemma}
+    Let $P$ be a polynomial of degree $\deg(P) = d \geq 1$ vanishing on the hyperplane $L$. Then we have:
+    \[
+        P = L Q
+    \]
+    where $\deg(Q) = d - 1$.
+\end{lemma}
+\begin{proof}
+    without loss of generality (w.l.o.g.) we may consider $L(x) = x_n$ (where $x \in \mathbb{R}^n$), i.e. the hyperplane is described by $L(\substack{\hat{x} \\ 0}) = 0$ where $x = [\hat{x}, x_n]$.
+    We see that $P(\substack{\hat{x} \\ 0}) = 0$. Since $\deg(P) = d$ we can write:
+    \[
+        P(\substack{\hat{x} \\ x_n}) = \sum_{j=0}^d \sum_{|\hat{i}| \leq d - j} C_{\hat{i}j} \hat{x}^{\hat{i}} x_n^j \quad \begin{cases}
+             & \hat{x} = (x_1, x_2, \ldots, x_{n-1}) \\
+             & \hat{i} = (i_1, i_2, \ldots, i_{n-1})
+        \end{cases}
+    \]
+    Letting $x_n = 0$ gives:
+    \[
+        P(\substack{\hat{x} \\ 0}) = \sum_{|\hat{i}| \leq d} C_{\hat{i}0} \hat{x}^{\hat{i}} = 0
+    \]
+    implying $C_{\hat{i}0} = 0$ for $|\hat{i}| \leq d$. This tells us that:
+    \[
+        P(\substack{\hat{x} \\ x_n}) = \sum_{j=1}^d \sum_{|\hat{i}| \leq d - j} C_{\hat{i}j} \hat{x}^{\hat{i}} x_n^j = x_n \underbrace{\sum_{j=1}^d \sum_{|\hat{i}| \leq d - j} C_{\hat{i}j} \hat{x}^{\hat{i}} x_n^{j-1}}_{Q(\substack{\hat{x} \\ x_n})} = x_n Q(\substack{\hat{x} \\ x_n}) = L(x) Q(x)
+    \]
+    where $\deg(Q) = d - 1$.\qed
+\end{proof}
+
+We begin focusing on \textbf{triangular elements:}
+
+\subsection{Triangular elements}
+Let $\mathcal{K}$ be any triangle and $\mathcal{P}_k$ be the set of polynomials (in two variables) of degree $\deg(P) \leq k$.
+
+The most standard finite element is the \emph{linear ($k=1$) Lagrange element} defined by:
+
+\begin{definition}{Linear Lagrange element}{linear-lagrange-element}
+    Let $\mathcal{P} = P_1$ and $\mathcal{N} = \{N_1, N_2, N_3\}$ (as $\dim(P_1) = 3$) where:
+    \[
+        N_i(v) = v(z_i) \quad \text{ for vertices } z_1, z_2, z_3 \text{ of } \mathcal{K}
+    \]
+\end{definition}
+\begin{center}
+    \begin{tikzpicture}
+        \draw[thick, color=green, fill=green!90!black, fill opacity=0.4] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+        \node[below] at (0, 0) {$z_1$};
+        \node[below] at (4, 0) {$z_2$};
+        \node[above] at (2, 3) {$z_3$};
+
+        \filldraw[black] (0, 0) circle (2pt);
+        \filldraw[black] (4, 0) circle (2pt);
+        \filldraw[black] (2, 3) circle (2pt);
+
+        % Include labels for edges L_i
+        \node[below] at (2, 0) {$L_1$};
+        \node[right] at (3, 1.5) {$L_2$};
+        \node[left] at (1, 1.5) {$L_3$};
+    \end{tikzpicture}
+\end{center}
+\begin{itemize}
+    \item $\cdot$ represents nodes $z_i$.
+    \item $L_i$ represents the edges.
+\end{itemize}
+
+Let's check this satisfies the definition of a finite element, to do this we need to show that $\mathcal{N}$ determines $\mathcal{P}_1$:
+\begin{proof}[Proof that $\mathcal{N}=\{N_1, N_2, N_3\}$ determines $\mathcal{P}_1$]
+
+    \medskip
+
+Let $L_1, L_2, L_3$ be linear functions describing the lines/edges of the triangle $\mathcal{K}$.
+\medskip
+Suppose we have a polynomial $P \in \mathcal{P}_1$ which vanishes on the nodes $z_1, z_2, z_3$.
+\medskip
+Since $P|_{L_1} = 0$ is linear in one variable and vanishes at two points, $P$ must vanish on the entire line $L_1$ s.t. $P|_{L_1} = 0$.
+By \emph{Deconstruction lemma \ref{lem:deconstruction-lemma}} we have $P = L_1 c$ where $c$ is a constant (since $\deg(P) = 1$).
+
+\[
+    P(z_1) = c L_1(z_1) = 0 \implies c = 0 \quad \text{as} \quad L_1(z_1) \neq 0 \implies P = 0
+\]
+we have $P \equiv 0$ and can conclude that $\mathcal{N}$ determines $\mathcal{P}_1$ (and is a finite element).\qed
+\end{proof}
+
+This choice of element is not unique (but it is preferred).
+
+Another valid element could be as follows:
+\begin{center}
+    \begin{tikzpicture}
+        \draw[thick, color=green, fill=green!90!black, fill opacity=0.3] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+        \node[below] at (2, 0) {$z_1$};
+        \node[above] at (3, 1.5) {$z_2$};
+        \node[above] at (1, 1.5) {$z_3$};
+
+        \filldraw[black] (2, 0) circle (2pt);
+        \filldraw[black] (3, 1.5) circle (2pt);
+        \filldraw[black] (1, 1.5) circle (2pt);
+
+        % dashed lines between nodes
+        \draw[dashed, thick, color=blue] (2, 0) -- (3, 1.5) -- (1, 1.5) -- cycle;
+
+        % Include labels for edges L_i
+        \node[below] at (2.5, 0.75) {$L_1$};
+        \node[right] at (2.75, 1.5) {$L_2$};
+        \node[left] at (1.5, 1.5) {$L_3$};
+    \end{tikzpicture}
+\end{center}
+
+\begin{example}{$k=2$ triangular element}{}
+    Let $\mathcal{P} = P_2$ and $\mathcal{N} = \{N_1, N_2, N_3, N_4, N_5, N_6\}$ (as $\dim(P_2) = 6$) where:
+    \[
+        N_i(v) =
+        \begin{cases}
+             & v(z_i), \quad i = 1, 2, 3 \text{ (vertices) } \\
+             & v(z_i), \quad i = 4, 5, 6 \text{ (midpoints of edges) }
+        \end{cases}
+    \]
+    \begin{center}
+        \begin{tikzpicture}
+            \draw[thick, fill=blue!50, fill opacity=0.3] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+            \draw[thick] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+            \node[below] at (0, 0) {$z_1$};
+            \node[below] at (4, 0) {$z_2$};
+            \node[above] at (2, 3) {$z_3$};
+            \node[below] at (2, 0) {$z_4$};
+            \node[right] at (3, 1.5) {$z_5$};
+            \node[left] at (1, 1.5) {$z_6$};
+
+            \filldraw[black] (0, 0) circle (2pt);
+            \filldraw[black] (4, 0) circle (2pt);
+            \filldraw[black] (2, 3) circle (2pt);
+            \filldraw[black] (2, 0) circle (2pt);
+            \filldraw[black] (3, 1.5) circle (2pt);
+            \filldraw[black] (1, 1.5) circle (2pt);
+
+
+            % dashed lines between midpoints
+            \draw[dashed, thick, color=blue] (2, 0) -- (3, 1.5) -- (1, 1.5) -- cycle;
+
+            % Include labels for edges L_i
+            \node[below] at (2, 0.5) {$L_1$};
+            \node[right] at (2.5, 2) {$L_2$};
+            \node[left] at (1.5, 1.5) {$L_3$};
+        \end{tikzpicture}
+    \end{center}
+    To confirm this is a finite element we need to check that $\mathcal{N}$ determines $\mathcal{P}_2$:
+
+    Suppose $P \in \mathcal{P}_2$ vanishes at all nodes $z_i$. Since $P|_{L_1}$ is quadratic in one variable and vanishes at $3$ points, $P|_{L_1} = 0$.
+
+    By \emph{(DL)} we have $P = L_1 Q_1$ with $\deg(Q_1) = \deg(P) - 1 = 1$.
+    As $P|_{L_2} = 0$ we have $L_1Q_1|_{L_2} = 0$. So $Q_1|_{L_2} = 0$ (a.e.) as $L_1(z_1) \neq 0$ except possible at $z_3$.
+    By continuity of $Q_1$ we have $Q_1|_{L_2} = 0$.
+
+    Applying \emph{(DL)} again we find $Q_1 = L_2 Q_2$ with $\deg(Q_2) = \deg(Q_1) - 1 = 0$.
+    $\implies Q_2$ is a constant ($c$) and $P = c L_1 L_2$. Observe that $P(z_6) = 0$ and is not on $L_1$ or $L_2$, so $P(z_6) = c L_1(z_6) L_2(z_6) = 0 \implies c = 0$ as $L_1(z_6), L_2(z_6) \neq 0$.
+
+    Thus $P \equiv 0$ and $\mathcal{N}$ determines $\mathcal{P}_2$, so it is a finite element.\qed
+
+\end{example}
