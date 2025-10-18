@@ -976,7 +976,6 @@ We have existence/uniqueness, now we want to know how accurate a discrete approx
     Allowing us to conclude.\qed
 \end{proof}
 
-
 \section{Lecture 11: 24.09.2025}
 
 \subsection{Topic 4: 2D finite element spaces}
@@ -1107,17 +1106,17 @@ Let's check this satisfies the definition of a finite element, to do this we nee
 
     \medskip
 
-Let $L_1, L_2, L_3$ be linear functions describing the lines/edges of the triangle $\mathcal{K}$.
-\medskip
-Suppose we have a polynomial $P \in \mathcal{P}_1$ which vanishes on the nodes $z_1, z_2, z_3$.
-\medskip
-Since $P|_{L_1} = 0$ is linear in one variable and vanishes at two points, $P$ must vanish on the entire line $L_1$ s.t. $P|_{L_1} = 0$.
-By \emph{Deconstruction lemma \ref{lem:deconstruction-lemma}} we have $P = L_1 c$ where $c$ is a constant (since $\deg(P) = 1$).
+    Let $L_1, L_2, L_3$ be linear functions describing the lines/edges of the triangle $\mathcal{K}$.
+    \medskip
+    Suppose we have a polynomial $P \in \mathcal{P}_1$ which vanishes on the nodes $z_1, z_2, z_3$.
+    \medskip
+    Since $P|_{L_1} = 0$ is linear in one variable and vanishes at two points, $P$ must vanish on the entire line $L_1$ s.t. $P|_{L_1} = 0$.
+    By \emph{Deconstruction lemma \ref{lem:deconstruction-lemma}} we have $P = L_1 c$ where $c$ is a constant (since $\deg(P) = 1$).
 
-\[
-    P(z_1) = c L_1(z_1) = 0 \implies c = 0 \quad \text{as} \quad L_1(z_1) \neq 0 \implies P = 0
-\]
-we have $P \equiv 0$ and can conclude that $\mathcal{N}$ determines $\mathcal{P}_1$ (and is a finite element).\qed
+    \[
+        P(z_1) = c L_1(z_1) = 0 \implies c = 0 \quad \text{as} \quad L_1(z_1) \neq 0 \implies P = 0
+    \]
+    we have $P \equiv 0$ and can conclude that $\mathcal{N}$ determines $\mathcal{P}_1$ (and is a finite element).\qed
 \end{proof}
 
 This choice of element is not unique (but it is preferred).
@@ -1149,7 +1148,7 @@ Another valid element could be as follows:
     \[
         N_i(v) =
         \begin{cases}
-             & v(z_i), \quad i = 1, 2, 3 \text{ (vertices) } \\
+             & v(z_i), \quad i = 1, 2, 3 \text{ (vertices) }           \\
              & v(z_i), \quad i = 4, 5, 6 \text{ (midpoints of edges) }
         \end{cases}
     \]
@@ -1195,3 +1194,224 @@ Another valid element could be as follows:
     Thus $P \equiv 0$ and $\mathcal{N}$ determines $\mathcal{P}_2$, so it is a finite element.\qed
 
 \end{example}
+
+\section{Lecture 12: 25.09.2025}
+\begin{example}{General Lagrange element}{}
+    \[
+        \mathcal{N}_k = \{N_i\}_{i=1}^{\frac12(k+1)(k+2)}, \quad
+        N_i =
+        \begin{cases}
+            3 \text{ Vector Nodes}             \\
+            3(k-1) \text{ Distinct Edge Nodes} \\
+            \frac12(k-1)(k-2) \text{ Interior Nodes}
+        \end{cases}
+    \]
+    With interior points chosen to determine $\mathbb{P}_k$.
+
+    Let $k=3$ for the moment:
+
+    \begin{center}
+        \begin{tikzpicture}[font=\small]
+            \draw[thick, fill=blue!50, fill opacity=0.3] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+            \draw[thick] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+            \node[below] at (0, 0) {$z_1$};
+            \node[below] at (4, 0) {$z_2$};
+            \node[above] at (2, 3) {$z_3$};
+            % Edge nodes for k=3: two per edge
+            \node[below] at (1.333, 0) {$z_4$};
+            \node[below] at (2.667, 0) {$z_5$};
+            \node[right] at (3.333, 1) {$z_6$};
+            \node[right] at (2.8, 2) {$z_7$};
+            \node[left] at (0.667, 1) {$z_8$};
+            \node[left] at (1.2, 2) {$z_9$};
+            % Interior node
+            \node[above] at (2, 1.333) {$z_{10}$};
+
+            \filldraw[black] (0, 0) circle (2pt);
+            \filldraw[black] (4, 0) circle (2pt);
+            \filldraw[black] (2, 3) circle (2pt);
+            \filldraw[black] (1.333, 0) circle (2pt);
+            \filldraw[black] (2.667, 0) circle (2pt);
+            \filldraw[black] (3.333, 1) circle (2pt);
+            \filldraw[black] (2.667, 2) circle (2pt);
+            \filldraw[black] (0.667, 1) circle (2pt);
+            \filldraw[black] (1.333, 2) circle (2pt);
+            \filldraw[black] (2, 1.333) circle (2pt);
+        \end{tikzpicture}
+    \end{center}
+
+    For $k=4$:
+    \begin{center}
+        \begin{tikzpicture}[font=\small]
+            \draw[thick, fill=blue!50, fill opacity=0.3] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+            \draw[thick] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+            \filldraw[black] (0, 0) circle (2pt) node[below] {$z_1$};
+            \filldraw[black] (4, 0) circle (2pt) node[below] {$z_2$};
+            \filldraw[black] (2, 3) circle (2pt) node[above] {$z_3$};
+            % Edge nodes for k=4: three per edge
+            \filldraw[black] (1, 0) circle (2pt) node[below] {$z_4$};
+            \filldraw[black] (2, 0) circle (2pt) node[below] {$z_5$};
+            \filldraw[black] (3, 0) circle (2pt) node[below] {$z_6$};
+            \filldraw[black] (3.5, 0.75) circle (2pt) node[right] {$z_7$};
+            \filldraw[black] (3, 1.5) circle (2pt) node[right] {$z_8$};
+            \filldraw[black] (2.5, 2.25) circle (2pt) node[right] {$z_9$};
+            \filldraw[black] (0.5, 0.75) circle (2pt) node[left] {$z_{10}$};
+            \filldraw[black] (1, 1.5) circle (2pt) node[left] {$z_{11}$};
+            \filldraw[black] (1.5, 2.25) circle (2pt) node[left] {$z_{12}$};
+
+            % Interior nodes
+            \filldraw[black] (1.5, 1) circle (2pt) node[below] {$z_{13}$};
+            \filldraw[black] (2.5, 1) circle (2pt) node[below] {$z_{14}$};
+            \filldraw[black] (2, 1.75) circle (2pt) node[below] {$z_{15}$};
+        \end{tikzpicture}
+    \end{center}
+    The interior point makes a $\mathbb{P}_1$ element that is a triangle.\footnote{The proof is left as an exercise for the reader.}
+\end{example}
+
+\subsection{The Cubic Hermite}
+Let $\mathcal{P} = \mathbb{P}_3$, where $\cdot$ be a point evaluation and $\odot$ a derivative evaluation, then the FE is given by $\mathcal{N} = \{N_1, \dots, N_10\}$
+
+Abridged version to skip some technical details:
+
+Showing this is an FE by assuming $p \in \mathbb{P}_3$ s.t.
+\[
+N_i(p) = 0 \quad \forall \, i
+\]
+
+Restricting to $L_1$ then:
+\[
+\begin{cases}
+& p(z_2)= p'(z_2) = 0 \\
+& p(z_3) = p'(z_3) = 0
+\end{cases}
+\]
+where the derivative is along the edge.
+\begin{center}
+    \begin{tikzpicture}
+        \draw[thick, fill=orange, fill opacity=0.6] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+        \draw[thick] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+        \draw[thick, dashed] (2,0) -- (3, 1.5) -- (1,1.5) -- cycle;
+        \draw[thick] (0, 0) circle (3pt) node[below] {$z_1$};
+        \draw[thick] (4, 0) circle (3pt) node[below] {$z_2$};
+        \draw[thick] (2, 3) circle (3pt) node[above] {$z_3$};
+        \filldraw (2, 1.5) circle (1pt) node[below] {$z_4$};
+        \filldraw (0, 0) circle (1pt);
+        \filldraw (4, 0) circle (1pt);
+        \filldraw (2, 3) circle (1pt);
+
+        % Include labels for edges L_i
+        \node[below] at (2, 0) {$L_1$};
+        \node[right] at (3, 1.5) {$L_2$};
+        \node[left] at (1, 1.5) {$L_3$};
+    \end{tikzpicture}
+\end{center}
+
+The only cubic polynomial with 4 roots is $0$: $p\lvert_{L_1} \equiv 0$ and the same follows for $p\lvert_{L_2}$ and $p\lvert_{L_3}$.
+
+By (DL) we have:
+
+\[
+\begin{aligned}
+    p &= c L_1 L_2 L_3 &\\
+    L_i(z_4) &\neq 0 & i = 1,2,3 \\
+    p(z_4) &= 0 \implies c = 0 &\implies \boxed{p = 0}
+\end{aligned}
+\]
+For a more complete proof one has to show in detail that $p = L_i Q_i$ and that if $p(x) = 0$ and $L_i \neq Q_i$ (a.e.).
+
+\subsection{Defining the derivatives}
+we need two points to derive the derivatives at a point.
+In practice one might use directional derivatives.
+Then the Hermite element can be drawn as follows (where the arrows is its derivative):
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw[thick, fill=blue!50, fill opacity=0.4] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+        \filldraw[black] (0, 0) circle (2pt) node[below] at (0, 0) {$z_1$};
+        \filldraw[black] (4, 0) circle (2pt) node[below] at (4, 0) {$z_2$};
+        \filldraw[black] (2, 3) circle (2pt) node[above] at (2, 3) {$z_3$};
+        \draw[->, thick, spaceblack] (0,0) -- (1,0);
+        \draw[->, thick, spaceblack] (0,0) -- (0,1);
+        \draw[->, thick, spaceblack] (4,0) -- (5,0);
+        \draw[->, thick, spaceblack] (4,0) -- (4,1);
+        \draw[->, thick, spaceblack] (2,3) -- (3,3);
+        \draw[->, thick, spaceblack] (2,3) -- (2,4);
+
+
+        % Include labels for edges L_i
+        \node[below] at (2, 0) {$L_1$};
+        \node[right] at (3, 1.5) {$L_2$};
+        \node[left] at (1, 1.5) {$L_3$};
+    \end{tikzpicture}
+\end{center}
+\textbf{In general} the Hermite elements have $\frac12(k+1)(k+2) \, DoF = \# \, Nodes$  where the nodal variables are:
+\[
+N_i =
+\begin{cases}
+    3 \text{ Vertices}\\
+    6 \text{ Derivatives}\\
+    3(k-3) \text{ Edges} \\
+    \frac12(k-2)(k-1) \text{ Interior}
+\end{cases}
+\]
+
+% The Hermite element is not usually preferedover Lagrange
+% but are an alt choice
+% Example quintic Argyris Let D Ps in two variables and consider the
+% 21 dimP dof where are pointevaluation and are istand2ⁿᵈderivati
+% are normal derivatives at midpoint mi
+% The proof is left as an exercise for the reader
+% Proof in BS book
+
+% To build a FE space we piece the elements together
+% Def local interpolent for a FE 39,8 ur let i i k
+% be the basis of N abasis for D
+% The local interpolant is
+% I v Nilu di
+% Note v must be well defined Ni
+% Eksample Consider spanned by the basisfunctions
+% 1010 11,01
+% 4,1 11 I y The interpolant is
+% 926.9
+% 9,6cg I Irv N Vaio 1 1 N VG.DE
+% Vlan I
+% As before the interpolant is invariant under composition
+% Ikt Iq
+% some more definitions
+% Def Subdevision of a domain or is a finite collection
+% of dement domain Ki
+% s.t.int
+% Ki nint Kj if itj the empty domain
+% and µ K I
+% Def A triangelization is a subderision where no ventet of any
+% triangle lies in the interior of an edge of another triangle
+% vertecis can share information
+% edges can not
+% ok not ok
+% as ventet
+% toutches an
+% edgeDef Interpolant Let or have some triangelazation T of KPN
+% the FE fixingm to the highest orde derivative in the nodal
+% variables we can define the interpolant of a function fee a
+% It
+% Eit KIET
+% µ
+% To build a conforming FES we need to enforce conditions between
+% elements Enforcing C continuity we can obtain a FES VG ECMER
+% elements Through enforcing continuity the Lagrange and
+% Hamite elements are a subspace of C
+% C elements Enforcing C continuity the Argyri's elements are
+% a subspace of C
+% Let's Focus on Lagrange elements
+% Det Diameter Given a set 5 diamCs 11 911
+% Def Mesh conditions Let a be given and Ta be a family of
+% triangulations sit
+% max diam T Te Tu h diamle for och El
+% further define B sit for any ET the closed convex hull
+% of UB is contained in T
+% We must work within convex shapes
+% The family of meshes is quasi uniform if 79 0 sit
+% min dium B TE Ta ghdiamler COD
+% The family is non degenerate if 75 SO s t
+% TE Tu and 410,1
+% diamLB 2g diam T
