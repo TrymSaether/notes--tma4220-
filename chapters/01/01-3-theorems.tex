@@ -1,0 +1,81 @@
+\documentclass[../../main.tex]{subfiles}
+\begin{document}
+
+\section{Viktige resultater}
+\label{sec:theorems}
+
+\subsection{Fundamental lemma of calculus of variations}
+\begin{lemma}{Fundamental lemma of calculus of variations}{fundlemma}
+    La $\Omega \subset \mathbb{R}^n$ være et åpent område med regulær rand og $f: \Omega \rightarrow \mathbb{R}$ være en kontinuerlig funksjon.
+    Hvis
+    \begin{equation}
+        \int_{\Omega} \omega(x) \varphi(x) \, dx = 0
+    \end{equation}
+    holder for alle $\varphi \in \mathcal{C}_c^{\infty}(\Omega)$ (dvs. uendelig differensierbare funksjoner med kompakt støtte i $\Omega$), da er $\omega(x) = 0$ for alle $x \in \Omega$.
+\end{lemma}
+
+
+\subsection{Lax-Milgram teoremet}
+Lax-Milgram-teoremet er et fundamentalt resultat som garanterer eksistens og entydighet av løsninger til bilinære variasjonsproblemer i Hilbert-rom.
+\begin{theorem}{Lax-Milgram}{lax_milgram}
+    La $V$ være et Hilbert-rom, og la $a: V \times V \to \mathbb{R}$ være en bilinær form som er \emph{kontinuerlig} og \emph{koersiv}. Anta at $F: V \to \mathbb{R}$ er en begrenset lineær funksjonell. Da finnes det en entydig løsning $u \in V$ slik at
+    \[
+        a(u,v) = F(v) \quad \forall v \in V.
+    \]
+\end{theorem}
+
+For at teoremet skal gjelde, må bilinærformen $a(\cdot, \cdot)$ oppfylle to viktige egenskaper:
+
+\textbf{Kontinuitet:} Det finnes en konstant $M > 0$ slik at
+\[
+    |a(u,v)| \leq M\, \|u\|_V\, \|v\|_V \quad \text{for alle } u,v\in V.
+\]
+Dette betyr at små endringer i inngangsfunksjonene resulterer i små endringer i bilinærformen.
+
+\textbf{Koersivitet:} Det finnes en konstant $\alpha > 0$ slik at
+\[
+    a(v,v) \geq \alpha\, \|v\|_V^2 \quad \text{for alle } v\in V.
+\]
+Dette er en slags \enquote{positiv definitthet} for bilinærformen og sikrer at problemet er veldefinert.
+
+Når $F$ er en begrenset lineær funksjonell på $V$ (altså $F \in V'$), garanterer teoremet at:
+\begin{itemize}
+    \item Det finnes en entydig løsning $u \in V$ til variasjonsproblemet
+          \[
+              a(u,v)=F(v) \quad \text{for alle } v\in V.
+          \]
+
+    \item Løsningen oppfyller den stabile estimeringen
+          \[
+              \|u\|_V \leq \frac{1}{\alpha}\, \|F\|_{V'}.
+          \]
+          Dette betyr at løsningen avhenger kontinuerlig av dataene, en viktig egenskap for numeriske metoder.
+\end{itemize}
+
+\subsection{Galerkins ortogonalitet}
+\begin{definition}{Galerkins Ortogonalitet}{galerkins_ortogonalitet}
+    \[
+        a(u - u_h, v) = 0 \quad \forall v \in V_h
+    \]
+    hvor $u_h$ er den approksimerte løsningen, $u$ er den eksakte løsningen, og $V_h$ er det endelige elementrommet.
+\end{definition}
+
+Galerkins ortogonalitet betyr at feilen $u - u_h$ er \enquote{ortogonal} til hele approksiamasjonsrommet $V_h$ med hensyn til bilinærformen $a(\cdot,\cdot)$. Dette er en fundamental egenskap ved Galerkins metode, og betyr at approksiamasjonen $u_h$ er optimal i en viss forstand.
+
+\subsection{Céas lemma}
+Céas lemma sier at feilen mellom den eksakte løsningen $u$ og den numeriske løsningen $u_h$ kan estimeres ved hjelp av en konstant som avhenger av bilinærformen og koersivitetskonstanten.
+
+\begin{lemma}{Céas lemma}{ceas_lemma}
+    La $u \in V$ være den eksakte løsningen og $u_h \in V_h$ være den numeriske løsningen. Da gjelder:
+    \[
+        \| u - u_h \| \leq \frac{M}{\alpha} \inf_{v \in V_h} \| u - v \|
+    \]
+    hvor $M$ er en konstant som avhenger av den kontinuerlige delen av bilinærformen, og $\alpha$ er koersivitetskonstanten for $a(\cdot,\cdot)$.
+\end{lemma}
+
+Dette lemmaet forteller oss at feilen i den numeriske løsningen $u_h$ er begrenset av den best mulige approksimasjonen av den eksakte løsningen $u$ i rommet $V_h$, multiplisert med forholdet $\frac{M}{\alpha}$.
+
+Dette er et viktig resultat fordi det lar oss fokusere på approksiamasjonsegenskapene til rommet $V_h$ når vi analyserer konvergensen av endelig element-metoder. For eksempel, hvis vi vet at $V_h$ består av stykkevis lineære funksjoner, kan vi bruke klassisk approksimasjonsteori til å vise at $\inf_{v \in V_h} \| u - v \| = O(h^2)$ når $u$ er glatt nok, og dermed at $\| u - u_h \| = O(h^2)$.
+
+
+\end{document}

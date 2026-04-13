@@ -1,0 +1,20 @@
+\section*{Galerkin orthogonality}
+Let $u \in V$ be the solution to the weak form and $u_h \in V_h \subset V$ the Ritz-Galerkin approximation.
+\[
+    a(u - u_h, v) = 0 \quad \forall v \in V_h
+\]
+
+\textbf{Proof:}
+
+Recall the weak form:
+\[
+    a(u, v) = F(v) \quad \forall v \in V
+\]
+and the Ritz-Galerkin approx.:
+\[
+    a(u_h, v) = F(v) \quad \forall v \in V_h
+\]
+As $V_h \subset V$ through restricting the weak form and:
+\[
+    a(u - u_h, v) = \langle f, v \rangle - \langle f, v \rangle = 0 \quad \forall v \in V_h
+\]

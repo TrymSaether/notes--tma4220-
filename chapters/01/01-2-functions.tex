@@ -1,0 +1,59 @@
+\documentclass[../../main.tex]{subfiles}
+\begin{document}
+
+\section{Funksjonalanalyse}
+\label{sec:functional_analysis}
+
+\subsection{Funksjonsrom}
+Rommet av funksjoner som tilfredsstiller randbetingelsene.
+\begin{equation}\label{eq:function_space}
+V = \{ v \in C^2(\Omega) \, | \, v(a) = \alpha, v(b) = \beta \}
+\end{equation}
+
+Dette rommet representerer alle mulige funksjoner som kan være løsninger på problemet vårt.
+
+\subsection{Testfunksjoner}
+Funksjoner i \(V\) som brukes til å formulere den svake formen.
+Testfunksjoner lar oss \enquote{teste} en mulig løsning ved å integrere mot disse funksjonene.
+
+\subsection{Basisfunksjoner}
+Lokale funksjoner som spenner ut løsningsrommet.
+\begin{itemize}
+	\item Har kompakt støtte (er null utenfor et lite område).
+	\item Oppfyller \(\phi_i(x_j) = \delta_{ij}\) (Kronecker delta)
+\end{itemize}
+Basisfunksjoner brukes til å konstruere numeriske løsninger. I endelig element-metoden er disse typisk \enquote{hatt-funksjoner} eller polynomer som er positive i små områder og null ellers.
+
+\subsection{Energifunksjon}
+La \(F: V \mapsto \mathbb{R}\) være en funksjon som tar inn en funksjon \(v\) og gir ut et reelt tall. Energien til en funksjon \(v\) er gitt ved:
+\begin{equation}\label{eq:energy_functional}
+	F(v) = \frac{1}{2} \langle v, v \rangle - \langle f, v \rangle
+\end{equation}
+I mange fysiske problemer representerer dette faktisk den fysiske energien i systemet. Minimering av denne energifunksjonen gir oss løsningen på det tilsvarende differensialligningsmessige problemet, noe som er bakgrunnen for variasjonelle formuleringer.
+
+\subsection{Svak derivasjon}
+Svak derivasjon er et konsept som lar oss definere derivasjon av funksjoner som ikke nødvendigvis er klassisk deriverbare.
+\begin{definition}{Svak derivasjon}{weak_derivative}
+	En funksjon $u \in L^2(\Omega)$ har en svak derivasjon $Du \in L^2(\Omega)$ hvis for alle testfunksjoner $\varphi \in C_c^\infty(\Omega)$ gjelder:
+	\[
+		\int_\Omega u \frac{\partial \varphi}{\partial x} \, dx = -\int_\Omega Du \varphi \, dx.
+	\]
+\end{definition}
+
+\subsection{Bilinær form}
+\begin{definition}{Bilinær form}{bilinear_form}
+	En bilinær form $a: V \times V \to \mathbb{R}$ er en funksjon som er lineær i begge argumentene, dvs. for alle $u,v,w \in V$ og $\alpha, \beta \in \mathbb{R}$ gjelder:
+	\begin{align*}
+		a(\alpha u + \beta v, w) & = \alpha a(u,w) + \beta a(v,w)  \\
+		a(u, \alpha v + \beta w) & = \alpha a(u,v) + \beta a(u,w).
+	\end{align*}
+\end{definition}
+
+For eksempel i Poisson-ligningen blir den bilinære formen:
+\begin{equation}
+	a(u,v) = \int_\Omega \nabla u \cdot \nabla v \, dx
+\end{equation}
+
+Bilinære former brukes i variasjonelle formuleringer og representerer typisk energien eller arbeidet i det fysiske systemet.
+
+\end{document}

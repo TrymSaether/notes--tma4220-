@@ -1,0 +1,875 @@
+\subsection*{1. Function spaces \& basic inequalities}
+\emph{Lebesgue space.}
+\[
+    L^2(\Omega)
+    := \{ u \text{ measurable} : \|u\|_{L^2(\Omega)}^2 := \int_\Omega |u|^2\,dx < \infty \}.
+\]
+\emph{Weak derivative.}
+For a multi--index $\alpha$ with $|\alpha|\le m$, $D^\alpha u$ is the weak derivative if
+\[
+    \int_\Omega u\,D^\alpha\varphi\,dx
+    = (-1)^{|\alpha|}\int_\Omega D^\alpha u\,\varphi\,dx
+    \quad\forall \varphi\in C_c^\infty(\Omega).
+\]
+\emph{Sobolev spaces.}
+\[
+    H^m(\Omega)
+    := \bigl\{ u\in L^2(\Omega) : D^\alpha u \in L^2(\Omega),\ \forall |\alpha|\le m\bigr\}.
+\]
+Norm and seminorm:
+\[
+    \|u\|_{H^m(\Omega)}^2 := \sum_{|\alpha|\le m}\|D^\alpha u\|_{L^2}^2,
+    \qquad
+    |u|_{H^m(\Omega)}^2 := \sum_{|\alpha|= m}\|D^\alpha u\|_{L^2}^2.
+\]
+
+\emph{Spaces with boundary conditions.}
+\[
+    H_0^1(\Omega)
+    := \text{closure of } C_c^\infty(\Omega) \text{ in } H^1(\Omega),
+    \quad\text{(zero trace on } \partial\Omega).
+\]
+
+\emph{Vector-valued space $H(\div)$.}
+\[
+    H(\div;\Omega)
+    := \{\sigma\in L^2(\Omega)^d : \div\sigma \in L^2(\Omega)\}.
+\]
+Norm: $\|\sigma\|_{H(\div)}^2 = \|\sigma\|_{L^2}^2 + \|\div\sigma\|_{L^2}^2$.
+
+\emph{Poincaré inequality (Dirichlet).}
+If $\Omega$ bounded and $v\in H_0^1(\Omega)$, then
+\[
+    \|v\|_{L^2(\Omega)} \le C_\Omega \|\nabla v\|_{L^2(\Omega)}.
+\]
+So $\|\nabla v\|_{L^2}$ is an equivalent norm on $H_0^1(\Omega)$.
+
+\subsection*{2. Abstract variational problem \& Lax--Milgram}
+
+\emph{Abstract setting.} Let $(V,\|\cdot\|_V)$ Hilbert, $a:V\times V\to\mathbb{R}$ bilinear, $g\in V^\ast$.
+
+\textbf{Assumptions:}
+\begin{itemize}
+    \item \emph{Boundedness:} $\exists M>0$ s.t.
+          \[
+              |a(u,v)| \le M \|u\|_V\|v\|_V\quad\forall u,v\in V.
+          \]
+    \item \emph{$V$-ellipticity (coercivity):} $\exists \alpha>0$ s.t.
+          \[
+              a(v,v) \ge \alpha \|v\|_V^2\quad\forall v\in V.
+          \]
+\end{itemize}
+
+\textbf{Problem:} Find $u\in V$ such that
+\[
+    a(u,v) = g(v) \quad\forall v\in V.
+\]
+
+\emph{Lax--Milgram theorem.}
+Under the assumptions above, there exists a unique $u\in V$ and
+\[
+    \|u\|_V \le \frac{1}{\alpha}\,\|g\|_{V^\ast}.
+\]
+
+\emph{Céa's lemma (Galerkin error).}
+Let $V_h\subset V$ finite dim., and $u_h\in V_h$ solve
+\[
+    a(u_h,v_h) = g(v_h)\quad\forall v_h\in V_h.
+\]
+Then
+\[
+    \|u-u_h\|_V \le \frac{M}{\alpha}\,\inf_{v_h\in V_h}\|u-v_h\|_V.
+\]
+In particular: Galerkin solution is quasi-best approximation.
+
+\subsection*{3. Model PDEs and weak forms}
+
+\textbf{3.1 Poisson with Dirichlet BC}
+
+\[
+    \begin{cases}
+        - \Delta u = f & \text{in } \Omega,         \\
+        u = 0          & \text{on } \partial\Omega.
+    \end{cases}
+\]
+
+\textbf{Weak form:} Find $u\in H_0^1(\Omega)$ s.t.
+\[
+    \int_\Omega \nabla u\cdot\nabla v\,dx = \int_\Omega f v\,dx
+    \quad\forall v\in H_0^1(\Omega).
+\]
+
+\textbf{Abstract notation:}
+\[
+    V = H_0^1(\Omega),\quad
+    a(u,v)=\int_\Omega \nabla u\cdot\nabla v,\quad
+    g(v)=\int_\Omega f v.
+\]
+
+\textbf{3.2 Poisson with Neumann BC}
+
+\[
+    \begin{cases}
+        - \Delta u = f      & \text{in } \Omega,        \\
+        \nabla u\cdot n = 0 & \text{on }\partial\Omega.
+    \end{cases}
+\]
+
+\textbf{Weak form:} Find $u\in H^1(\Omega)$ (mod constants) s.t.
+\[
+    \int_\Omega \nabla u\cdot\nabla v\,dx = \int_\Omega f v\,dx
+    \quad\forall v\in H^1(\Omega).
+\]
+(For uniqueness: restrict to mean-zero functions.)
+
+\textbf{3.3 Heat equation (weak in space)}
+
+\[
+    \begin{cases}
+        u_t - \Delta u = f & \text{in } (0,T)\times\Omega,         \\
+        u = 0              & \text{on } (0,T)\times\partial\Omega, \\
+        u(0)=u_0.
+    \end{cases}
+\]
+
+\textbf{Weak form:} Find $u:(0,T)\to H_0^1(\Omega)$ s.t.
+\[
+    \langle u_t(t),v\rangle + \int_\Omega \nabla u\cdot\nabla v\,dx
+    = \langle f(t),v\rangle
+    \quad\forall v\in H_0^1(\Omega).
+\]
+
+\textbf{Energy identity (take $v=u(t)$):}
+\[
+    \frac12\frac{d}{dt}\|u(t)\|_{L^2}^2 + \|\nabla u(t)\|_{L^2}^2
+    = \langle f(t),u(t)\rangle.
+\]
+
+\subsection*{4. Finite elements: Ciarlet triple and mesh}
+
+\emph{Ciarlet finite element.}
+A finite element is a triple $(K,P,N)$ where:
+\begin{itemize}
+    \item $K\subset\mathbb{R}^n$ closed, bounded, nonempty interior, piecewise smooth boundary.
+    \item $P$ finite-dimensional space of functions on $K$ (e.g. polynomials).
+    \item $N=\{N_1,\dots,N_m\}$ a basis of $P^\ast$ (linear functionals on $P$).
+\end{itemize}
+\textbf{Unisolvence:} $N$ \emph{determines} $P$:
+\[
+    p\in P,\ N_i(p)=0\ \forall i \quad\Rightarrow\quad p\equiv 0.
+\]
+
+\emph{Mesh / triangulation.}
+A triangulation $\mathcal{T}_h$ of $\Omega$ is a finite set of elements $K$ such that:
+\[
+    \overline{\Omega} = \bigcup_{K\in\mathcal{T}_h}\overline{K},
+\]
+and intersections of distinct elements are either empty, a common vertex, or a common edge/face.
+Here $h:=\max_{K\in\mathcal{T}_h}\operatorname{diam}(K)$.
+
+\emph{Global FE space (conforming).}
+Example for $H_0^1(\Omega)$:
+\[
+    V_h := \{v_h\in C^0(\overline{\Omega}) : v_h|_K\in P\ \forall K\in\mathcal{T}_h,\
+    v_h|_{\partial\Omega}=0\}.
+\]
+
+\subsection*{5. Lagrange elements on triangles}
+
+Let $K$ a triangle in $\mathbb{R}^2$ with barycentric coords $(\lambda_1,\lambda_2,\lambda_3)$.
+
+\emph{Polynomial space.}
+\[
+    \mathbb{P}_k(K) := \{\text{polynomials on }K \text{ of total degree }\le k\},\quad
+    \dim \mathbb{P}_k = \frac{(k+1)(k+2)}{2}.
+\]
+
+General formula Degree $k$ Lagrange element (on triangle):
+\[
+    \text{DOFS} =
+    \frac{(k + 1)(k + 2)}{2} \text{ nodes at }
+    \begin{cases}
+        N_{\text{vertices}} = 3,          \\
+        N_{\text{edge nodes}} = 3(k - 1), \\
+        N_{\text{interior nodes}} = \frac{(k - 1)(k - 2)}{2},
+    \end{cases}
+\]
+\emph{Degrees of freedom (DOFS).} Point evaluations at these nodes.
+
+
+\emph{$P_1$ (linear) Lagrange element.}
+\[
+    P = \mathbb{P}_1(K),\quad \dim P=3.
+\]
+Nodes: vertices $a_1,a_2,a_3$.
+\[
+    N_i(v) := v(a_i),\ i=1,2,3.
+\]
+
+\emph{$P_2$ (quadratic) Lagrange element.}
+\[
+    P = \mathbb{P}_2(K),\quad \dim P=6.
+\]
+Nodes:
+\begin{itemize}
+    \item 3 vertices $a_1,a_2,a_3$,
+    \item 3 edge midpoints $m_1,m_2,m_3$ (one per edge).
+\end{itemize}
+DoFs: point evaluations at these 6 nodes.
+
+\emph{$P_3$ (cubic) Lagrange element.}
+\[
+    P = \mathbb{P}_3(K),\quad \dim P=10.
+\]
+Typical nodes:
+\begin{itemize}
+    \item 3 vertices,
+    \item 2 interior points per edge (e.g. at barycentric $(2/3,1/3,0)$ and $(1/3,2/3,0)$),
+    \item 1 interior point (barycenter).
+\end{itemize}
+
+\subsection*{6. Interpolation and projections}
+
+\textbf{6.1 Nodal Lagrange interpolation}
+
+Define $I_h:C^0(\overline{\Omega})\to V_h$ by matching nodal values:
+\[
+    N_i\bigl(I_h u\bigr) = N_i(u)
+    \quad\text{for all local/global DoFs }N_i.
+\]
+
+\emph{Error estimate (typical):} if $u\in H^{k+1}(\Omega)$ and $V_h$ is $P_k$:
+\[
+    \|u - I_h u\|_{H^m(\Omega)} \le C h^{k+1-m} |u|_{H^{k+1}(\Omega)},
+    \quad 0\le m\le k+1.
+\]
+
+\textbf{6.2 $L^2$-projection}
+
+$\Pi_{V_h}:L^2(\Omega)\to V_h$ is defined by
+\[
+    \int_\Omega (u - \Pi_{V_h}u)\,v_h\,dx = 0
+    \quad\forall v_h\in V_h.
+\]
+\textbf{Property:} best approximation in $L^2$:
+\[
+    \|\Pi_{V_h}u - u\|_{L^2} \le \|u - v_h\|_{L^2}\quad\forall v_h\in V_h.
+\]
+
+\textbf{6.3 Ritz projection}
+
+For bilinear form $a(v,\chi)=\int_\Omega \nabla v\cdot\nabla\chi$, define $R_h:H_0^1(\Omega)\to V_h$ by
+\[
+    a(R_h v - v,\chi) = 0\quad\forall \chi\in V_h.
+\]
+
+\textbf{$H^1$-stability:}
+\[
+    \|\nabla R_h v\|_{L^2} \le \|\nabla v\|_{L^2}.
+\]
+
+\textbf{Error estimates (typical):} if $v\in H^s(\Omega)\cap H_0^1(\Omega)$:
+\[
+    \|\nabla(v - R_h v)\|_{L^2} \le C h^{s-1} |v|_{H^s},
+\]
+\[
+    \|v - R_h v\|_{L^2} \le C h^s |v|_{H^s} \quad(\text{Aubin--Nitsche}).
+\]
+
+\subsection*{7. Galerkin FEM for Poisson}
+
+\emph{Continuous weak problem.}
+Find $u\in V:=H_0^1(\Omega)$ s.t.
+\[
+    a(u,v) = g(v)\quad\forall v\in V,
+\]
+with
+\[
+    a(u,v) = \int_\Omega \nabla u\cdot\nabla v,
+    \quad
+    g(v) = \int_\Omega f v.
+\]
+
+\emph{Discrete FE problem.}
+Given $V_h\subset V$, find $u_h\in V_h$ s.t.
+\[
+    a(u_h,v_h) = g(v_h)\quad\forall v_h\in V_h.
+\]
+
+\emph{Matrix form.}
+Choose basis $\{\varphi_i\}_{i=1}^N$ of $V_h$ and write
+\[
+    u_h(x) = \sum_{j=1}^N U_j \varphi_j(x).
+\]
+Then for each $i$:
+\[
+    \sum_{j=1}^N A_{ij}U_j = b_i,
+\]
+with
+\[
+    A_{ij} := \int_\Omega \nabla\varphi_j\cdot\nabla\varphi_i\,dx
+    \quad\text{(stiffness matrix)},
+    \qquad
+    b_i := \int_\Omega f\,\varphi_i\,dx.
+\]
+
+$A$ is symmetric positive definite (for Dirichlet).
+
+\subsection*{8. Time-dependent FEM in space}
+
+\textbf{8.1 Semi-discrete heat equation}
+
+Seek $u_h:[0,T]\to V_h$ with
+\[
+    \langle u_{h,t}(t),v_h\rangle + a(u_h(t),v_h) = \langle f(t),v_h\rangle,
+    \quad\forall v_h\in V_h.
+\]
+
+Expand $u_h(t,x) = \sum_j U_j(t)\varphi_j(x)$:
+\[
+    M U'(t) + A U(t) = b(t),
+\]
+with
+\[
+    M_{ij} = \int_\Omega \varphi_j\varphi_i\,dx \quad\text{(mass matrix)},
+    \quad
+    A_{ij} = \int_\Omega \nabla\varphi_j\cdot\nabla\varphi_i\,dx,
+    \quad
+    b_i(t) = \int_\Omega f(t)\varphi_i\,dx.
+\]
+
+$M$ is symmetric positive definite, $A$ positive semidefinite / definite.
+
+\textbf{8.2 Backward Euler}
+
+Time grid: $t_n = n\tau$. Backward Euler for $M U'+A U=b$:
+\[
+    M\frac{U^{n+1}-U^n}{\tau} + A U^{n+1} = b^{n+1}.
+\]
+Rearranged:
+\[
+    (M + \tau A)U^{n+1} = M U^n + \tau b^{n+1}.
+\]
+$M+\tau A$ is SPD $\Rightarrow$ unique $U^{n+1}$.
+
+\subsection*{9. dG in time (upwind dG)}
+
+\emph{Broken polynomial space.}
+Time partition $0=t_0<\dots<t_N=T$, intervals $I_n=(t_n,t_{n+1})$.
+\[
+    V_k^{\mathrm{dG}}([0,T])
+    := \{ V: [0,T]\to\mathbb{R}^D : V|_{I_n}\in\mathbb{P}_k(I_n;\mathbb{R}^D)\}.
+\]
+
+Left/right limits:
+\[
+    V_n^- := \lim_{t\to t_n^-}V(t),\quad
+    V_n^+ := \lim_{t\to t_n^+}V(t),
+    \quad
+    \Jump{V_n} := V_n^+ - V_n^-.
+\]
+
+\emph{Upwind dG formulation for $u_t + A u = 0$.}
+Find $U\in V_k^{\mathrm{dG}}$ s.t.
+\[
+    \sum_{n=0}^{N-1}
+    \left(
+    \int_{I_n} U_t\cdot V\,dt
+    + \Jump{U_n}\cdot V_n^+
+    + \int_{I_n} A U\cdot V\,dt
+    \right) = 0
+    \quad\forall V\in V_k^{\mathrm{dG}},
+\]
+with $U_0^- = u_0$.
+
+\emph{Energy inequality (key identity).}
+For any $W\in V_k^{\mathrm{dG}}$,
+\[
+    \int_{I_n} W_t\cdot W\,dt + \Jump{W_n}\cdot W_n^+
+    \ge
+    \frac12|W_{n+1}^-|^2 - \frac12 |W_n^-|^2.
+\]
+
+\emph{Equivalence with backward Euler (for $k=0$).}
+On each $I_n$, $U$ constant $\Rightarrow U_t=0$.
+On $I_0$, upwind dG gives
+\[
+    (U_1 - U_0)\cdot V_1 + \tau A U_1\cdot V_1 = 0\ \forall V_1
+    \quad\Rightarrow\quad
+    U_1 = U_0 - \tau A U_1,
+\]
+which is the backward Euler step.
+
+\subsection*{10. Non-conforming Finite Elements in Time (dG in Time)}
+Let $V$ be a Hilbert space, $V \subset H \simeq H' \subset V'$ a Gelfand triple,
+and $A: V \to V'$ a coercive linear operator.
+We consider
+\begin{align*}
+    u_t(t) + A u(t) & = f(t) &  & \text{for } t \in (0,T], \\
+    u(0)            & = u_0.
+\end{align*}
+The variational form is:
+
+Find $u$ such that
+\[
+    \langle u_t(t), v\rangle_{V',V} + a(u(t),v) = \langle f(t), v\rangle_{V',V}
+    \quad \forall v\in V,\ \text{a.e. }t\in (0,T),
+\]
+where $a(u,v) := \langle Au, v\rangle_{V',V}$.
+
+\textbf{Time Partition and Discrete Space.}
+
+Let $0=t_0 < t_1 < \cdots < t_N=T$, and $I_n=(t_n,t_{n+1}]$. Define the \emph{time-discrete space} (non-conforming in time):
+\[
+    X_k := \left\{
+    v : [0,T] \to V\ \bigg|\
+    v|_{I_n} \in \mathbb{P}_k(I_n; V),\ n=0,\dots,N-1
+    \right\}.
+\]
+Functions in $X_k$ are allowed to jump at the time nodes $t_n$, i.e.
+\[
+    X_k \not\subset C([0,T];V),
+\]
+so this is \textbf{non-conforming in time}.
+
+Define the time jump at $t_n$:
+\[
+    [v]^n := v(t_n^+) - v(t_n^-).
+\]
+
+\textbf{dG-in-Time Formulation (Upwind Version)}
+
+Seek $u_h \in X_k \otimes V_h$ such that, for all $v_h \in X_k \otimes V_h$,
+\[
+    \sum_{n=0}^{N-1}
+    \left(
+    \int_{I_n} \langle (u_h)_t, v_h\rangle
+    +
+    a(u_h, v_h)\,dt
+    +
+    \langle [u_h]^n, v_h(t_n^+)\rangle
+    \right)
+    =
+    \sum_{n=0}^{N-1}
+    \int_{I_n} \langle f, v_h\rangle\,dt.
+\]
+This is a typical upwind dG in time scheme:
+\begin{itemize}[leftmargin=*]
+    \item $u_h$ is piecewise polynomial in time on each $I_n$,
+    \item jumps $[u_h]^n$ at time nodes enter the formulation via jump terms,
+    \item continuity in time is enforced weakly.
+\end{itemize}
+
+\textbf{Special Case $k=0$: Backward Euler}
+
+If $k=0$ (piecewise constant in time), $u_h(t)$ and $v_h(t)$ are constant on each $I_n$.
+Then $(u_h)_t = 0$ on each $I_n$, and the terms over $I_n$ reduce to:
+\[
+    \int_{I_n} a(u_h, v_h)\,dt = \tau_n \, a(u_h^{n+1}, v_h^{n+1}),
+\]
+and the jump terms give
+\[
+    \langle u_h^{n+1}-u_h^n, v_h^{n+1}\rangle.
+\]
+This yields exactly the algebraic backward Euler step:
+\[
+    \frac{1}{\tau_n}\langle u_h^{n+1}-u_h^n, v_h^{n+1}\rangle
+    + a(u_h^{n+1}, v_h^{n+1})
+    =
+    \langle f^{n+1}, v_h^{n+1}\rangle,
+\]
+equivalent to
+\[
+    (M + \tau_n A)U^{n+1} = M U^n + \tau_n F^{n+1},
+\]
+where $M$ and $A$ are mass and stiffness matrices.
+
+\emph{Cookbook:}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Write the continuous variational form:}
+          $\langle u_t, v\rangle + a(u,v) = \langle f, v\rangle$.
+    \item \textbf{Choose time partition and space:}
+          $X_k$ piecewise polynomials on each $I_n$, allowing jumps at $t_n$.
+    \item \textbf{Integrate by parts in time \emph{on each interval} $I_n$:}
+          This produces endpoint terms at $t_n$ and $t_{n+1}$.
+    \item \textbf{Introduce jumps:}
+          Write all endpoint contributions in terms of $[u_h]^n$, and add them to the bilinear form.
+    \item \textbf{Special case $k=0$:}
+          Show that the resulting scheme is the backward Euler time stepping method.
+\end{itemize}
+
+\subsection*{11. Mixed formulation (Poisson)}
+\emph{First-order system.}
+For $-\Delta u = f$ with $u=0$ on $\partial\Omega$, introduce
+\[
+    \sigma := \nabla u,
+\]
+then
+\[
+    \begin{cases}
+        \sigma - \nabla u = 0, \\
+        \nabla\cdot \sigma = f.
+    \end{cases}
+\]
+
+\emph{Mixed spaces.}
+\[
+    W := H(\div;\Omega),\quad V := L^2(\Omega).
+\]
+
+\emph{Bilinear forms.}
+\[
+    a(\sigma,w) := \int_\Omega \sigma\cdot w\,dx,
+    \quad
+    b(w,u) := \int_\Omega (\div w) u\,dx,
+    \quad
+    F(v) := \int_\Omega f v\,dx.
+\]
+
+\emph{Mixed weak formulation.}
+Find $(\sigma,u)\in W\times V$ s.t.
+\[
+    \begin{cases}
+        a(\sigma,w) + b(w,u) = 0 & \forall w\in W, \\
+        b(\sigma,v) = F(v)       & \forall v\in V.
+    \end{cases}
+\]
+
+\emph{Key mixed conditions.}
+\begin{itemize}
+    \item $a$ bounded and coercive on $\widetilde W:=\{w\in W : b(w,v)=0\ \forall v\}$.
+    \item $b$ bounded and satisfies inf--sup:
+          \[
+              \inf_{0\neq v\in V}\sup_{0\neq w\in W}
+              \frac{b(w,v)}{\|w\|_W\|v\|_V} \ge \beta>0.
+          \]
+\end{itemize}
+
+\subsection*{12. Interior penalty dG for Poisson}
+
+\emph{Mesh notation.}
+$\mathcal{P}_h$ elements $T$, $\mathcal{E}_h$ faces/edges $e$, with characteristic face size $|e|$.
+
+\emph{Jumps and averages (scalar $v_h$).}
+For interior face $e$ shared by $T^\pm$ with normal $n_e$ from $T^+$ to $T^-$:
+\[
+    v_h^\pm := v_h|_{T^\pm},
+    \quad
+    \jump{v_h} := v_h^+ n_e - v_h^- n_e,
+    \quad
+    \{v_h\} := \frac{1}{2}(v_h^+ + v_h^-),
+    \quad
+    \{\nabla v_h\} := \frac{1}{2}(\nabla v_h^+ + \nabla v_h^-).
+\]
+On boundary face $e\subset\partial\Omega$:
+\[
+    \jump{v_h} := v_h^+ n,\quad \{\nabla v_h\}:=\nabla v_h^+.
+\]
+
+\emph{Symmetric IP bilinear form.}
+\[
+    \begin{aligned}
+        a_h(u_h,v_h)
+         & = \sum_{T\in\mathcal{P}_h}\int_T \nabla u_h\cdot\nabla v_h\,dx                        \\
+         & \quad - \sum_{e\in\mathcal{E}_h}\int_e
+        \Big(\{\nabla u_h\}\cdot\jump{v_h} + \{\nabla v_h\}\cdot\jump{u_h}\Big)\,ds              \\
+         & \quad + \sum_{e\in\mathcal{E}_h}\frac{\eta}{|e|}\int_e \jump{u_h}\cdot\jump{v_h}\,ds,
+    \end{aligned}
+\]
+with penalty $\eta>0$ sufficiently large.
+
+\emph{Mesh-dependent IP norm.}
+\[
+    \|v_h\|_{\mathrm{IP}}^2
+    := \sum_{T}\|\nabla v_h\|_{L^2(T)}^2
+    + \sum_{e}\frac{\eta}{|e|}\|\jump{v_h}\|_{L^2(e)}^2.
+\]
+
+\emph{Key properties (for large enough $\eta$).}
+\begin{itemize}
+    \item \emph{Consistency:} For $u\in H^2(\Omega)\cap H_0^1(\Omega)$ solving $-\Delta u=f$,
+          \[
+              a_h(u,v_h) = \int_\Omega f v_h\,dx\quad\forall v_h\in V_h.
+          \]
+    \item \emph{Symmetry:} $a_h(u_h,v_h)=a_h(v_h,u_h)$.
+    \item \emph{Continuity:}
+          \[
+              |a_h(u_h,v_h)| \le C \|u_h\|_{\mathrm{IP}}\|v_h\|_{\mathrm{IP}}.
+          \]
+    \item \emph{Coercivity:}
+          \[
+              a_h(v_h,v_h) \ge \alpha \|v_h\|_{\mathrm{IP}}^2.
+          \]
+\end{itemize}
+
+\subsection*{13. Typical FE error estimates (elliptic)}
+
+For $k$-th order Lagrange elements and exact solution $u\in H^{k+1}(\Omega)\cap H_0^1(\Omega)$:
+\[
+    \|u-u_h\|_{H^1(\Omega)} \le C h^k |u|_{H^{k+1}(\Omega)},
+\]
+\[
+    \|u-u_h\|_{L^2(\Omega)} \le C h^{k+1} |u|_{H^{k+1}(\Omega)}.
+\]
+
+These follow from Céa's lemma + interpolation estimates (and Aubin--Nitsche for $L^2$).
+
+\subsection*{14. Heat equation FE error (typical form)}
+
+With spatial FE space of order $k$ and $u\in C^1([0,T];H^{k+1}(\Omega))$:
+\[
+    \|u_h(t) - u(t)\|_{L^2(\Omega)}
+    \lesssim
+    \underbrace{\|\Pi_{V_h}u_0 - u_0\|_{L^2}}_{\text{initial proj.}}
+    + C h^{k+1}\Bigl(
+    \|u_0\|_{H^{k+1}} + \int_0^t\|u_\tau(\tau)\|_{H^{k+1}}\,d\tau
+    \Bigr).
+\]
+(Precise constants depend on regularity assumptions and the projection used.)
+
+\subsection*{15. Elliptic Regularity}
+
+\textbf{Assumption (A1)} (Approximation property of $W_h$).
+
+Let $W_h \subset H_0^1(\Omega)$ be a finite element space of polynomial degree $k$. For $1 \le s \le k+1$ we assume that, for every
+$u_0 \in H^s(\Omega) \cap H_0^1(\Omega)$, there exists $\chi_h \in W_h$ such that
+\[
+    \|u_0 - \chi_h\|_{L^2(\Omega)} + h \|\nabla(u_0 - \chi_h)\|_{L^2(\Omega)} \le C h^s \|u_0\|_{H^s(\Omega)}.\tag{A1}
+\]
+
+\textbf{Theorem (Convergence of Ritz projection).}
+
+Let $R_h : H_0^1(\Omega) \to W_h$ be the Ritz projection defined by
+\[
+    \int_\Omega \nabla R_h u_0 \cdot \nabla v_h \, dx
+    =
+    \int_\Omega \nabla u_0 \cdot \nabla v_h \, dx
+    \quad \text{for all } v_h \in W_h.
+\]
+Under Assumption (A1) the Ritz projection satisfies
+\[
+    \|R_h u_0 - u_0\|_{L^2(\Omega)}
+    + h \|\nabla(R_h u_0 - u_0)\|_{L^2(\Omega)}
+    \le
+    C h^s \|u_0\|_{H^s(\Omega)},
+    \quad
+    u_0 \in H^s(\Omega) \cap H_0^1(\Omega),
+    \tag{Ritz-conv}
+\]
+for $1 \le s \le k+1$.
+
+Lemma (elliptic regularity). Consider the homogeneous dual problem
+\[
+    -\Delta \psi = \varphi \quad \text{in } \Omega,
+    \qquad \psi = 0 \quad \text{on } \partial\Omega,
+\]
+where $\varphi \in L^2(\Omega)$. If $\partial\Omega \in C^2$, then there exists
+$C>0$ such that
+\[
+    \|\psi\|_{H^2(\Omega)} \le C \,\|\varphi\|_{L^2(\Omega)}.
+    \tag{ER}
+\]
+
+\textbf{Proof.}
+
+Let $R_h : H_0^1(\Omega) \to W_h \subset H_0^1(\Omega)$ be the Ritz
+projection defined by
+\[
+    \int_\Omega \nabla R_h u_0 \cdot \nabla \chi \, dx
+    =
+    \int_\Omega \nabla u_0 \cdot \nabla \chi \, dx
+    \quad \text{for all } \chi \in W_h.
+\]
+Set $e_h := R_h u_0 - u_0$.
+
+\emph{Step 1: $H^1$--error.}
+For any $\chi \in W_h$ we have
+\[
+    \|\nabla e_h\|_{L^2(\Omega)}^2
+    =
+    \int_\Omega \nabla e_h \cdot \nabla e_h \, dx
+    =
+    \int_\Omega \nabla e_h \cdot \nabla(R_h u_0 - \chi) \, dx
+    +
+    \int_\Omega \nabla e_h \cdot \nabla(\chi - u_0) \, dx.
+\]
+By the definition of $R_h$ (Galerkin orthogonality),
+\[
+    \int_\Omega \nabla e_h \cdot \nabla(R_h u_0 - \chi) \, dx = 0,
+\]
+so
+\[
+    \|\nabla e_h\|_{L^2(\Omega)}^2
+    =
+    \int_\Omega \nabla e_h \cdot \nabla(\chi - u_0) \, dx \le \|\nabla e_h\|_{L^2(\Omega)} \|\nabla(\chi - u_0)\|_{L^2(\Omega)}.
+\]
+Cancelling $\|\nabla e_h\|_{L^2(\Omega)}$ (if it is nonzero) gives
+\[
+    \|\nabla e_h\|_{L^2(\Omega)} \le \|\nabla(\chi - u_0)\|_{L^2(\Omega)} \quad \text{for all } \chi \in W_h.
+\]
+Hence
+\[
+    \|\nabla e_h\|_{L^2(\Omega)} \le \inf_{\chi \in W_h} \|\nabla(\chi - u_0)\|_{L^2(\Omega)}.
+\]
+Using the approximation property (assumption A1) for $u_0 \in H^s(\Omega)$,
+$1 \le s \le k+1$,
+\[
+    \inf_{\chi \in W_h}
+    \|\nabla(\chi - u_0)\|_{L^2(\Omega)}
+    \le
+    C h^{s-1} \|u_0\|_{H^s(\Omega)},
+\]
+we obtain
+\[
+    \|\nabla (R_h u_0 - u_0)\|_{L^2(\Omega)}
+    \le
+    C h^{s-1} \|u_0\|_{H^s(\Omega)}.
+    \tag{H1-error}
+\]
+\emph{Step 2: $L^2$--error by duality.}
+For the $L^2$--error we argue by duality. Let $\varphi \in L^2(\Omega)$ be
+arbitrary and consider the dual problem
+\[
+    -\Delta \psi = \varphi \quad \text{in } \Omega,
+    \qquad \psi = 0 \quad \text{on } \partial\Omega,
+\]
+with solution $\psi \in H^2(\Omega) \cap H_0^1(\Omega)$, and let
+$\psi_h \in W_h$ be arbitrary. Then
+\[
+    \int_\Omega e_h \,\varphi \, dx
+    =
+    \int_\Omega e_h (-\Delta \psi)\, dx
+    =
+    \int_\Omega \nabla e_h \cdot \nabla \psi \, dx,
+\]
+where we used integration by parts and $e_h\in H_0^1(\Omega)$, $\psi=0$ on
+$\partial\Omega$. Add and subtract $\psi_h$:
+\begin{align*}
+    \int_\Omega e_h \,\varphi \, dx & = \int_\Omega \nabla e_h \cdot \nabla(\psi - \psi_h)\, dx.         \\
+    \left|\int_\Omega e_h \,\varphi \, dx\right|
+                                    & \overset{\text{Cauchy--Schwarz}}{\le} \|\nabla e_h\|_{L^2(\Omega)}
+    \|\nabla(\psi - \psi_h)\|_{L^2(\Omega)}.
+\end{align*}
+Using the approximation property A1 for $\psi \in H^2(\Omega)$ (so $s=2$),
+\[
+    \inf_{\psi_h \in W_h}
+    \|\nabla(\psi - \psi_h)\|_{L^2(\Omega)}
+    \le
+    C h \|\psi\|_{H^2(\Omega)}.
+\]
+Choosing such a $\psi_h$ and combining with \((H1\text{-error})\), we get
+\[
+    \left|
+    \int_\Omega e_h \,\varphi \, dx
+    \right|
+    \le
+    C h^{s-1} \|u_0\|_{H^s(\Omega)} \cdot h \|\psi\|_{H^2(\Omega)}
+    =
+    C h^{s} \|u_0\|_{H^s(\Omega)} \|\psi\|_{H^2(\Omega)}.
+\]
+
+By elliptic regularity \((ER)\),
+\[
+    \|\psi\|_{H^2(\Omega)} \le C \|\varphi\|_{L^2(\Omega)},
+\]
+hence
+\[
+    \left|
+    \int_\Omega e_h \,\varphi \, dx
+    \right|
+    \le
+    C h^{s} \|u_0\|_{H^s(\Omega)} \|\varphi\|_{L^2(\Omega)}.
+    \tag{dual-est}
+\]
+
+Now choose $\varphi = e_h$ in \((\text{dual-est})\). Then
+\[
+    \|e_h\|_{L^2(\Omega)}^2
+    =
+    \left|
+    \int_\Omega e_h \, e_h \, dx
+    \right|
+    \le
+    C h^{s} \|u_0\|_{H^s(\Omega)} \|e_h\|_{L^2(\Omega)},
+\]
+and thus
+\[
+    \|R_h u_0 - u_0\|_{L^2(\Omega)}
+    \le
+    C h^{s} \|u_0\|_{H^s(\Omega)}.
+    \tag{L2-error}
+\]
+This completes the duality argument using elliptic regularity. \hfill$\qed$
+
+\subsection*{16. Young's Theorem}
+Let $a,b \ge 0$ and $\varepsilon > 0$. Then
+\[
+    ab \le \varepsilon a^2 + \frac{1}{4\varepsilon} b^2. \tag{young}
+\]
+A very common variant (multiplying by $2$) is
+\[
+    2ab \le \varepsilon a^2 + \frac{1}{\varepsilon} b^2. \tag{young2}
+\]
+These inequalities hold also for real $a,b$ by applying them to $|a|,|b|$.
+
+\textbf{Proof.}
+
+We prove
+\[
+    ab \le \varepsilon a^2 + \frac{1}{4\varepsilon} b^2
+    \quad \text{for all } a,b \in \mathbb{R},\ a,b \ge 0,\ \varepsilon>0.
+\]
+
+\emph{Step 1: Consider a nonnegative square.}
+For any real numbers $x,y$,
+\[
+    (x-y)^2 \ge 0.
+\]
+We choose
+\[
+    x := \sqrt{\varepsilon}\,a,
+    \quad
+    y := \frac{b}{2\sqrt{\varepsilon}}.
+\]
+Then
+\[
+    (\sqrt{\varepsilon}\,a - \tfrac{b}{2\sqrt{\varepsilon}})^2 \ge 0.
+\]
+\emph{Step 2: Expand the square.}
+Compute
+\begin{align*}
+    (\sqrt{\varepsilon}\,a - \tfrac{b}{2\sqrt{\varepsilon}})^2 & = (\sqrt{\varepsilon}\,a)^2 -2\sqrt{\varepsilon}\,a \cdot \frac{b}{2\sqrt{\varepsilon}} + \left(\frac{b}{2\sqrt{\varepsilon}}\right)^2 \\
+                                                               & =\varepsilon a^2 - ab + \frac{b^2}{4\varepsilon}.
+\end{align*}
+Hence
+\[
+    \varepsilon a^2 - ab + \frac{b^2}{4\varepsilon} \ge 0.
+\]
+
+\emph{Step 3: Rearrange.}
+\begin{align*}
+    \varepsilon a^2 - ab + \frac{b^2}{4\varepsilon} & \ge 0,                                           \\
+    -ab                                             & \ge -\varepsilon a^2 - \frac{b^2}{4\varepsilon}, \\
+    ab                                              & \le \varepsilon a^2 + \frac{b^2}{4\varepsilon}.
+\end{align*}
+This is exactly (young).
+
+\emph{Step 4: Variant with $2ab$.}
+Starting from (young) applied to $a$ and $2b$, we get
+\[
+    a(2b) \le \varepsilon a^2 + \frac{1}{4\varepsilon}(2b)^2 = \varepsilon a^2 + \frac{4b^2}{4\varepsilon} = \varepsilon a^2 + \frac{b^2}{\varepsilon}.
+\]
+Thus
+\[
+    2ab \le \varepsilon a^2 + \frac{1}{\varepsilon} b^2,
+\]
+which is (young2).
+
+\subsection*{17. Hölder's Inequality}
+Hölder's inequality is a generalization of the Cauchy--Schwarz inequality and is fundamental in functional analysis and PDEs.
+
+For $p,q > 1$ with $\frac{1}{p} + \frac{1}{q} = 1$, and measurable functions $f,g$ on a measure space $(\Omega,\mu)$,
+\[
+    \int_\Omega |f g| \, d\mu \le \left( \int_\Omega |f|^p \, d\mu \right)^{1/p} \left( \int_\Omega |g|^q \, d\mu \right)^{1/q}.
+\]
+Special case: $p=q=2$ recovers Cauchy--Schwarz.

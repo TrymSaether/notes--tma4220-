@@ -1,0 +1,265 @@
+
+\section*{[2023 PREP EXAM] Problem 2: Ciarlet FE on triangles}
+\subsection*{(a) Ciarlet's definition of a finite element and a missing ingredient.}
+
+\textbf{Ciarlet finite element.}
+
+Let
+\begin{itemize}
+    \item $K \subset \mathbb{R}^n$ be a closed, bounded set with nonempty interior
+          and piecewise smooth boundary,
+    \item $P$ be a finite dimensional space of real-valued functions on $K$,
+    \item $N = \{N_1,\dots,N_m\}$ be a basis of the dual space $P^\ast$, i.e., each
+          $N_i : P \to \mathbb{R}$ is a linear functional and $\{N_i\}$ is linearly independent
+          and spans $P^\ast$.
+\end{itemize}
+Then the triple $(K,P,N)$ is called a \textbf{finite element} (a \textbf{Ciarlet triple}).
+A standard way to phrase ``$N$ determines $P$'' is:
+\[
+    \psi \in P,\; N_i(\psi) = 0 \ \forall i \quad \Longrightarrow \quad \psi = 0,
+\]
+i.e. the map
+\[
+    P \ni \psi \ \mapsto\ (N_1(\psi),\dots,N_m(\psi)) \in \mathbb{R}^m
+\]
+is an isomorphism of vector spaces.
+
+\textbf{Missing ingredient for implementation.}
+Ciarlet's definition is \textbf{local} (on a single $K$).
+To implement a finite element method on a domain $\Omega$ one also needs at least:
+
+\begin{itemize}
+    \item a \textbf{triangulation/mesh} $\mathcal{T}_h$ of $\Omega$ into elements $K$,
+\end{itemize}
+
+and, in practice, a global numbering of degrees of freedom (connectivity) built from
+the local sets $N$.
+
+\subsection*{(b) Quadratic Lagrange and cubic Hermite elements on triangular meshes.}
+
+Let $K$ be a non-degenerate triangle in $\mathbb{R}^2$ with vertices
+$a_1,a_2,a_3$ and edges $e_i$ opposite $a_i$.
+
+\textbf{Quadratic Lagrange element. $k=2$.}
+\begin{itemize}
+    \item $K$: the triangle with vertices $a_1,a_2,a_3$.
+    \item $P_L := \mathbb{P}_2(K)$, the polynomials on $K$ of total degree $\le 2$.
+          In 2D we have $\dim \mathbb{P}_2 = 6$.
+    \item Nodal functionals $N_L$:
+          \begin{itemize}
+              \item $N_i(v) := v(a_i)$, $i=1,2,3$ (values at the three vertices),
+              \item For each edge $e_i$ let $m_i$ be its midpoint.
+                    Define $N_{3+i}(v) := v(m_i)$, $i=1,2,3$ (values at the three edge midpoints).
+          \end{itemize}
+\end{itemize}
+Sketch: one draws a triangle with
+three nodes at the vertices and three additional nodes at the edge midpoints.
+The single degree of freedom at each node is the function value.
+
+\textbf{Cubic Hermite element $k=3$.}
+We again take $K$ a triangle with vertices $a_1,a_2,a_3$.
+\begin{itemize}
+    \item $K$: same triangle.
+    \item $P_H := \mathbb{P}_3(K)$, the polynomials of total degree $\le 3$ on $K$.
+          In 2D $\dim \mathbb{P}_3 = 10$.
+    \item Let $b$ be the barycenter of $K$:
+          \[
+              b := \frac{1}{3}(a_1+a_2+a_3).
+          \]
+          Define the nodal functionals $N_H$ by:
+          \begin{itemize}
+              \item at each vertex $a_i$:
+                    \[
+                        N_{i,0}(v) := v(a_i), \qquad
+                        N_{i,1}(v) := \partial_x v(a_i), \qquad
+                        N_{i,2}(v) := \partial_y v(a_i), \quad i=1,2,3,
+                    \]
+                    where $\partial_x,\partial_y$ are partial derivatives
+                    in the global coordinate directions;
+              \item plus one interior degree of freedom:
+                    \[
+                        N_b(v) := v(b).
+                    \]
+          \end{itemize}
+          This gives $3\times 3 + 1 = 10$ linearly independent degrees of freedom.
+\end{itemize}
+Sketch: in addition to marking the three vertices, one indicates at each vertex
+the function value and two “derivative arrows'' corresponding to
+$\partial_x v$ and $\partial_y v$, and a further node at the barycenter
+for the value $v(b)$.
+\textbf{(SE FORMELARK FOR FIGURER)}
+\subsection*{(c) Hyperplane (definition / heuristic).}
+A \textbf{hyperplane} in $\mathbb{R}^n$ is an affine subspace of codimension one, i.e.
+a set of the form
+\[
+    L = \{ x \in \mathbb{R}^n : a \cdot x = \beta\},
+\]
+where $a \in \mathbb{R}^n$, $a \neq 0$, and $\beta \in \mathbb{R}$.
+Heuristically, in $\mathbb{R}^2$ a hyperplane is a straight line, in $\mathbb{R}^3$
+it is an ordinary plane, and in higher dimensions it is the “flat” generalisation
+of these objects.
+
+\subsection*{(d) Quadratic Lagrange element satisfies Ciarlet's definition.}
+We must check that $(K,P_L,N_L)$ with
+$P_L = \mathbb{P}_2(K)$ and $N_L$ as in (b) is a finite element.
+\textbf{Geometric and space conditions.}
+\begin{itemize}
+    \item $K$ is a closed, bounded triangle with nonempty interior and piecewise smooth boundary,
+          so the geometric condition is satisfied.
+    \item $P_L = \mathbb{P}_2(K)$ is a finite-dimensional space of functions on $K$, with
+          $\dim P_L = 6$.
+\end{itemize}
+\textbf{Nodal functionals form a basis of $P_L^\ast$.}
+The set $N_L$ has six functionals, so to show $N_L$ is a basis of $P_L^\ast$ it is enough to show
+that $N_L$ \textbf{determines} $P_L$, i.e.
+\[
+    p \in \mathbb{P}_2(K),\; N_L(p) = 0\ \forall N \in N_L
+    \quad \Longrightarrow \quad p \equiv 0 \text{ on } K.
+\]
+Assume $p \in \mathbb{P}_2(K)$ and
+\[
+    p(a_i) = 0,\quad p(m_i) = 0, \qquad i=1,2,3,
+\]
+where $a_i$ are the vertices and $m_i$ the midpoints of the edges.
+Fix an edge, say $e_3$ connecting $a_1$ to $a_2$; let $L_3=0$ be an affine equation
+for the line containing $e_3$.
+Restrict $p$ to that edge:
+\[
+    \tilde p(t) := p(\gamma_3(t)), \qquad t \in [0,1],
+\]
+where $\gamma_3$ parametrises $e_3$ from $a_1$ to $a_2$.
+Then $\tilde p$ is a one-dimensional polynomial of degree $\le 2$
+and we know
+\[
+    \tilde p(0) = p(a_1) = 0,\quad
+    \tilde p(1) = p(a_2) = 0,\quad
+    \tilde p(1/2) = p(m_3) = 0.
+\]
+A quadratic polynomial in one variable with three distinct zeros is identically zero,
+so $\tilde p \equiv 0$ on $[0,1]$, i.e. $p \equiv 0$ on $e_3$.
+By the \textbf{deconstruction lemma} applied to the hyperplane $L_3=0$, we conclude that
+\[
+    p = L_3 q_3,
+\]
+where $q_3$ is a polynomial of total degree $\le 1$ on $K$ (linear or constant).
+We may repeat the same argument on another edge, say $e_1$ with supporting line $L_1=0$.
+Again $p$ vanishes at $a_2,a_3$ and at the midpoint $m_1$, so $p$ vanishes on $e_1$ and
+\[
+    p = L_1 q_1,
+\]
+with $\deg q_1 \le 1$ by the deconstruction lemma.
+Combining the two factorizations, we have
+\[
+    p = L_3 q_3 = L_1 q_1.
+\]
+Because $L_1$ and $L_3$ correspond to two \textbf{distinct} lines (hyperplanes),
+they are linearly independent linear functions and share no common nontrivial factor.
+Thus $L_1$ must divide $q_3$. Since $\deg q_3 \le 1$, we must have
+\[
+    q_3 = c\,L_1
+\]
+for some constant $c\in\mathbb{R}$, and hence
+\[
+    p = c\,L_1 L_3,
+\]
+so $p$ is (at most) a scalar multiple of $L_1L_3$, a quadratic polynomial vanishing on $e_1 \cup e_3$.
+
+Now use that $p$ also vanishes at the midpoint $m_2$ of $e_2$.
+
+The point $m_2$ lies on the third edge $e_2$, which is \textbf{not} contained in either line $L_1$ or $L_3$, so $L_1(m_2)$ and $L_3(m_2)$ are both non-zero. Therefore
+\[
+    p(m_2) \;=\; c\,L_1(m_2)\,L_3(m_2) \;=\; 0
+\]
+forces $c = 0$. It follows that $p \equiv 0$ on $K$.
+
+Hence $N_L$ determines $P_L$ and, since $\#N_L=\dim P_L$, the functionals $N_L$ form a basis of $P_L^\ast$. Thus $(K,P_L,N_L)$ is a finite element in the sense of Ciarlet.
+
+\subsection*{(e) Cubic Hermite element $k = 3$ satisfies Ciarlet's.}
+We show that $(K,P_H,N_H)$ with $P_H=\mathbb{P}_3(K)$ and $N_H$ as in (b) is a finite element.
+\textbf{Geometric and space conditions.}
+\begin{itemize}
+    \item $K$ is again a closed, bounded triangle with nonempty interior, suitable as in Ciarlet's definition.
+    \item $P_H = \mathbb{P}_3(K)$ is a finite-dimensional function space on $K$, with
+          $\dim P_H = 10$.
+\end{itemize}
+\textbf{Dimension and nodal functionals.}
+By construction,
+\[
+    N_H = \{v(a_i),\,\partial_x v(a_i),\,\partial_y v(a_i)\ (i=1,2,3),\ v(b)\}
+\]
+contains $3\times 3 + 1 = 10$ linear functionals, so $\#N_H = \dim P_H$.
+It remains to prove that $N_H$ \textbf{determines} $P_H$, i.e. unisolvency:
+\[
+    p \in \mathbb{P}_3(K),\ N_H(p) = 0 \ \forall N \in N_H
+    \quad \Longrightarrow \quad p \equiv 0 \text{ on } K.
+\]
+\textbf{Reduction to the reference triangle.}
+Let $\widehat K$ be the reference triangle with vertices
+\[
+    \hat a_1 = (0,0),\quad \hat a_2 = (1,0),\quad \hat a_3 = (0,1),
+\]
+and let $\hat b = (1/3,1/3)$ be its barycenter.
+Any nondegenerate triangle $K$ is the affine image of $\widehat K$ by a mapping
+\[
+    F(\hat x) = B \hat x + c,
+\]
+where $B$ is an invertible $2\times 2$ matrix and $c\in\mathbb{R}^2$.
+Composition with $F$ defines an isomorphism
+\[
+    \mathbb{P}_3(K) \to \mathbb{P}_3(\widehat K),\qquad
+    p \mapsto \hat p := p\circ F.
+\]
+Values and first derivatives transform linearly under $F$, so
+$N_H$ determines $P_H$ on $K$ if and only if the corresponding set
+$\widehat N_H$ of nodal functionals determines $\mathbb{P}_3(\widehat K)$.
+Thus it suffices to work on $\widehat K$.
+On the reference triangle we therefore consider
+\[
+    \widehat P_H := \mathbb{P}_3(\widehat K),
+    \quad \dim \widehat P_H = 10,
+\]
+with degrees of freedom
+\[
+    \widehat N_H =
+    \{\hat p(\hat a_i),\ \partial_x \hat p(\hat a_i),\ \partial_y \hat p(\hat a_i)\ (i=1,2,3),\
+    \hat p(\hat b)\}.
+\]
+\textbf{Unisolvency on the reference triangle.}
+Write a general cubic polynomial in two variables as
+\[
+    \hat p(x,y) = a_0
+    + a_1 x + a_2 y
+    + a_3 x^2 + a_4 xy + a_5 y^2
+    + a_6 x^3 + a_7 x^2 y + a_8 xy^2 + a_9 y^3.
+\]
+This has 10 unknown coefficients $a_0,\dots,a_9$.
+Imposing the conditions
+\[
+    \hat p(\hat a_i) = 0,\quad
+    \partial_x \hat p(\hat a_i) = 0,\quad
+    \partial_y \hat p(\hat a_i) = 0,\quad i=1,2,3,
+    \quad \text{and}\quad \hat p(\hat b) = 0,
+\]
+gives a system of 10 homogeneous linear equations in the 10 variables $a_0,\dots,a_9$:
+\[
+    M \mathbf{a} = 0,
+\]
+where $\mathbf{a} = (a_0,\dots,a_9)^T$ and $M$ is a $10\times 10$ matrix whose entries are
+obtained by substituting the coordinates of the nodes and evaluating the derivatives.
+One can compute (by straightforward but tedious algebra) that
+\[
+    \det M = -\frac{1}{27} \neq 0.
+\]
+Hence the only solution is $\mathbf{a} = 0$, i.e.\ all coefficients vanish and so
+$\hat p \equiv 0$ on $\widehat K$.
+Therefore $\widehat N_H$ determines $\widehat P_H$ and so $N_H$ determines $P_H$
+on an arbitrary nondegenerate triangle $K$.
+\textbf{Conclusion.}
+We have:
+\begin{itemize}
+    \item $K$ is an admissible element domain;
+    \item $P_H=\mathbb{P}_3(K)$ is finite-dimensional;
+    \item $N_H$ is a set of $\dim P_H$ linearly independent linear functionals,
+          hence a basis of $P_H^\ast$.
+\end{itemize}
+Thus $(K,P_H,N_H)$ satisfies Ciarlet's definition of a finite element.

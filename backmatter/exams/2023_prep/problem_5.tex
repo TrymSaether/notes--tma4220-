@@ -1,0 +1,329 @@
+\section*{[2023 PREP EXAM] Problem 5: Ritz projection, error estimates for the heat equation}
+We consider the semi-discrete (in space) heat equation: find
+\(u_h \in C^1([0,T];V_h)\) such that
+\[
+    \langle u_{h,t}(t),v_h\rangle + \langle \nabla u_h(t),\nabla v_h\rangle
+    = \langle f(t),v_h\rangle \quad \forall v_h\in V_h,\ \forall t\in(0,T), \tag{\text{semi}}
+\]
+with initial condition
+\[
+    u_h(0,x) = \Pi_{V_h} u_0(x), \tag{\text{semi-init}}
+\]
+where \(\Pi_{V_h}:H^1(\Omega)\to V_h\) is the \(L^2\)-projection and
+\(V_h\subset H^1_0(\Omega)\).
+We denote \((\cdot,\cdot) := \langle\cdot,\cdot\rangle\) the \(L^2(\Omega)\) inner product
+and use the shorthand
+\[
+    \|v\| := \|v\|_{L^2(\Omega)},\qquad |v|_1 := \|\nabla v\|_{L^2(\Omega)}.
+\]
+The elliptic bilinear form is
+\[
+    a(u,v) := (\nabla u,\nabla v) \quad \text{for } u,v\in H^1_0(\Omega).
+\]
+The \emph{Ritz projection} \(R_h:H^1_0(\Omega)\to V_h\) is defined by
+\[
+    a(R_h v - v,\chi) = 0 \quad \forall \chi\in V_h. \tag{\text{Ritz-def}}
+\]
+We are also given a regularity/approximation assumption:
+for a family of regular triangulations \(\{T_h\}\) and corresponding FE spaces
+\(V_h\subset H^1_0(\Omega)\), there exist \(r\ge 2\) and \(C>0\) such that
+for \(1\le s\le r\) and small enough \(h\),
+\[
+    \inf_{\chi\in V_h} \bigl(\|u_0 - \chi\| + h\,|\nabla(u_0 - \chi)|_0\bigr)
+    \;\le\; C h^s \|u_0\|_{H^s(\Omega)},
+    \qquad u_0\in H^s(\Omega)\cap H^1_0(\Omega). \tag{\text{reg-ass}}
+\]
+\subsection*{(a) Stability of the Ritz projection in the $H^1$ semi-norm}
+We want to prove
+\[
+    |R_h v|_1 \le |v|_1 \quad \forall v\in H^1_0(\Omega).
+\]
+Let \(v\in H^1_0(\Omega)\) and set \(w_h := R_h v \in V_h\).
+By the definition (reg-ass), choosing \(\chi = w_h\) gives
+\[
+    a(R_h v - v, w_h) = 0
+    \quad\Longrightarrow\quad
+    a(w_h,w_h) = a(v,w_h).
+\]
+Expanding \(a\),
+\[
+    (\nabla w_h,\nabla w_h) = (\nabla v,\nabla w_h).
+\]
+The left-hand side is \(|w_h|_1^2\), so
+\[
+    |w_h|_1^2 = (\nabla v,\nabla w_h)
+    \le |\nabla v|_0 |\nabla w_h|_0
+    = |v|_1\,|w_h|_1,
+\]
+where we used the Cauchy--Schwarz inequality.
+If \(|w_h|_1 = 0\) there is nothing to prove (then \(R_h v\equiv 0\), so
+\(|R_h v|_1 = 0 \le |v|_1\)).
+Otherwise, divide by \(|w_h|_1>0\):
+\[
+    |w_h|_1 \le |v|_1.
+\]
+Thus
+\[
+    \boxed{|R_h v|_1 \le |v|_1 \quad \forall v\in H^1_0(\Omega),}
+\]
+i.e.\ the Ritz projection is stable in the \(H^1\) semi-norm.
+\subsection*{(b) Optimal $H^1$-semi-norm convergence of $R_h$}
+We want to show that for smooth enough \(v\in H^s(\Omega)\cap H^1_0(\Omega)\),
+\(1\le s\le r\), the Ritz projection converges \emph{optimally} in the
+\(H^1\)-semi-norm:
+\[
+    |v - R_h v|_1 \le C h^{s-1} \|v\|_{H^s(\Omega)}.
+\]
+\textbf{Best-approximation property.}
+Let \(v\in H^1_0(\Omega)\), and let \(e := v - R_h v\).
+By (ritz-def), for all \(\chi\in V_h\),
+\[
+    a(e,\chi) = a(v - R_h v, \chi) = 0.
+\]
+In particular,
+\[
+    a(e,e) = a(e, v - R_h v)
+    = a(e, v - \chi) + a(e,\chi - R_h v).
+\]
+But \(\chi - R_h v \in V_h\), so \(a(e,\chi - R_h v)=0\). Hence
+\[
+    a(e,e) = a(e, v - \chi) \quad \forall \chi\in V_h.
+\]
+Using Cauchy--Schwarz for \(a(\cdot,\cdot)\) in the \(H^1\)-semi-norm:
+\[
+    |e|_1^2 = a(e,e) = a(e, v - \chi)
+    \le |e|_1\,|v - \chi|_1.
+\]
+If \(e\neq 0\), divide by \(|e|_1\):
+\[
+    |v - R_h v|_1 = |e|_1 \le |v - \chi|_1 \quad \forall \chi\in V_h.
+\]
+Therefore,
+\[
+    |v - R_h v|_1 \le \inf_{\chi\in V_h} |v - \chi|_1. \tag{\text{best-approx}}
+\]
+\textbf{Use of the approximation/regularity assumption.}
+Let \(v\in H^s(\Omega)\cap H^1_0(\Omega)\), with \(1\le s\le r\).
+By the assumption (reg-ass), for each such \(v\) there exists some
+\(\chi_h\in V_h\) (approximately attaining the infimum) such that
+\[
+    \|v - \chi_h\| + h\,|\nabla(v - \chi_h)|_0
+    \;\le\; C h^s \|v\|_{H^s(\Omega)}.
+\]
+In particular,
+\[
+    h\,|v - \chi_h|_1
+    = h \|\nabla(v - \chi_h)\|_0
+    \le C h^s \|v\|_{H^s(\Omega)},
+\]
+so
+\[
+    |v - \chi_h|_1 \le C h^{s-1} \|v\|_{H^s(\Omega)}.
+\]
+Since
+\[
+    \inf_{\chi\in V_h} |v - \chi|_1 \le |v - \chi_h|_1,
+\]
+combining with (best-approx) yields
+\[
+    |v - R_h v|_1
+    \le \inf_{\chi\in V_h} |v - \chi|_1
+    \le C h^{s-1} \|v\|_{H^s(\Omega)}.
+\]
+Thus, for \(1\le s\le r\),
+\[
+    \boxed{
+        |v - R_h v|_1 \le C h^{s-1} \|v\|_{H^s(\Omega)}
+    }
+\]
+which is the \emph{optimal} order in \(H^1\)-semi-norm (matching the standard FE interpolation
+order).
+\subsection*{(c) Parabolic error splitting and an $L^2$-error estimate}
+We split the total error into elliptic and parabolic parts:
+\[
+    u_h(t) - u(t)
+    = \underbrace{u_h(t) - R_h u(t)}_{\theta(t)}
+    + \underbrace{R_h u(t) - u(t)}_{\rho(t)}
+    =: \theta(t) + \rho(t).
+\]
+We will prove the first of the two proposed estimates:
+\emph{Claim:} Let \(u\in C^1([0,T];H^s(\Omega))\), \(1\le s\le r\), solve the heat equation
+\[
+    (u_t,v) + a(u,v) = (f,v)\quad \forall v\in H^1_0(\Omega),
+\]
+and let \(u_h\) be the semi-discrete solution (semi)--(semi-init).
+Assume the regularity/approximation condition (reg-ass) and that
+the Ritz projection satisfies the optimal \(L^2\) estimate
+\[
+    \|w - R_h w\| \le C h^s \|w\|_{H^s(\Omega)}
+    \quad\text{for } w\in H^s(\Omega)\cap H^1_0(\Omega),\ 1\le s\le r. \tag{\text{Ritz-L2}}
+\]
+Then, for all \(t\in[0,T]\),
+\[
+    \|u_h(t) - u(t)\|
+    \le \|\Pi_{V_h}u_0 - u_0\|
+    + C h^s\Bigl(\|u_0\|_{H^s(\Omega)}
+    + \int_0^t \|u_\tau(\tau)\|_{H^s(\Omega)}\,d\tau\Bigr). \tag{\text{L2-final}}
+\]
+\textbf{Step 1: Error equation for $\theta$.}
+The continuous weak form is:
+\[
+    (u_t(t),v) + a(u(t),v) = (f(t),v) \quad \forall v\in H^1_0(\Omega).
+\]
+The semi-discrete form is:
+\[
+    (u_{h,t}(t),v_h) + a(u_h(t),v_h) = (f(t),v_h) \quad \forall v_h\in V_h.
+\]
+Subtracting and restricting to test functions \(v_h\in V_h\), we obtain
+\[
+    (u_{h,t} - u_t, v_h) + a(u_h - u, v_h) = 0
+    \quad \forall v_h\in V_h.
+\]
+Write \(u_h - u = \theta + \rho\) and \(u_{h,t} - u_t = \theta_t + \rho_t\):
+\[
+    (\theta_t + \rho_t, v_h) + a(\theta + \rho, v_h) = 0
+    \quad\forall v_h\in V_h.
+\]
+By definition of the Ritz projection,
+\[
+    a(\rho(t), v_h) = a(R_h u(t) - u(t),v_h) = 0
+    \quad \forall v_h\in V_h,\ \forall t,
+\]
+so $a(\rho,v_h)$ vanishes. Hence
+\[
+    (\theta_t,v_h) + (\rho_t,v_h) + a(\theta,v_h) = 0
+    \quad\forall v_h\in V_h.
+\]
+Take \(v_h = \theta(t)\in V_h\):
+\[
+    (\theta_t,\theta) + (\rho_t,\theta) + a(\theta,\theta) = 0.
+\]
+Note
+\[
+    (\theta_t,\theta) = \frac{1}{2}\frac{d}{dt}\|\theta(t)\|^2,
+    \qquad
+    a(\theta,\theta) = |\theta(t)|_1^2.
+\]
+Thus
+\[
+    \frac{1}{2}\frac{d}{dt}\|\theta(t)\|^2 + |\theta(t)|_1^2
+    = -(\rho_t(t),\theta(t)). \tag{\text{theta-energy}}
+\]
+\textbf{Step 2: Differential inequality for $\|\theta(t)\|$.}
+Using Cauchy--Schwarz in (theta-energy):
+\[
+    |(\rho_t(t),\theta(t))| \le \|\rho_t(t)\|\,\|\theta(t)\|.
+\]
+Dropping the nonnegative term $|\theta(t)|_1^2$ gives
+\[
+    \frac{1}{2}\frac{d}{dt}\|\theta(t)\|^2
+    \le \|\rho_t(t)\|\,\|\theta(t)\|.
+\]
+When $\|\theta(t)\|\neq 0$, we can divide by $\|\theta(t)\|$ and use
+\[
+    \frac{d}{dt}\|\theta(t)\|
+    = \frac{1}{\|\theta(t)\|}\frac{d}{dt}\Bigl(\frac12\|\theta(t)\|^2\Bigr),
+\]
+to obtain
+\[
+    \frac{d}{dt}\|\theta(t)\| \le \|\rho_t(t)\|.
+\]
+Integrating from $0$ to $t$:
+\[
+    \|\theta(t)\| \le \|\theta(0)\| + \int_0^t \|\rho_\tau(\tau)\|\,d\tau. \tag{\text{theta-bound}}
+\]
+\textbf{Step 3: Initial value $\theta(0)$ and bounds for $\rho$.}
+By definition,
+\[
+    \theta(0) = u_h(0) - R_h u(0) = \Pi_{V_h}u_0 - R_h u_0.
+\]
+Hence
+\[
+    \|\theta(0)\|
+    \le \|\Pi_{V_h}u_0 - u_0\| + \|u_0 - R_h u_0\|
+    = \|\Pi_{V_h}u_0 - u_0\| + \|\rho(0)\|.
+\]
+Next, recall \(\rho(t) = R_h u(t) - u(t)\) and
+\(\rho_t(t) = R_h u_t(t) - u_t(t)\).
+Using the \(L^2\)-estimate (Ritz-L2), for each \(t\in[0,T]\),
+\[
+    \|\rho(t)\| = \|R_h u(t) - u(t)\|
+    \le C h^s \|u(t)\|_{H^s(\Omega)},
+\]
+\[
+    \|\rho_t(t)\| = \|R_h u_t(t) - u_t(t)\|
+    \le C h^s \|u_t(t)\|_{H^s(\Omega)}.
+\]
+In particular,
+\[
+    \|\rho(0)\| \le C h^s \|u_0\|_{H^s(\Omega)}.
+\]
+\textbf{Step 4: Bound $\|u(t)\|_{H^s}$ in terms of $\|u_0\|_{H^s}$ and $u_t$.}
+For each $t\in[0,T]$, by the fundamental theorem of calculus in $H^s(\Omega)$,
+\[
+    u(t) = u_0 + \int_0^t u_\tau(\tau)\,d\tau,
+\]
+hence
+\[
+    \|u(t)\|_{H^s}
+    \le \|u_0\|_{H^s} + \int_0^t \|u_\tau(\tau)\|_{H^s}\,d\tau.
+\]
+Therefore,
+\[
+    \|\rho(t)\|
+    \le C h^s\Bigl(\|u_0\|_{H^s} + \int_0^t \|u_\tau(\tau)\|_{H^s}\,d\tau\Bigr),
+\]
+and
+\[
+    \int_0^t \|\rho_\tau(\tau)\|\,d\tau
+    \le C h^s \int_0^t \|u_\tau(\tau)\|_{H^s}\,d\tau.
+\]
+\textbf{Step 5: Combine bounds for the total error.}
+Recall
+\[
+    e(t) := u_h(t) - u(t) = \theta(t) + \rho(t),
+\]
+so
+\[
+    \|e(t)\|\le \|\theta(t)\| + \|\rho(t)\|.
+\]
+Using (theta-bound) and the bounds above,
+\[
+    \begin{aligned}
+        \|\theta(t)\|
+         & \le \|\Pi_{V_h}u_0 - u_0\| + \|\rho(0)\|
+        + \int_0^t \|\rho_\tau(\tau)\|\,d\tau       \\
+         & \le \|\Pi_{V_h}u_0 - u_0\|
+        + C h^s \|u_0\|_{H^s}
+        + C h^s \int_0^t \|u_\tau(\tau)\|_{H^s}\,d\tau.
+    \end{aligned}
+\]
+Thus
+\[
+    \begin{aligned}
+        \|u_h(t) - u(t)\|
+         & \le \|\theta(t)\| + \|\rho(t)\|             \\
+         & \le \|\Pi_{V_h}u_0 - u_0\|
+        + C h^s \|u_0\|_{H^s}
+        + C h^s \int_0^t \|u_\tau(\tau)\|_{H^s}\,d\tau \\
+         & \quad
+        + C h^s \Bigl(\|u_0\|_{H^s} + \int_0^t \|u_\tau(\tau)\|_{H^s}\,d\tau\Bigr).
+    \end{aligned}
+\]
+Absorbing constants (and the two identical \(h^s\)-terms) into a new \(C\), we obtain
+\[
+    \|u_h(t) - u(t)\|
+    \le \|\Pi_{V_h}u_0 - u_0\|
+    + C h^s \Bigl(\|u_0\|_{H^s} + \int_0^t \|u_\tau(\tau)\|_{H^s}\,d\tau\Bigr),
+\]
+which is exactly (L2-final).
+Thus we have:
+\[
+    \boxed{
+        \|u_h(t) - u(t)\|
+        \le \|\Pi_{V_h}u_0 - u_0\|
+        + C h^s\Bigl(\|u_0\|_{H^s(\Omega)} + \int_0^t \|u_\tau(\tau)\|_{H^s(\Omega)}\,d\tau\Bigr)
+    }
+\]
+for all \(t\in[0,T]\), proving the first of the requested parabolic a priori error estimates.
+

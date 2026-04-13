@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+    \draw[thick, color=green, fill=green!90!black, fill opacity=0.4] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+    \node[below] at (0, 0) {$z_1$};
+    \node[below] at (4, 0) {$z_2$};
+    \node[above] at (2, 3) {$z_3$};
+
+    \filldraw[black] (0, 0) circle (2pt);
+    \filldraw[black] (4, 0) circle (2pt);
+    \filldraw[black] (2, 3) circle (2pt);
+
+    % Include labels for edges L_i
+    \node[below] at (2, 0) {$L_1$};
+    \node[right] at (3, 1.5) {$L_2$};
+    \node[left] at (1, 1.5) {$L_3$};
+\end{tikzpicture}

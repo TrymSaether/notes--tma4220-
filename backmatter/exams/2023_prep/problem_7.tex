@@ -1,0 +1,345 @@
+\section*{[2023 PREP EXAM] Problem 7: Interior penalty disc. Galerkin method for the Poisson}
+We consider the (symmetric) interior penalty (IP) discontinuous Galerkin
+approximation of the Poisson problem
+\[
+    \begin{cases}
+        - \Delta u = f & \text{in }\Omega,         \\
+        u = 0          & \text{on }\partial\Omega,
+    \end{cases}
+\]
+in the nonconforming space $V_h \not\subset H^1_0(\Omega)$:
+find $u_h \in V_h(\Omega)$ such that
+\[
+    a_h(u_h,v_h) = \langle f,v_h\rangle
+    \quad \forall v_h \in V_h(\Omega), \tag{7}
+\]
+where
+\[
+    \begin{aligned}
+        a_h(u_h,v_h) & =
+        \sum_{T\in \mathcal{P}_h} \int_T \nabla u_h \cdot \nabla v_h\,dx \\
+                     & \quad - \sum_{e\in \mathcal{E}_h} \int_e
+        \Big( \{\nabla u_h\}\cdot \jump{v_h} + \{\nabla v_h\}\cdot \jump{u_h} \Big)\,ds
+        + \sum_{e\in \mathcal{E}_h} \frac{\eta}{|e|} \int_e \jump{u_h}\cdot \jump{v_h}\,ds.
+    \end{aligned}\tag{8}
+\]
+Here $\mathcal{P}_h$ is the set of mesh elements and $\mathcal{E}_h$ the set of faces/edges,
+and $\eta>0$ is a sufficiently large penalty parameter.
+\subsection*{(a) Consistency, symmetry and penalty terms}
+The three face terms in (8) are:
+\[
+    - \sum_{e} \int_e \{\nabla u_h\}\cdot \jump{v_h}\,ds,
+    \quad
+    - \sum_{e} \int_e \{\nabla v_h\}\cdot \jump{u_h}\,ds,
+    \quad
+    \sum_{e} \frac{\eta}{|e|} \int_e \jump{u_h}\cdot \jump{v_h}\,ds.
+\]
+\begin{itemize}
+    \item \textbf{Consistency term:}
+          \[
+              - \sum_{e\in \mathcal{E}_h} \int_e \{\nabla u_h\}\cdot \jump{v_h}\,ds.
+          \]
+          Heuristics: If $u$ is the exact (smooth) solution, then $u$ is continuous, so its
+          jump vanishes across all faces, while $\{\nabla u\}$ coincides with $\nabla u$
+          on each side.
+          When one performs elementwise integration by parts on
+          $\sum_T \int_T \nabla u\cdot \nabla v_h\,dx$, the boundary terms are precisely
+          represented by this face term. This makes the discrete formulation
+          \emph{consistent} with the continuous weak form (hence the name).
+    \item \textbf{Symmetry term:}
+          \[
+              - \sum_{e\in \mathcal{E}_h} \int_e \{\nabla v_h\}\cdot \jump{u_h}\,ds.
+          \]
+          This term is obtained by swapping $u_h$ and $v_h$ in the consistency term.
+          Together, the volume term and the two face terms
+          \[
+              \sum_T \int_T \nabla u_h\cdot\nabla v_h
+              - \sum_e \int_e (\{\nabla u_h\}\cdot\jump{v_h}
+              + \{\nabla v_h\}\cdot\jump{u_h})
+          \]
+          are symmetric in $(u_h,v_h)$ (i.e.\ $a_h(u_h,v_h)=a_h(v_h,u_h)$ when we
+          include the last term as well). This is why the second face term is called
+          the \emph{symmetry} term.
+    \item \textbf{Penalty term:}
+          \[
+              \sum_{e\in \mathcal{E}_h} \frac{\eta}{|e|} \int_e \jump{u_h}\cdot \jump{v_h}\,ds.
+          \]
+          This term penalises discontinuities of the discrete solution across element faces.
+          The larger $\eta$ is, the more expensive it is (in the energy functional) for $u_h$
+          to have non-zero jumps. This restores coercivity in a suitable mesh-dependent norm,
+          hence the name \emph{penalty} term.
+\end{itemize}
+\subsection*{(b) Definitions of jump and average}
+Let $e\in\mathcal{E}_h$ be an interior face shared by two elements
+$T^+$ and $T^-$. Choose a unit normal $n_e$ pointing from $T^+$ to $T^-$, and let
+\[
+    v_h^\pm := v_h\big|_{T^\pm}.
+\]
+For a \emph{scalar} function $v_h$, we define:
+\begin{align*}
+    \jump{v_h}
+     & := v_h^+ n_e - v_h^- n_e
+    = (v_h^+ - v_h^-)\,n_e \quad \text{(vector-valued normal jump)}, \\
+    \{v_h\}
+     & := \frac{1}{2}\big(v_h^+ + v_h^-\big).
+\end{align*}
+For its gradient (a vector field), we usually take the componentwise average
+\[
+    \{\nabla v_h\} := \frac{1}{2}\big(\nabla v_h^+ + \nabla v_h^-\big).
+\]
+On a \emph{boundary} face $e\subset\partial\Omega$, there is only one
+adjacent element $T^+$.
+We interpret the outside value as zero (Dirichlet boundary) and define
+\[
+    \jump{v_h} := v_h^+ n, \qquad
+    \{\nabla v_h\} := \nabla v_h^+,
+\]
+where $n$ is the outward unit normal of $\partial\Omega$.
+These conventions make all terms in (8) well-defined for all faces $e\in\mathcal{E}_h$.
+\subsection*{(c) Consistency of the interior penalty bilinear form}
+We must show: if $u\in H^2(\Omega)\cap H^1_0(\Omega)$ solves
+\[
+    - \Delta u = f \quad\text{in }\Omega,
+\]
+then
+\[
+    a_h(u,v_h) = \int_\Omega f v_h\,dx
+    \quad \forall v_h\in V_h,
+\]
+i.e.\ the discrete formulation is consistent with the continuous strong form.
+Let $u$ be the exact solution.
+Since $u$ is continuous with continuous traces and $u=0$ on $\partial\Omega$,
+we have
+\[
+    \jump{u} = 0 \quad \text{on all faces } e\in\mathcal{E}_h.
+\]
+Therefore, in (8) we obtain, for any $v_h\in V_h$,
+\[
+    a_h(u,v_h)
+    = \sum_{T} \int_T \nabla u\cdot \nabla v_h\,dx
+    - \sum_{e} \int_e \{\nabla u\}\cdot \jump{v_h}\,ds,
+\]
+since the symmetry and penalty terms involve $\jump{u}$ and hence vanish.
+Now use integration by parts on each element $T$:
+\[
+    \int_T \nabla u\cdot \nabla v_h\,dx
+    = - \int_T (\Delta u)\, v_h\,dx + \int_{\partial T} \partial_{n_T}u\, v_h\,ds,
+\]
+where $n_T$ is the outward unit normal on $\partial T$.
+Summing over all $T\in\mathcal{P}_h$:
+\[
+    \sum_T \int_T \nabla u\cdot \nabla v_h
+    = - \sum_T \int_T (\Delta u)\, v_h
+    + \sum_T \int_{\partial T} \partial_{n_T}u\, v_h.
+\]
+The boundary term $\sum_T\int_{\partial T} \partial_{n_T}u\, v_h$ can be
+re-written as a sum over all faces $e\in\mathcal{E}_h$.
+On an interior face $e$ shared by $T^+$ and $T^-$,
+\[
+    \int_{\partial T^+} \partial_{n^+}u\, v_h
+    + \int_{\partial T^-} \partial_{n^-}u\, v_h
+    = \int_e (\nabla u)^+\cdot n_e\, v_h^+\,ds
+    + \int_e (\nabla u)^-\cdot (-n_e)\, v_h^-\,ds.
+\]
+But $\{\nabla u\} = \frac{1}{2}((\nabla u)^+ + (\nabla u)^-)$ and
+$\jump{v_h} = v_h^+ n_e - v_h^- n_e$, so
+\[
+    \int_e \{\nabla u\}\cdot \jump{v_h}\,ds
+    = \frac{1}{2}\int_e (\nabla u)^+\cdot n_e (v_h^+ - v_h^-)
+    + (\nabla u)^-\cdot n_e (v_h^+ - v_h^-)\,ds,
+\]
+and one checks that
+\[
+    \sum_{T} \int_{\partial T}  \partial_{n_T}u\, v_h
+    = \sum_{e\in\mathcal{E}_h} \int_e \{\nabla u\}\cdot \jump{v_h}\,ds.
+\]
+(Interior contributions appear twice with opposite orientations and
+combine into the average--jump expression; on boundary faces $e\subset\partial\Omega$,
+we use $\{\nabla u\} = \nabla u$, $\jump{v_h}=v_h n$.)
+Therefore
+\[
+    \sum_T \int_T \nabla u\cdot \nabla v_h
+    - \sum_e \int_e \{\nabla u\}\cdot \jump{v_h}
+    = - \sum_T \int_T (\Delta u)\, v_h\,dx.
+\]
+So
+\[
+    a_h(u,v_h)
+    = - \sum_T \int_T (\Delta u)\, v_h\,dx
+    = \int_\Omega f v_h\,dx,
+\]
+since $- \Delta u = f$ in $\Omega$.
+Thus $a_h$ is \emph{consistent} with the Poisson equation.
+\subsection*{(d) Mesh-dependent norm for ellipticity}
+The interior penalty bilinear form is elliptic with respect to the standard DG/IP
+energy norm
+\[
+    \|v_h\|_{IP}^2
+    := \sum_{T\in\mathcal{P}_h} \|\nabla v_h\|_{L^2(T)}^2
+    + \sum_{e\in\mathcal{E}_h} \frac{\eta}{|e|}\,\|\jump{v_h}\|_{L^2(e)}^2.
+\]
+That is, for sufficiently large $\eta$, there exists $\alpha>0$ such that
+\[
+    a_h(v_h,v_h) \;\ge\; \alpha\,\|v_h\|_{IP}^2
+    \quad \forall v_h\in V_h.
+\]
+\subsection*{(e) Continuity of $a_h(\cdot,\cdot)$ in the IP-norm}
+We show that there exists $C>0$ independent of $h$ such that
+\[
+    |a_h(u_h,v_h)| \le C \|u_h\|_{IP}\,\|v_h\|_{IP}
+    \quad \forall u_h,v_h\in V_h.
+\]
+Write $a_h$ term-by-term:
+\[
+    \begin{aligned}
+        a_h(u_h,v_h)
+         & = \underbrace{\sum_T \int_T \nabla u_h\cdot\nabla v_h}_{I_1}
+        - \underbrace{\sum_e \int_e \{\nabla u_h\}\cdot\jump{v_h}}_{I_2}
+        - \underbrace{\sum_e \int_e \{\nabla v_h\}\cdot\jump{u_h}}_{I_3}                        \\
+         & \quad + \underbrace{\sum_e \frac{\eta}{|e|} \int_e \jump{u_h}\cdot\jump{v_h}}_{I_4}.
+    \end{aligned}
+\]
+\underline{Volume term $I_1$.}
+By Cauchy--Schwarz,
+\[
+    |I_1|
+    \le \left(\sum_T \|\nabla u_h\|_{L^2(T)}^2\right)^{1/2}
+    \left(\sum_T \|\nabla v_h\|_{L^2(T)}^2\right)^{1/2}
+    \le \|u_h\|_{IP}\,\|v_h\|_{IP}.
+\]
+\underline{Flux term $I_2$.}
+Use Cauchy--Schwarz on each face and introduce $|e|$ and $1/|e|$:
+\[
+    \bigg|\int_e \{\nabla u_h\}\cdot\jump{v_h}\bigg|
+    \le \|\{\nabla u_h\}\|_{L^2(e)} \,\|\jump{v_h}\|_{L^2(e)}
+    = \frac{1}{\sqrt{|e|}}\big(\sqrt{|e|}\,\|\{\nabla u_h\}\|_{L^2(e)}\big)\,\|\jump{v_h}\|_{L^2(e)}.
+\]
+Then by Cauchy--Schwarz over all $e$,
+\[
+    |I_2|
+    \le \left(\sum_e |e|\,\|\{\nabla u_h\}\|_{L^2(e)}^2\right)^{1/2}
+    \left(\sum_e \frac{1}{|e|}\,\|\jump{v_h}\|_{L^2(e)}^2\right)^{1/2}.
+\]
+By the given lemma,
+\[
+    \sum_e |e|\,\|\{\nabla u_h\}\|_{L^2(e)}^2
+    \le C \sum_T \|\nabla u_h\|_{L^2(T)}^2.
+\]
+Therefore
+\[
+    |I_2|
+    \le C^{1/2} \left(\sum_T \|\nabla u_h\|_{L^2(T)}^2\right)^{1/2}
+    \left(\sum_e \frac{1}{|e|}\,\|\jump{v_h}\|_{L^2(e)}^2\right)^{1/2}.
+\]
+Since
+\[
+    \sum_e \frac{1}{|e|}\,\|\jump{v_h}\|_{L^2(e)}^2
+    \le \frac{1}{\eta} \sum_e \frac{\eta}{|e|}\,\|\jump{v_h}\|_{L^2(e)}^2
+    \le \frac{1}{\eta}\,\|v_h\|_{IP}^2,
+\]
+we obtain
+\[
+    |I_2| \le C\,\|u_h\|_{IP}\,\|v_h\|_{IP}
+\]
+(with a constant depending on the mesh regularity and $\eta$).
+\underline{Flux term $I_3$.}
+This is analogous to $I_2$ with $u_h$ and $v_h$ swapped, so
+\[
+    |I_3| \le C\,\|u_h\|_{IP}\,\|v_h\|_{IP}.
+\]
+\underline{Penalty term $I_4$.}
+Again Cauchy--Schwarz,
+\[
+    \left|\sum_e \frac{\eta}{|e|} \int_e \jump{u_h}\cdot\jump{v_h}\right|
+    \le \left(\sum_e \frac{\eta}{|e|}\,\|\jump{u_h}\|_{L^2(e)}^2\right)^{1/2}
+    \left(\sum_e \frac{\eta}{|e|}\,\|\jump{v_h}\|_{L^2(e)}^2\right)^{1/2}
+    \le \|u_h\|_{IP}\,\|v_h\|_{IP}.
+\]
+Collecting all terms,
+\[
+    |a_h(u_h,v_h)|
+    \le (1+C+C+1)\,\|u_h\|_{IP}\,\|v_h\|_{IP}
+    = C'\,\|u_h\|_{IP}\,\|v_h\|_{IP},
+\]
+so $a_h$ is continuous in the IP-norm.
+\subsection*{(f) Coercivity of $a_h(\cdot,\cdot)$ in the IP-norm}
+We prove that, for $\eta$ sufficiently large, there exists $\alpha>0$ such that
+\[
+    a_h(v_h,v_h) \ge \alpha \|v_h\|_{IP}^2 \quad\forall v_h\in V_h.
+\]
+Let $v_h\in V_h$. Then
+\[
+    \begin{aligned}
+        a_h(v_h,v_h)
+         & = \sum_T \|\nabla v_h\|_{L^2(T)}^2
+        - 2\sum_e \int_e \{\nabla v_h\}\cdot\jump{v_h}\,ds
+        + \sum_e \frac{\eta}{|e|}\,\|\jump{v_h}\|_{L^2(e)}^2.
+    \end{aligned}
+\]
+We bound the negative flux term using Young's inequality.
+For each face $e$,
+\[
+    2\left|\int_e \{\nabla v_h\}\cdot\jump{v_h}\right| \le 2\|\{\nabla v_h\}\|_{L^2(e)}\,\|\jump{v_h}\|_{L^2(e)}.
+\]
+Write this as
+\[
+    2\|\{\nabla v_h\}\|_{L^2(e)}\,\|\jump{v_h}\|_{L^2(e)} = 2\frac{1}{\sqrt{|e|}}\big(\sqrt{|e|}\,\|\{\nabla v_h\}\|_{L^2(e)}\big) \, \|\jump{v_h}\|_{L^2(e)}.
+\]
+Apply Young's inequality $2ab\le \varepsilon a^2 + \frac{1}{\varepsilon}b^2$ with
+$a = \sqrt{|e|}\,\|\{\nabla v_h\}\|_{L^2(e)}$,
+$b = \frac{1}{\sqrt{|e|}}\|\jump{v_h}\|_{L^2(e)}$:
+\[
+    2\|\{\nabla v_h\}\|_{L^2(e)}\,\|\jump{v_h}\|_{L^2(e)}
+    \le \varepsilon |e|\,\|\{\nabla v_h\}\|_{L^2(e)}^2
+    + \frac{1}{\varepsilon}\frac{1}{|e|}\,\|\jump{v_h}\|_{L^2(e)}^2.
+\]
+Summing over $e$,
+\[
+    2\sum_e \left|\int_e \{\nabla v_h\}\cdot\jump{v_h}\right|
+    \le \varepsilon \sum_e |e|\,\|\{\nabla v_h\}\|_{L^2(e)}^2
+    + \frac{1}{\varepsilon}\sum_e \frac{1}{|e|}\,\|\jump{v_h}\|_{L^2(e)}^2.
+\]
+Hence
+\[
+    - 2\sum_e \int_e \{\nabla v_h\}\cdot\jump{v_h}
+    \ge -\varepsilon \sum_e |e|\,\|\{\nabla v_h\}\|_{L^2(e)}^2
+    - \frac{1}{\varepsilon}\sum_e \frac{1}{|e|}\,\|\jump{v_h}\|_{L^2(e)}^2.
+\]
+Using the lemma,
+\[
+    \sum_e |e|\,\|\{\nabla v_h\}\|_{L^2(e)}^2
+    \le C \sum_T \|\nabla v_h\|_{L^2(T)}^2,
+\]
+we get
+\[
+    - 2\sum_e \int_e \{\nabla v_h\}\cdot\jump{v_h}
+    \ge -\varepsilon C \sum_T \|\nabla v_h\|_{L^2(T)}^2
+    - \frac{1}{\varepsilon}\sum_e \frac{1}{|e|}\,\|\jump{v_h}\|_{L^2(e)}^2.
+\]
+Therefore,
+\[
+    \begin{aligned}
+        a_h(v_h,v_h)
+         & \ge \sum_T \|\nabla v_h\|_{L^2(T)}^2
+        -\varepsilon C \sum_T \|\nabla v_h\|_{L^2(T)}^2                                                                \\
+         & \qquad + \sum_e \left(\frac{\eta}{|e|} - \frac{1}{\varepsilon}\frac{1}{|e|}\right)\|\jump{v_h}\|_{L^2(e)}^2 \\
+         & = (1 - \varepsilon C)\sum_T \|\nabla v_h\|_{L^2(T)}^2
+        + \sum_e \left(\frac{\eta - 1/\varepsilon}{|e|}\right)\|\jump{v_h}\|_{L^2(e)}^2.
+    \end{aligned}
+\]
+Now choose $\varepsilon>0$ small enough so that $1 - \varepsilon C \ge \tfrac{1}{2}$
+(e.g.\ $\varepsilon = 1/(2C)$), and then choose the penalty parameter $\eta$ large enough
+so that $\eta - 1/\varepsilon \ge \eta_0 > 0$ (for example, any $\eta > 1/\varepsilon$).
+Then
+\[
+    a_h(v_h,v_h)
+    \ge \frac{1}{2}\sum_T \|\nabla v_h\|_{L^2(T)}^2
+    + \eta_0\sum_e \frac{1}{|e|}\,\|\jump{v_h}\|_{L^2(e)}^2.
+\]
+This is exactly
+\[
+    a_h(v_h,v_h) \ge \alpha \|v_h\|_{IP}^2
+\]
+with some $\alpha>0$ independent of $h$ (but depending on $\eta$ and the mesh
+regularity through $C$).
+Thus $a_h(\cdot,\cdot)$ is coercive in the IP-norm.

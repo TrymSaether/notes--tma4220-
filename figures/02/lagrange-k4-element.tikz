@@ -1,0 +1,22 @@
+\begin{tikzpicture}[font=\small]
+    \draw[thick, fill=blue!50, fill opacity=0.3] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+    \draw[thick] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+    \filldraw[black] (0, 0) circle (2pt) node[below] {$z_1$};
+    \filldraw[black] (4, 0) circle (2pt) node[below] {$z_2$};
+    \filldraw[black] (2, 3) circle (2pt) node[above] {$z_3$};
+    % Edge nodes for k=4: three per edge
+    \filldraw[black] (1, 0) circle (2pt) node[below] {$z_4$};
+    \filldraw[black] (2, 0) circle (2pt) node[below] {$z_5$};
+    \filldraw[black] (3, 0) circle (2pt) node[below] {$z_6$};
+    \filldraw[black] (3.5, 0.75) circle (2pt) node[right] {$z_7$};
+    \filldraw[black] (3, 1.5) circle (2pt) node[right] {$z_8$};
+    \filldraw[black] (2.5, 2.25) circle (2pt) node[right] {$z_9$};
+    \filldraw[black] (0.5, 0.75) circle (2pt) node[left] {$z_{10}$};
+    \filldraw[black] (1, 1.5) circle (2pt) node[left] {$z_{11}$};
+    \filldraw[black] (1.5, 2.25) circle (2pt) node[left] {$z_{12}$};
+
+    % Interior nodes
+    \filldraw[black] (1.5, 1) circle (2pt) node[below] {$z_{13}$};
+    \filldraw[black] (2.5, 1) circle (2pt) node[below] {$z_{14}$};
+    \filldraw[black] (2, 1.75) circle (2pt) node[below] {$z_{15}$};
+\end{tikzpicture}

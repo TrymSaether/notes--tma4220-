@@ -1,0 +1,17 @@
+\begin{tikzpicture}
+    \draw[thick, fill=blue!50, fill opacity=0.4] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+    \filldraw[black] (0, 0) circle (2pt) node[below] at (0, 0) {$z_1$};
+    \filldraw[black] (4, 0) circle (2pt) node[below] at (4, 0) {$z_2$};
+    \filldraw[black] (2, 3) circle (2pt) node[above] at (2, 3) {$z_3$};
+    \draw[->, thick, black] (0,0) -- (1,0);
+    \draw[->, thick, black] (0,0) -- (0,1);
+    \draw[->, thick, black] (4,0) -- (5,0);
+    \draw[->, thick, black] (4,0) -- (4,1);
+    \draw[->, thick, black] (2,3) -- (3,3);
+    \draw[->, thick, black] (2,3) -- (2,4);
+
+    % Include labels for edges L_i
+    \node[below] at (2, 0) {$L_1$};
+    \node[right] at (3, 1.5) {$L_2$};
+    \node[left] at (1, 1.5) {$L_3$};
+\end{tikzpicture}

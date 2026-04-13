@@ -1,0 +1,38 @@
+\section*{Ceás lemma}
+
+Let $a(\cdot, \cdot)$ be $V$-elliptic and $g(\cdot)$ be a bounded linear functional on $V$. Let $u \in V$ satisfy:
+\[
+    a(u, v) = g(v) \quad \forall v \in V.
+\]
+Consider the finite dimensional subspace $V_h \subset V$, and let $u_h \in V_h$ s.t.
+\[
+    a(u_h, v_h) = g(v_h) \quad \forall v_h \in V_h.
+\]
+Then:
+\[
+    \|u - u_h\|_V \leq \frac{C_1}{C_0} \min_{v_h \in V_h} \|u - v_h\|_V
+\]
+
+\textbf{Proof:}
+Since $V_h \subset V$ we have:
+\[
+    a(u - u_h, v_h) = 0 \quad \forall v_h \in V_h
+\]
+
+So we have \emph{Galerkin orthogonality}:
+
+\[
+    a(u - u_h,v_h) = 0 \quad \forall v_h \in V_h
+\]
+
+For any $v_h \in V_h$ we have:
+\begin{align*}
+    C_0 \|u - u_h\|_V^2 & \leq a(u - u_h, u - u_h) \tag{coercivity} = a(u - u_h, u - v_h) + \overbrace{a(u - u_h, v_h - u_h)}^{= 0, \text{ since } v_h - u_h \in V_h} \\
+                        & \leq C_1 \|u - u_h\|_V \|u - v_h\|_V \tag{continuity}
+\end{align*}
+
+Thus:
+\[
+    \|u - u_h\|_V \leq \frac{C_1}{C_0} \|u - v_h\|_V \quad \forall v_h \in V_h
+\]
+Allowing us to conclude.\qed

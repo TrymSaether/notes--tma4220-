@@ -1,0 +1,17 @@
+\begin{tikzpicture}
+    \draw[thick, fill=orange, fill opacity=0.6] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+    \draw[thick] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+    \draw[thick, dashed] (2,0) -- (3, 1.5) -- (1,1.5) -- cycle;
+    \draw[thick] (0, 0) circle (3pt) node[below] {$z_1$};
+    \draw[thick] (4, 0) circle (3pt) node[below] {$z_2$};
+    \draw[thick] (2, 3) circle (3pt) node[above] {$z_3$};
+    \filldraw (2, 1.5) circle (1pt) node[below] {$z_4$};
+    \filldraw (0, 0) circle (1pt);
+    \filldraw (4, 0) circle (1pt);
+    \filldraw (2, 3) circle (1pt);
+
+    % Include labels for edges L_i
+    \node[below] at (2, 0) {$L_1$};
+    \node[right] at (3, 1.5) {$L_2$};
+    \node[left] at (1, 1.5) {$L_3$};
+\end{tikzpicture}

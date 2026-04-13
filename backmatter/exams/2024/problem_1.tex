@@ -1,0 +1,159 @@
+\section*{[2024 EXAM] Problem 1: Weak form, Neumann BCs, Lax--Milgram}
+We are given $u \in H^2(\Omega)$ solving
+\[
+  \begin{cases}
+    - \Delta u = f       & \text{in } \Omega \subset \mathbb{R}^3, \\
+    \nabla u \cdot n = 0 & \text{on } \partial\Omega,
+  \end{cases}
+\]
+for $f \in L^2(\Omega)$, where $n$ is the unit outward normal.
+\subsection*{(a) Weak formulation, bilinear form $a$ and functional $g$}
+We want to write the problem in the abstract form
+\[
+  a(u,v) = g(v) \qquad \forall v \in V,
+\]
+by identifying a bilinear form $a(\cdot,\cdot)$ and a bounded linear functional $g$.
+
+\textbf{Choice of space.}
+The natural energy space for Neumann problems is $H^1(\Omega)$.
+(Strictly speaking, the solution is only determined up to a constant, so one should work
+in $V = H^1(\Omega)/\mathbb{R}$ or in the subspace of mean-zero functions.
+Following the exam note, we will write $V = H^1(\Omega)$ and ignore this kernel issue in (a).)
+
+\textbf{Derivation of the weak form.}
+Let $v \in C^\infty(\overline{\Omega})$ (later we take $v \in H^1(\Omega)$ by density).
+Multiply the PDE by $v$ and integrate over $\Omega$:
+\[
+  \int_\Omega (-\Delta u)\, v \,dx = \int_\Omega f\,v\,dx.
+\]
+Integrate by parts in $\Omega$:
+\[
+  \int_\Omega (-\Delta u)\, v \,dx
+  = \int_\Omega \nabla u \cdot \nabla v \,dx
+  - \int_{\partial\Omega} (\nabla u \cdot n)\, v \,ds.
+\]
+Using the Neumann boundary condition $\nabla u \cdot n = 0$ on $\partial\Omega$, we obtain
+\[
+  \int_\Omega (-\Delta u)\, v \,dx
+  = \int_\Omega \nabla u \cdot \nabla v \,dx.
+\]
+Hence the weak form is:
+\[
+  \int_\Omega \nabla u \cdot \nabla v \,dx
+  = \int_\Omega f\,v\,dx
+  \quad\forall v \in H^1(\Omega).
+\]
+We now define
+\[
+  a(u,v) := \int_\Omega \nabla u \cdot \nabla v \,dx,\qquad
+  g(v) := \int_\Omega f\,v\,dx,
+\]
+and we take $V = H^1(\Omega)$ (or $H^1(\Omega)/\mathbb{R}$ for full rigor).
+
+\textbf{Boundedness of $g$.}
+For $v \in H^1(\Omega)$, by Cauchy--Schwarz,
+\[
+  |g(v)| = \left|\int_\Omega f\,v\,dx\right|
+  \le \|f\|_{L^2(\Omega)}\,\|v\|_{L^2(\Omega)}
+  \le \|f\|_{L^2(\Omega)}\,\|v\|_{H^1(\Omega)},
+\]
+so $g$ is a bounded linear functional on $V$.
+Hence the Poisson problem can be written as:
+\[
+  \boxed{
+    \text{Find } u \in V \text{ s.t. } a(u,v) = g(v)\quad\forall v \in V,
+  }
+\]
+with
+\[
+  a(u,v) = \int_\Omega \nabla u \cdot \nabla v\,dx,\qquad
+  g(v) = \int_\Omega f\,v\,dx,\qquad V = H^1(\Omega)
+  \text{ (up to constants)}.
+\]
+
+\subsection*{(b) V-ellipticity \& uniqueness (Lax--Milgram)}
+
+\textbf{Definition (V-elliptic).}
+Let $V$ be a Hilbert space with norm $\|\cdot\|_V$ and $a : V\times V \to \mathbb{R}$ a bilinear form.
+We say that $a$ is \emph{$V$-elliptic} (or \emph{coercive on $V$}) if there exists a constant $\alpha>0$ such that
+\[
+  a(v,v) \;\ge\; \alpha\,\|v\|_V^2 \quad \forall v \in V.
+\]
+\textbf{Boundedness of $a$.}
+For $u,v \in V$,
+\[
+  |a(u,v)|
+  = \left|\int_\Omega \nabla u \cdot \nabla v\,dx\right|
+  \le \|\nabla u\|_{L^2(\Omega)}\,\|\nabla v\|_{L^2(\Omega)}
+  \le \|u\|_{H^1(\Omega)}\,\|v\|_{H^1(\Omega)},
+\]
+so $a$ is bounded on $V\times V$.
+\textbf{Coercivity of $a$.}
+We equip $V = H^1(\Omega)$ with the standard norm
+\[
+  \|v\|_{H^1(\Omega)}^2 := \|v\|_{L^2(\Omega)}^2 + \|\nabla v\|_{L^2(\Omega)}^2.
+\]
+We are given the Poincaré inequality (formally)
+\[
+  \|v\|_{L^2(\Omega)} \le C_\Omega \|\nabla v\|_{L^2(\Omega)} \quad\forall v\in V,
+\]
+so
+\[
+  \|v\|_{H^1(\Omega)}^2
+  = \|v\|_{L^2(\Omega)}^2 + \|\nabla v\|_{L^2(\Omega)}^2
+  \le C_\Omega^2 \|\nabla v\|_{L^2(\Omega)}^2 + \|\nabla v\|_{L^2(\Omega)}^2
+  = (1+C_\Omega^2)\,\|\nabla v\|_{L^2(\Omega)}^2.
+\]
+But
+\[
+  a(v,v) = \int_\Omega |\nabla v|^2 \,dx = \|\nabla v\|_{L^2(\Omega)}^2,
+\]
+so we can rewrite the previous inequality as
+\[
+  \|v\|_{H^1(\Omega)}^2 \le (1+C_\Omega^2)\,a(v,v).
+\]
+Equivalently,
+\[
+  a(v,v) \;\ge\; \frac{1}{1+C_\Omega^2}\,\|v\|_{H^1(\Omega)}^2
+  =:\alpha\,\|v\|_V^2,\quad \alpha = \frac{1}{1+C_\Omega^2}>0.
+\]
+Thus $a$ is $V$-elliptic.
+
+\emph{Remark on the kernel:}
+For a pure Neumann problem, constant functions satisfy $a(c,c) = 0$ but $c\neq 0$, so $a$ is not coercive on all of $H^1(\Omega)$.
+The proper setting is $V = H^1(\Omega)/\mathbb{R}$ or
+\[
+  V = \bigl\{ v\in H^1(\Omega) : \int_\Omega v\,dx = 0\bigr\},
+\]
+where Poincaré inequality holds without the constant functions, and the above coercivity argument is rigorous.
+The exam note allows us to ignore this subtlety and write $V=H^1(\Omega)$.
+\textbf{Boundedness of $g$ revisited.}
+From (a) we already have
+\[
+  |g(v)| \le \|f\|_{L^2(\Omega)}\|v\|_{L^2(\Omega)}
+  \le \|f\|_{L^2(\Omega)}\,C_\Omega\,\|\nabla v\|_{L^2(\Omega)}
+  \le \|f\|_{L^2(\Omega)}\,C_\Omega\,\|v\|_{H^1(\Omega)},
+\]
+so $g\in V^\ast$ is bounded.
+\textbf{Application of Lax--Milgram.}
+We have shown:
+\begin{itemize}
+  \item $a(\cdot,\cdot)$ is bilinear and bounded on $V\times V$.
+  \item $a$ is $V$-elliptic: $\exists \alpha>0$ such that $a(v,v)\ge\alpha\|v\|_V^2$ for all $v\in V$.
+  \item $g\in V^\ast$ is a bounded linear functional.
+\end{itemize}
+Therefore, by the Lax--Milgram theorem, there exists a unique $u\in V$ such that
+\[
+  a(u,v) = g(v) \qquad \forall v\in V.
+\]
+Concretely, this says:
+There exists a unique
+\[
+  \boxed{
+    u \in V \text{ solving }
+    \int_\Omega \nabla u \cdot \nabla v\,dx = \int_\Omega f\,v\,dx
+    \quad\forall v\in V,
+  }
+\]
+where, for full rigor, $V = H^1(\Omega)/\mathbb{R}$ (or equivalently, the subspace of $H^1(\Omega)$ of mean-zero functions).
+Thus the weak form derived in (a) is well posed.

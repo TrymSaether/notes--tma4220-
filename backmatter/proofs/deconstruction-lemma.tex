@@ -1,0 +1,25 @@
+\section*{Deconstruction lemma}
+Let $P$ be a polynomial of degree $\deg(P) = d \geq 1$ vanishing on the hyperplane $L$. Then we have:
+\[
+    P = L Q
+\]
+where $\deg(Q) = d - 1$.
+
+\textbf{Proof:}
+without loss of generality (w.l.o.g.) we may consider $L(x) = x_n$ (where $x \in \mathbb{R}^n$), i.e. the hyperplane is described by $L(\substack{\hat{x} \\ 0}) = 0$ where $x = [\hat{x}, x_n]$.
+We see that $P(\substack{\hat{x} \\ 0}) = 0$. Since $\deg(P) = d$ we can write:
+\[
+    P(\substack{\hat{x} \\ x_n}) = \sum_{j=0}^d \sum_{|\hat{i}| \leq d - j} C_{\hat{i}j} \hat{x}^{\hat{i}} x_n^j \quad \begin{cases}
+         & \hat{x} = (x_1, x_2, \ldots, x_{n-1}) \\
+         & \hat{i} = (i_1, i_2, \ldots, i_{n-1})
+    \end{cases}
+\]
+Letting $x_n = 0$ gives:
+\[
+    P(\substack{\hat{x} \\ 0}) = \sum_{|\hat{i}| \leq d} C_{\hat{i}0} \hat{x}^{\hat{i}} = 0
+\]
+implying $C_{\hat{i}0} = 0$ for $|\hat{i}| \leq d$. This tells us that:
+\[
+    P(\substack{\hat{x} \\ x_n}) = \sum_{j=1}^d \sum_{|\hat{i}| \leq d - j} C_{\hat{i}j} \hat{x}^{\hat{i}} x_n^j = x_n \underbrace{\sum_{j=1}^d \sum_{|\hat{i}| \leq d - j} C_{\hat{i}j} \hat{x}^{\hat{i}} x_n^{j-1}}_{Q(\substack{\hat{x} \\ x_n})} = x_n Q(\substack{\hat{x} \\ x_n}) = L(x) Q(x)
+\]
+where $\deg(Q) = d - 1$.

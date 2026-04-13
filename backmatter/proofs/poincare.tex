@@ -1,0 +1,25 @@
+\section*{Poincaré inequality}
+Suppose $\Omega \subset \mathbb{R}^n$ is bounded and $u \in H_0^1(\Omega)$. Then $\exists C > 0$ s.t.
+\[
+    \|u\|_0 \leq C \|\nabla u\|_0
+\]
+\textbf{Proof:}
+We will first assume that $u \in C_0^\infty(\Omega)$ (and we relax/extend this assumption later).
+For $u \in C_0^\infty(\Omega)$ we have:
+\begin{align*}
+    \nabla \cdot (u^2 \symbf{x}) & = \partial_{x_1}(u^2 x_1) + \partial_{x_2}(u^2 x_2) + \ldots + \partial_{x_n}(u^2 x_n)                   \\
+                                 & = u^2 + 2u \partial_{x_1} u x_1 + u^2 + 2u \partial_{x_2} u x_2 + \ldots + u^2 + 2u \partial_{x_n} u x_n \\
+                                 & = n u^2 + 2u \nabla u \cdot \symbf{x}                                                                    \\
+    u^2                          & = \frac{1}{n} \nabla \cdot (u^2 \symbf{x}) - \frac{2}{n} u (\nabla u \cdot \symbf{x})
+\end{align*}
+Through Hölder's inequality:
+\begin{align*}
+    \|u\|_0^2 & = \int_\Omega u^2 \, dx = \frac{1}{n} \int_\Omega \nabla \cdot (u^2 \symbf{x}) \, dx - \frac{2}{n} \int_\Omega u (\nabla u \cdot \symbf{x}) \, dx                                                                                             \\
+              & = \overbrace{\frac{1}{n} \int_{\partial \Omega} \mathbf{n} \cdot (u^2 \symbf{x}) \, ds}^{0} - \frac{2}{n} \overbrace{\int_\Omega u (\nabla u \cdot \symbf{x}) \, dx}^{\mathcal{I}} \leq \frac{2}{n} \abs{\mathcal{I}}                         \\
+              & \leq \frac{2}{n} \max_{\symbf{x} \in \Omega} |\symbf{x}| \int_\Omega |u \nabla u| \, dx \leq\frac{2}{n} \max_{\symbf{x} \in \Omega} \overset{\text{Hölder}}{|\symbf{x}| \sqrt{\int_\Omega |u|^2 \, dx} \sqrt{\int_\Omega |\nabla u|^2 \, dx}} \\
+    \|u\|_0^2 & = \frac{2}{n} \max_{\symbf{x} \in \Omega} |\symbf{x}| \|u\|_0 \|\nabla u\|_0 \quad \big| \times \frac{1}{\|u\|_0}                                                                                                                             \\
+    \|u\|_0   & \leq \frac{2}{n} \max_{\symbf{x} \in \Omega} |\symbf{x}| \|\nabla u\|_0 \leq \underbrace{\frac{2}{n} \max_{\symbf{x} \in \Omega}{|\symbf{x}|}}_{C} \|\nabla u\|_0
+\end{align*}
+If $u \in H_0^1(\Omega)$, as $C_0^\infty(\Omega)$ is dense in $H_0^1(\Omega)$ we can define $\{u_k\}$ as a sequence congverging to $u$ for each $u_k \in C_0^\infty(\Omega)$.
+
+Then the inequality holds for each $k$ and $\|u_k\|_0 \to \|u\|_0$ and $\|\nabla u_k\|_0 \to \|\nabla u\|_0$ as $k \to \infty$ completing the proof.

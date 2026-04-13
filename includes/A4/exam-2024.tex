@@ -1,0 +1,242 @@
+\documentclass[../../main.tex]{subfiles}
+\begin{document}
+\section{Eksamen 2024}
+\subsection*{Oppgave 1}
+La $u \in H^2(\Omega)$ være en løsning av Poisson-likningen:
+\begin{align*}
+    -\Delta u                 & = f \quad \text{i } \Omega, \quad \text{hvor} f \in L^2(\Omega) \\
+    \nabla u \cdot \mathbf{n} & = 0 \quad \text{på } \partial \Omega, \quad \text{(Neumann)}
+\end{align*}
+
+\subsubsection*{(a) Svak formulering}
+La $u, v \in V = H^1(\Omega)$. Først så ganger vi med testfunksjonen $v$ og integrerer over $\int_\Omega$:
+\[
+    \int_{\Omega}-\Delta u v \, dx  = \int_{\Omega}f v \, dx
+\]
+Vi vet at:
+\begin{align*}
+    \nabla \cdot v \nabla u & =
+    \begin{bmatrix}
+        \partial_x \\ \partial_y \\ \partial_z
+    \end{bmatrix}
+    \cdot
+    \left(
+    v\begin{bmatrix}
+             u_x & u_y & u_z
+         \end{bmatrix}
+    \right)                                                                                \\
+                            & = v_x u_x + v_y u_y + v_z u_z + v (u_{xx} + u_{yy} + u_{zz}) \\
+                            & = \nabla v \cdot \nabla u + v \Delta u                       \\
+    -v \Delta u             & = \nabla v \cdot \nabla u - \nabla\cdot(v\nabla u)
+\end{align*}
+som gir:
+\begin{align*}
+    \int_{\Omega}-\Delta u v \, dx & = \int_{\Omega} \nabla v \cdot \nabla u \, dx - \int_{\Omega} \nabla\cdot(v\nabla u) \, dx
+\end{align*}
+Fra greens theorem om divergens:
+\[
+    \int_{\Omega} \nabla \cdot (v\nabla u) dx = \int_{\partial \Omega} v\nabla u \cdot \mathbf{n} \, dS
+\]
+Som i vårt tilfelle er gitt av Neumann betingelsen er $0$ s.a.
+\begin{align*}
+    \int_{\Omega}-\Delta u v \, dx & = \int_{\Omega} \nabla v \cdot \nabla u \, dx
+\end{align*}
+som til slutt gir oss den bilineære formen og linære funksjonen:
+\[
+    a(u, v) := \int_{\Omega} \nabla v \cdot \nabla u \, dx \qquad g(v) := \int_{\Omega}f v \, dx \qed
+\]
+
+\subsubsection*{(b) V-ellipsitet, og unik løsning av PDE}
+V-ellipsitet er definert som:
+\[
+    \exists \alpha > 0 \quad \text{s.a.} \quad a(v,v) \geq \alpha \|v\|_V^2 \quad \forall \; v \in V
+\]
+Som egentlig bare betyr at den bilineære formen strengt nedre bundet, og er positiv definitt.
+
+for å vise at $a(,)$ har en unik løsning må vi vise to ting: at den er \textbf{Koersiv (V-ell.)} og \textbf{kontinuerlig} i $\Omega$.
+
+\begin{description}
+    \item[Koersiv:] La $v \in V$:
+          \begin{align*}
+              |a(v,v)| & = \int_{\Omega} |\nabla v|^2 \, dx \\
+                       & = \|\nabla v\|_0^2
+          \end{align*}
+          Fra definisjonen av normen til $V$ har vi:
+          \[
+              \|v\|_V^2 = \|v\|_0^2 + \|\nabla v\|_0^2
+          \]
+          og Poincaré:
+          \[
+              \|v\|_0^2 \leq C_\Omega \|\nabla v\|_0^2
+          \]
+          som gir:
+          \begin{align*}
+              \|v\|_V^2                                    & \leq (1 + C_\Omega)\|\nabla v\|_0^2 \\
+                                                           & = (1 + C_\Omega) |a(v,v)|           \\
+              \Rightarrow \frac{1}{1 + C_\Omega} \|v\|_V^2 & \leq |a(v,v)|
+          \end{align*}
+          Altså er $a(,)$ V-ellipsisk med $\alpha = \frac{1}{1 + C_\Omega}$.
+    \item[Kontinuitet:] La $u, v \in V$:
+          \begin{align*}
+              |a(u,v)| & = \left|\int_{\Omega} \nabla u \cdot \nabla v \, dx\right|       \\
+                       & \leq \int_{\Omega} |\nabla u||\nabla v| \, dx                    \\
+                       & \leq \|\nabla u\|_0 \|\nabla v\|_0 \quad \text{(Cauchy-Schwarz)} \\
+                       & \leq \|u\|_V \|v\|_V
+          \end{align*}
+          Altså er $a(,)$ kontinuerlig med konstant $C=1$.
+\end{description}
+\textbf{Lax-Milgram teorem} sier at hvis $a(,)$ er V-ellipsisk og kontinuerlig, og $g(v)$ er en lineær og kontinuerlig funksjon på $V$, så eksisterer det en unik løsning $u \in V$ slik at:
+\[
+    a(u,v) = g(v) \quad \forall v \in V
+\]
+
+\subsection*{Oppgave 2}
+\subsubsection*{(a) Ciarlet-trippel}
+
+Et finit element er en triple $(K,\mathcal P,\mathcal N)$ hvor:
+\begin{enumerate}
+    \item $K\subset\mathbb{R}^n$ er et begrenset domene med stykkevis glatt rand (elementet).
+    \item $\mathcal P$ er et endelig-dimensjonalt rom av funksjoner på $K$ (formfunksjoner).
+    \item $\mathcal N=\{N_1,\dots,N_k\}$ er en samling lineære funksjonaler på $\mathcal P$ som danner en basis for $\mathcal P^*$, slik at kartet
+          $v\mapsto (N_i(v))_{i=1}^k$ gir en isomorfi $\mathcal P\cong\mathbb{R}^k$ (nodalverdiene bestemmer funksjonen).
+\end{enumerate}
+For å illustrere Ciarlet-trippelet, la oss se på et konkret eksempel med et lineært triangulært element:
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[scale=2]
+        % Triangle vertices
+        \coordinate (A) at (0,0);
+        \coordinate (B) at (2,0);
+        \coordinate (C) at (1,1.5);
+
+        % Draw triangle
+        \draw[thick, fill=state-blue!50] (A) -- (B) -- (C) -- cycle;
+
+        % Mark vertices (nodes)
+        \fill[red] (A) circle (1pt);
+        \fill[red] (B) circle (1pt);
+        \fill[red] (C) circle (1pt);
+
+        % Add coordinate labels
+        \node[below, font=\small] at (A) {$v_1=(0,0)$};
+        \node[below, font=\small] at (B) {$v_2=(1,0)$};
+        \node[above, font=\small] at (C) {$v_3=(0.5,1)$};
+
+        % Domain label
+        \node at (1,0.75) {\textbf{Element} $K$};
+
+        % Annotations with arrows
+        \draw[->, thick] (2,1.5) -- (C);
+        \node[right, align=left] at (2,1.5) {\textbf{Noder} $\mathcal{N}$:\\
+            $N_i(v) = v(v_i)$\\
+            (punktevaluering)};
+
+        \draw[->, thick] (1,-0.5) -- (1,0);
+        \draw[->, thick] (1, -0.5) -- (0.5,0.75);
+        \draw[->, thick] (1, -0.5) -- (1.5,0.75);
+        \node[below, align=center] at (1,-0.5) {\textbf{Formfunksjoner} $\mathcal{P}$:\\
+            $\mathcal{P}_1 = \text{span}\{1, x, y\}$\\
+            (lineære polynomer)};
+    \end{tikzpicture}
+    \caption{Ciarlet-trippel $(K,\mathcal{P},\mathcal{N})$ for lineært triangulært element}
+\end{figure}
+
+I dette eksemplet:
+\begin{itemize}
+    \item $K$: referansetriangel med hjørner $(0,0)$, $(1,0)$, $(0.5,1)$
+    \item $\mathcal{P} = \mathcal{P}_1(K) = \{a + bx + cy : a,b,c \in \mathbb{R}\}$ (lineære polynomer)
+    \item $\mathcal{N} = \{N_1, N_2, N_3\}$ hvor $N_i(v) = v(v_i)$ (punktevaluering i hjørnene)
+\end{itemize}
+
+De tre nodalverdiene $v(v_1)$, $v(v_2)$, $v(v_3)$ bestemmer entydig enhver lineær funksjon på triangelet.
+
+\subsubsection*{(b) Kubisk Lagrange-element i 2D}
+$(K, \mathcal{P}, \mathcal{N})$ der:
+\begin{itemize}
+    \item $K \subset \mathbb{R}^2$ er et trekantet domene med hjørner $v_1, v_2, v_3$.
+    \item $\mathcal{P} = \mathcal{P}_3(K)$ er rommet av polynomer på $K$ med grad $\leq 3$.
+    \item $\mathcal{N} = \{N_1, N_2, N_3, N_4, N_5, N_6, N_7, N_8, N_9, N_{10}\}$ hvor $N_i(v) = v(v_i)$ (punktevaluering i hjørnene)
+\end{itemize}
+Nodene er plassert som følger:
+\begin{itemize}
+    \item Hjørner: $v_1, v_2, v_3$
+    \item Midtpunkter på sidene: $m_{12}, m_{23}, m_{31}$
+    \item Interne punkter: $p_1, p_2, p_3, p_4$
+\end{itemize}
+Dette gir totalt 10 noder, som samsvarer med dimensjonen til $\mathcal{P}_3(K)$.
+Nodalverdiene $v(v_i)$ for $i=1,\ldots,10$ bestemmer entydig enhver kubisk funksjon på trekanten $K$.
+
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[scale=1.5]
+        % Triangle vertices
+        \coordinate (A) at (0,0);
+        \coordinate (B) at (3,0);
+        \coordinate (C) at (1.5,2.6);
+
+        % Draw triangle
+        \draw[thick, fill=state-blue!20] (A) -- (B) -- (C) -- cycle;
+
+        % Corner nodes
+        \fill[red] (A) circle (2pt);
+        \fill[red] (B) circle (2pt);
+        \fill[red] (C) circle (2pt);
+
+        % Edge nodes (2 nodes per edge for cubic)
+        \coordinate (AB1) at (1,0);
+        \coordinate (AB2) at (2,0);
+        \coordinate (BC1) at (2.25,1.3);
+        \coordinate (BC2) at (1.875,1.95);
+        \coordinate (CA1) at (1.125,1.95);
+        \coordinate (CA2) at (0.75,1.3);
+
+        \fill[blue] (AB1) circle (1.5pt);
+        \fill[blue] (AB2) circle (1.5pt);
+        \fill[blue] (BC1) circle (1.5pt);
+        \fill[blue] (BC2) circle (1.5pt);
+        \fill[blue] (CA1) circle (1.5pt);
+        \fill[blue] (CA2) circle (1.5pt);
+
+        % Internal node
+        \coordinate (INT) at (1.5,1.3);
+        \fill[green] (INT) circle (1.5pt);
+
+        % Labels for corner nodes
+        \node[below left, font=\small] at (A) {$v_1$};
+        \node[below right, font=\small] at (B) {$v_2$};
+        \node[above, font=\small] at (C) {$v_3$};
+
+        % Labels for edge nodes
+        \node[below, font=\tiny] at (AB1) {$m_1$};
+        \node[below, font=\tiny] at (AB2) {$m_2$};
+        \node[right, font=\tiny] at (BC1) {$m_3$};
+        \node[above right, font=\tiny] at (BC2) {$m_4$};
+        \node[above left, font=\tiny] at (CA1) {$m_5$};
+        \node[left, font=\tiny] at (CA2) {$m_6$};
+
+        % Label for internal node
+        \node[below right, font=\tiny] at (INT) {$p_1$};
+
+        % Domain label
+        \node at (1.5,0.7) {\textbf{Element} $K$};
+
+        % Legend
+        \node[align=left, font=\small] at (4.5,2) {
+            \textcolor{red}{\textbullet} Hjørnenoder (3)\\
+            \textcolor{blue}{\textbullet} Kantnoder (6)\\
+            \textcolor{green}{\textbullet} Intern node (1)\\
+            Total: 10 noder
+        };
+
+        % Annotation
+        \node[below, align=center, font=\small] at (1.5,-0.5) {
+            $\mathcal{P}_3(K) = \text{span}\{1, x, y, x^2, xy, y^2, x^3, x^2y, xy^2, y^3\}$\\
+            $\dim(\mathcal{P}_3(K)) = 10$
+        };
+    \end{tikzpicture}
+    \caption{Kubisk Lagrange-element i 2D med 10 noder}
+\end{figure}
+
+\end{document}

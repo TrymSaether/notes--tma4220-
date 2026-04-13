@@ -1,0 +1,407 @@
+\section*{[2023 EXAM] Problem 2: Lagrange elements, FEM formulation, Céa's lemma}
+
+In this problem we study Lagrange finite elements (local definition) and their use in a
+Galerkin approximation of a simple elliptic problem.
+
+\subsection*{(a) Additional ingredient beyond Ciarlet's definition}
+
+Ciarlet's definition gives a \emph{local} finite element as a triple \((K,P,N)\).
+
+To actually implement a finite element method on a domain \(\Omega\), we also need (at least) a
+\emph{triangulation/mesh} of \(\Omega\) into such elements, i.e.
+\[
+    \mathcal{T}_h = \{K\} \quad\text{with}\quad \overline{\Omega} = \bigcup_{K\in\mathcal{T}_h} K,
+\]
+together with a consistent global numbering of the local degrees of freedom (nodes) so we can
+assemble a global finite element space
+\[
+    V_h := \{v_h\in C^0(\overline{\Omega}) : v_h|_K \in P \ \forall K\in\mathcal{T}_h\}.
+\]
+
+(Any one of: a triangulation, a reference element with mappings, or a global DoF numbering
+is sufficient as the requested “one thing” beyond Ciarlet's local triple.)
+
+\subsection*{(b) Quadratic Lagrange finite element on a triangle}
+
+Let \(K\subset\mathbb{R}^2\) be a nondegenerate triangle with vertices
+\(a_1,a_2,a_3\), and edges \(e_1,e_2,e_3\).
+
+\textbf{Polynomial space.}
+Take
+\[
+    P := \mathbb{P}_2(K)
+    = \{ \text{polynomials on }K\text{ of total degree }\le 2\}.
+\]
+In 2D,
+\[
+    \dim \mathbb{P}_2 = \frac{(2+1)(2+2)}{2} = 6.
+\]
+
+\textbf{Degrees of freedom (nodal functionals).}
+We use point evaluation at 6 nodes:
+
+\begin{itemize}
+    \item \emph{Vertex nodes} (3 DoFs): at each vertex \(a_i\),
+          \[
+              N_i(v) := v(a_i), \quad i=1,2,3.
+          \]
+    \item \emph{Edge midpoints} (3 DoFs):
+          On each edge \(e_i\) we place one node at its midpoint \(m_i\).
+          Denote the midpoint of the edge opposite vertex \(a_i\) by \(m_i\).
+          Then
+          \[
+              N_{3+i}(v) := v(m_i), \quad i=1,2,3.
+          \]
+\end{itemize}
+So we have 6 nodal functionals \(N=\{N_1,\dots,N_6\}\), matching \(\dim P=6\).
+Hence the quadratic Lagrange finite element is the Ciarlet triple
+\[
+    (K,P,N) = (K,\mathbb{P}_2(K),\{v(a_i),v(m_i)\}_{i=1}^3).
+\]
+
+\subsection*{(c) Quadratic Lagrange element satisfies Ciarlet's definition}
+We must show that \(N\) is a basis of \(P^\ast\), i.e. that \(N\) \emph{determines} \(P\):
+\[
+    p\in P,\ N_i(p)=0\ \forall i \quad\Longrightarrow\quad p\equiv 0.
+\]
+
+Let \(p\in\mathbb{P}_2(K)\) satisfy
+\[
+    p(a_i)=0,\quad p(m_i)=0,\quad i=1,2,3.
+\]
+We will prove \(p\equiv 0\) using the given deconstruction lemma.
+
+Let the edges be:
+\[
+    e_1 = \overline{a_2a_3},\quad e_2 = \overline{a_1a_3},\quad e_3 = \overline{a_1a_2},
+\]
+and let \(L_i(x)=0\) be an affine equation for the line containing edge \(e_i\). So
+\(\{x:L_i(x)=0\}\) is a hyperplane in the sense of the statement.
+
+\textbf{Step 1: Vanishing on edge \(e_1\).}
+
+On edge \(e_1\) we have three distinct nodal points:
+\[
+    a_2,\quad a_3,\quad m_1\in e_1,
+\]
+and by assumption
+\[
+    p(a_2)=p(a_3)=p(m_1)=0.
+\]
+The restriction \(p|_{e_1}\) is a univariate polynomial of degree \(\le 2\).
+Since it has three distinct zeros, we must have
+\[
+    p(x) = 0 \quad\forall x\in e_1.
+\]
+Thus \(p\) vanishes on the hyperplane \(L_1(x)=0\), so by the deconstruction lemma
+\[
+    p = L_1 q_1,
+\]
+where \(q_1\) is a polynomial of degree \(\le 1\) on \(K\).
+
+\textbf{Step 2: Vanishing of \(q_1\) on edge \(e_2\).}
+Consider edge \(e_2 = \overline{a_1a_3}\) with nodes
+\[
+    a_1,\quad a_3,\quad m_2\in e_2.
+\]
+We know \(p\) vanishes at all these points:
+\[
+    p(a_1)=p(a_3)=p(m_2)=0.
+\]
+Recall \(p = L_1 q_1\). On edge \(e_2\), the line \(L_1(x)=0\) holds only at the vertex
+\(a_3\) (where \(e_1\) and \(e_2\) meet). At \(a_1\) and \(m_2\), we have \(L_1\neq 0\).
+Hence
+\[
+\begin{aligned}
+    0 = p(a_1) = L_1(a_1)\,q_1(a_1) &\quad\Longrightarrow\quad q_1(a_1) = 0, \\
+    0 = p(m_2) = L_1(m_2)\,q_1(m_2) &\quad\Longrightarrow\quad q_1(m_2) = 0.
+\end{aligned}
+\]
+So \(q_1|_{e_2}\) (a polynomial of degree \(\le 1\) along \(e_2\)) has two distinct zeros,
+therefore
+\[
+    q_1(x) = 0 \quad\forall x\in e_2.
+\]
+Thus \(q_1\) vanishes on the hyperplane \(L_2(x)=0\), and by the deconstruction lemma,
+\[
+    q_1 = L_2 c,
+\]
+for some constant \(c\in\mathbb{R}\). We have therefore
+\[
+    p = L_1 L_2 c.
+\]
+\textbf{Step 3: Use an edge where \(L_1\) and \(L_2\) are nonzero.}
+Now consider edge \(e_3 = \overline{a_1a_2}\). Its nodal points are
+\[
+    a_1,\quad a_2,\quad m_3\in e_3.
+\]
+We know
+\[
+    p(a_1)=p(a_2)=p(m_3)=0.
+\]
+At the interior edge midpoint \(m_3\), we have that \(m_3\) lies neither on \(e_1\) nor on
+\(e_2\), so
+\[
+    L_1(m_3)\neq 0,\quad L_2(m_3)\neq 0.
+\]
+Since
+\[
+    0 = p(m_3) = c\,L_1(m_3)L_2(m_3),
+\]
+we must have \(c=0\). Therefore \(p \equiv 0\) on \(K\).
+
+\textbf{Conclusion.}
+We have shown
+\[
+    p\in\mathbb{P}_2(K),\quad p(a_i)=p(m_i)=0\ \forall i \quad\Rightarrow\quad p\equiv 0.
+\]
+Equivalently, if all nodal functionals in \(N\) vanish on \(p\), then \(p=0\).
+Thus \(N\) determines \(P\), and, since \(\#N = \dim P = 6\), the \(N_i\) are linearly
+independent and form a basis of \(P^\ast\).
+
+Therefore the quadratic Lagrange element \((K,\mathbb{P}_2(K),N)\) satisfies Ciarlet's
+definition of a finite element.
+
+\subsection*{(d) Strong form of (5) and boundary conditions}
+We are given the weak problem:
+\[
+    \langle \nabla u,\nabla v\rangle + \langle u,v\rangle
+    = \langle f,v\rangle
+    \quad\forall v\in H^1_0(\Omega). \tag{5}
+\]
+Assume \(u\in H^1_0(\Omega)\cap H^2(\Omega)\). We want to find the corresponding strong PDE
+and boundary conditions.
+
+Take \(v\in C_c^\infty(\Omega)\subset H^1_0(\Omega)\). Then the boundary term vanishes
+under integration by parts. Compute
+\[
+    \langle \nabla u,\nabla v\rangle
+    = \int_\Omega \nabla u\cdot\nabla v\,dx
+    = -\int_\Omega \Delta u\,v\,dx
+\]
+(using that \(v\) has compact support in \(\Omega\)). Thus (5) gives
+\[
+    -\int_\Omega \Delta u\,v\,dx + \int_\Omega u\,v\,dx
+    = \int_\Omega f\,v\,dx
+    \quad\forall v\in C_c^\infty(\Omega).
+\]
+Equivalently,
+\[
+    \int_\Omega (-\Delta u + u - f)\,v\,dx = 0
+    \quad\forall v\in C_c^\infty(\Omega).
+\]
+Hence (by the standard distributional argument) the strong equation holds a.e.:
+\[
+    -\Delta u + u = f \quad\text{in }\Omega.
+\]
+
+Since \(u\in H^1_0(\Omega)\), its trace on \(\partial\Omega\) vanishes:
+\[
+    u = 0 \quad\text{on }\partial\Omega.
+\]
+\textbf{Strong form:}
+\[
+    \boxed{
+        \begin{cases}
+            -\Delta u + u = f & \text{in }\Omega,         \\
+            u = 0             & \text{on }\partial\Omega.
+        \end{cases}
+    }
+\]
+
+\subsection*{(e) Finite element formulation over $V_h$ and uniqueness}
+
+Let \(V := H^1_0(\Omega)\) and let \(V_h\subset V\) be a finite-dimensional subspace
+(e.g.\ constructed from quadratic Lagrange elements as above).
+
+The weak problem (5) can be written as
+\[
+    a(u,v) = g(v)\quad\forall v\in V,
+\]
+where
+\[
+    a(u,v) := \langle \nabla u,\nabla v\rangle + \langle u,v\rangle,
+    \qquad
+    g(v) := \langle f,v\rangle.
+\]
+
+\textbf{Discrete variational problem.}
+The Galerkin finite element formulation on \(V_h\) is:
+\[
+    \boxed{
+        \text{Find } u_h\in V_h \text{ such that }
+        a(u_h,v_h) = g(v_h)\quad\forall v_h\in V_h.
+    }
+\]
+
+\textbf{Boundedness and ellipticity of $a$ on $V_h$.}
+
+Since \(V_h\subset V\), we can use the same estimates as for the continuous problem:
+
+\begin{itemize}
+    \item \emph{Boundedness:}
+          \[
+              |a(w_h,v_h)|
+              = \left|\int_\Omega \nabla w_h\cdot\nabla v_h + w_h v_h\,dx\right|
+              \le \|\nabla w_h\|_{L^2}\|\nabla v_h\|_{L^2}
+              + \|w_h\|_{L^2}\|v_h\|_{L^2},
+          \]
+          so \(a\) is continuous on \(V\times V\), hence on \(V_h\times V_h\).
+
+    \item \emph{Ellipticity:} For any \(v_h\in V_h\),
+          \[
+              a(v_h,v_h)
+              = \|\nabla v_h\|_{L^2(\Omega)}^2 + \|v_h\|_{L^2(\Omega)}^2.
+          \]
+          If we choose the \(H^1_0\)-norm as
+          \(\|v\|_{H^1_0} := \|\nabla v\|_{L^2}\), then clearly
+          \[
+              a(v_h,v_h) \ge \|\nabla v_h\|_{L^2}^2 = \|v_h\|_{H^1_0}^2,
+          \]
+          so \(a\) is coercive on \(V_h\) with ellipticity constant \(\alpha=1\).
+\end{itemize}
+
+\textbf{Uniqueness via Lax--Milgram (on $V_h$).}
+On the finite-dimensional Hilbert space \(V_h\), the bilinear form \(a\) is
+bounded and coercive, and \(g\) is bounded. The (finite-dimensional) Lax--Milgram theorem
+therefore guarantees that there exists a \emph{unique} \(u_h\in V_h\) such that
+\[
+    a(u_h,v_h) = g(v_h)\quad\forall v_h\in V_h.
+\]
+
+Thus the discrete finite element problem has a unique solution.
+
+\subsection*{(f) Céa's lemma and the constant $C$}
+
+We now prove Céa's lemma in this setting and determine the constant \(C\).
+
+\textbf{General Céa lemma (abstract version).}
+
+Let \(V\) be a Hilbert space, \(V_h\subset V\) a closed subspace, and \(a:V\times V\to\mathbb{R}\)
+a bilinear form such that:
+\begin{itemize}
+    \item \emph{Continuity:}
+          \[
+              |a(u,v)| \le M\,\|u\|_V\,\|v\|_V \quad\forall u,v\in V,
+          \]
+          for some \(M>0\).
+    \item \emph{Ellipticity:}
+          \[
+              a(v,v) \ge \alpha\,\|v\|_V^2 \quad\forall v\in V,
+          \]
+          for some \(\alpha>0\).
+\end{itemize}
+Let \(g\in V^\ast\). Let \(u\in V\) solve
+\[
+    a(u,v) = g(v)\quad\forall v\in V,
+\]
+and let \(u_h\in V_h\) solve
+\[
+    a(u_h,v_h) = g(v_h)\quad\forall v_h\in V_h.
+\]
+Then Céa's lemma states that
+\[
+    \|u-u_h\|_V \le \frac{M}{\alpha}\,\inf_{v_h\in V_h}\|u-v_h\|_V.
+\]
+
+\textbf{Proof of Céa's lemma.}
+
+Let \(e := u-u_h\). Subtract the continuous and discrete problems for any \(v_h\in V_h\):
+\[
+    a(u,v_h) - a(u_h,v_h) = g(v_h) - g(v_h) = 0
+    \quad\Longrightarrow\quad
+    a(e,v_h) = 0\quad\forall v_h\in V_h.
+\]
+This is the \emph{Galerkin orthogonality}.
+
+Now let \(w_h\in V_h\) be arbitrary. Then
+\[
+    e = u-u_h = (u-w_h) + (w_h-u_h).
+\]
+Compute
+\[
+    a(e,e) = a(e,u-u_h) = a(e,u-w_h) + a(e,w_h-u_h).
+\]
+But \(w_h-u_h\in V_h\), so by Galerkin orthogonality \(a(e,w_h-u_h)=0\). Hence
+\[
+    a(e,e) = a(e,u-w_h).
+\]
+
+Using ellipticity on the left and boundedness on the right:
+\[
+    \alpha\|e\|_V^2 \le a(e,e) = a(e,u-w_h)
+    \le M\,\|e\|_V\,\|u-w_h\|_V.
+\]
+If \(\|e\|_V\neq 0\), divide by \(\|e\|_V\):
+\[
+    \|e\|_V \le \frac{M}{\alpha}\,\|u-w_h\|_V.
+\]
+Since this holds for all \(w_h\in V_h\), we may take the infimum:
+\[
+    \|u-u_h\|_V
+    \le \frac{M}{\alpha}\,\inf_{v_h\in V_h}\|u-v_h\|_V.
+\]
+This proves Céa's lemma with \(C = M/\alpha\).
+
+\textbf{Determine $C$ for our specific problem.}
+
+Here \(V = H^1_0(\Omega)\) and we use the norm
+\[
+    \|v\|_V := \|\nabla v\|_{L^2(\Omega)}.
+\]
+
+The bilinear form is
+\[
+    a(u,v) = \langle \nabla u,\nabla v\rangle + \langle u,v\rangle
+    = \int_\Omega \nabla u\cdot\nabla v + u v\,dx.
+\]
+
+\emph{Ellipticity.}
+For any \(v\in V\),
+\[
+    a(v,v) = \|\nabla v\|_{L^2}^2 + \|v\|_{L^2}^2 \ge \|\nabla v\|_{L^2}^2 = \|v\|_V^2.
+\]
+Hence \(\alpha = 1\).
+
+\emph{Continuity.}
+For any \(u,v\in V\),
+\[
+    |a(u,v)|
+    \le \|\nabla u\|_{L^2}\|\nabla v\|_{L^2}
+    + \|u\|_{L^2}\|v\|_{L^2}.
+\]
+By Poincaré's inequality (given in the exam),
+\[
+    \|u\|_{L^2} \le C_\Omega\|\nabla u\|_{L^2} = C_\Omega\|u\|_V,
+    \quad
+    \|v\|_{L^2} \le C_\Omega\|\nabla v\|_{L^2} = C_\Omega\|v\|_V,
+\]
+so
+\[
+    |a(u,v)|
+    \le \|u\|_V\|v\|_V + C_\Omega^2 \|u\|_V\|v\|_V
+    = (1+C_\Omega^2)\,\|u\|_V\,\|v\|_V.
+\]
+Thus we may take \(M = 1 + C_\Omega^2\).
+
+\emph{Constant in Céa.}
+Therefore, from Céa's lemma,
+\[
+    \|u-u_h\|_{H^1_0(\Omega)}
+    = \|u-u_h\|_V
+    \le \frac{M}{\alpha}\,\inf_{v_h\in V_h}\|u-v_h\|_V
+    = (1+C_\Omega^2)\,\inf_{v_h\in V_h}\|u-v_h\|_{H^1_0(\Omega)}.
+\]
+
+Thus, in the statement
+\[
+    \|u-u_h\|_{H^1_0(\Omega)} \le C\,\min_{v_h\in V_h}\|u-v_h\|_{H^1_0(\Omega)},
+\]
+we can take
+\[
+    \boxed{C = 1 + C_\Omega^2,}
+\]
+where \(C_\Omega\) is the Poincaré constant.
+
+(Any equivalent norm on \(H^1_0(\Omega)\) would give a constant \(C\) differing only by a
+fixed multiplicative factor.)

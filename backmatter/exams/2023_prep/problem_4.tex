@@ -1,0 +1,304 @@
+\section*{[2023 PREP EXAM] Problem 4: A-priori est., semi-disc., Disc-backw-Euler sch.}
+Let $u \in H^1([0,T];H^1_0(\Omega))$ solve
+\[
+    \langle u_t(t), v\rangle + \langle \nabla u(t), \nabla v\rangle = \langle f(t), v\rangle
+    \quad \forall v \in H^1_0(\Omega),\ t\in(0,T),
+\]
+with
+\[
+    u(0,x) = u_0(x)\in H^1_0(\Omega),
+\]
+where $\langle\cdot,\cdot\rangle$ denotes the $L^2(\Omega)$ inner product and $\|\cdot\| := \|\cdot\|_{L^2(\Omega)}$.
+We are also given the Poincar\'e inequality: for $\Omega\subset\mathbb{R}^n$ bounded and $v\in H^1_0(\Omega)$,
+\[
+    \|v\| \le C_\Omega \|\nabla v\|.
+\]
+\subsection*{(a) A-priori est. and coercivity}
+Define the bilinear form
+\[
+    a(u,v) := \langle \nabla u, \nabla v\rangle, \qquad u,v\in V:=H^1_0(\Omega).
+\]
+\textbf{Coercivity of $a$.}
+For any $v \in V$,
+\[
+    a(v,v) = \|\nabla v\|^2.
+\]
+We equip $V$ with the norm
+\[
+    \|v\|_V^2 := \|v\|^2 + \|\nabla v\|^2.
+\]
+By Poincar\'e,
+\[
+    \|v\|^2 \le C_\Omega^2 \|\nabla v\|^2,
+\]
+hence
+\[
+    \|v\|_V^2 = \|v\|^2 + \|\nabla v\|^2
+    \le (1 + C_\Omega^2)\|\nabla v\|^2
+    = (1+C_\Omega^2)a(v,v),
+\]
+so
+\[
+    a(v,v) \ge \frac{1}{1+C_\Omega^2}\,\|v\|_V^2
+    =: \alpha \|v\|_V^2, \qquad \alpha>0.
+\]
+Thus $a$ is coercive on $V$.
+
+\textbf{Energy estimate.}
+Take $v=u(t)$ in the weak form. Using $u(t)\in H^1_0(\Omega)$,
+\[
+    \langle u_t(t), u(t)\rangle + \|\nabla u(t)\|^2 = \langle f(t), u(t)\rangle.
+\]
+Note
+\[
+    \langle u_t(t), u(t)\rangle = \frac{1}{2}\frac{d}{dt}\|u(t)\|^2.
+\]
+Hence
+\[
+    \frac{1}{2}\frac{d}{dt}\|u(t)\|^2 + \|\nabla u(t)\|^2 = \langle f(t), u(t)\rangle.
+\]
+Integrate from $0$ to $t$:
+\[
+    \frac{1}{2}\bigl(\|u(t)\|^2 - \|u_0\|^2\bigr)
+    + \int_0^t \|\nabla u(s)\|^2\,ds
+    = \int_0^t \langle f(s), u(s)\rangle\,ds.
+\]
+Drop the nonnegative term $\int_0^t \|\nabla u(s)\|^2 ds$:
+\[
+    \frac{1}{2}\bigl(\|u(t)\|^2 - \|u_0\|^2\bigr)
+    \le \int_0^t \|f(s)\|\,\|u(s)\|\,ds.
+\]
+Define
+\[
+    U(t) := \sup_{0\le s\le t} \|u(s)\|,
+\]
+then
+\[
+    \int_0^t \|f(s)\|\,\|u(s)\|\,ds
+    \le U(t)\int_0^t \|f(s)\|\,ds.
+\]
+Thus
+\[
+    \frac{1}{2}\bigl(\|u(t)\|^2 - \|u_0\|^2\bigr)
+    \le U(t) \int_0^t \|f(s)\|\,ds,
+\]
+and hence
+\[
+    \|u(t)\|^2
+    \le \|u_0\|^2 + 2 U(t) \int_0^t \|f(s)\|\,ds
+    \quad\forall t\in[0,T].
+\]
+Taking the supremum over $t\in[0,T]$ on the left-hand side,
+\[
+    U(t)^2 \le \|u_0\|^2 + 2 U(t) \int_0^t \|f(s)\|\,ds.
+\]
+Consider $U(t)\ge 0$ as unknown; the inequality
+\[
+    U(t)^2 - 2U(t)\,F(t) - \|u_0\|^2 \le 0,
+    \quad F(t):=\int_0^t \|f(s)\|\,ds,
+\]
+has nonnegative solutions bounded by the positive root of the corresponding quadratic:
+\[
+    U(t) \le F(t) + \sqrt{F(t)^2 + \|u_0\|^2}
+    \le F(t) + \|u_0\|.
+\]
+Thus, in particular,
+\[
+    \|u(t)\| \le U(t) \le \|u_0\| + \int_0^t \|f(s)\|\,ds.
+\]
+So we obtain
+\[
+    \boxed{
+        \|u(t)\| \le \|u_0\| + C \int_0^t \|f(s)\|\,ds, \qquad C = 1.
+    }
+\]
+\subsection*{(b) Semi-discrete system: mass, stiffness, RHS, initial data}
+Let $V_h\subset H^1_0(\Omega)$ be a finite-dimensional space with basis
+$\{\varphi_i\}_{i=1}^N$. We seek
+\[
+    u_h(t,x) = \sum_{j=1}^N U_j(t)\,\varphi_j(x),
+\]
+with coefficient vector $U(t) = (U_1(t),\dots,U_N(t))^T$.
+The semi-discrete weak form reads: find $u_h\in C^1([0,T];V_h)$ such that
+\[
+    \langle u_{h,t}(t), v_h\rangle + \langle \nabla u_h(t), \nabla v_h\rangle
+    = \langle f(t), v_h\rangle
+    \quad \forall v_h\in V_h,
+\]
+with
+\[
+    u_h(0,x) = \Pi_{V_h}u_0(x).
+\]
+Choosing $v_h = \varphi_i$ ($i=1,\dots,N$) and inserting the expansion of $u_h$:
+\[
+    \left\langle \sum_{j=1}^N \dot U_j(t)\varphi_j,\ \varphi_i\right\rangle
+    + \left\langle \nabla\left(\sum_{j=1}^N U_j(t)\varphi_j\right),\ \nabla\varphi_i\right\rangle
+    = \langle f(t), \varphi_i\rangle.
+\]
+This gives
+\[
+    \sum_{j=1}^N M_{ij}\,\dot U_j(t)
+    + \sum_{j=1}^N A_{ij}\,U_j(t)
+    = b_i(t), \qquad i=1,\dots,N,
+\]
+where
+\begin{align*}
+    M_{ij} & := \langle \varphi_j, \varphi_i\rangle
+    = \int_\Omega \varphi_j(x)\varphi_i(x)\,dx,                  \\
+    A_{ij} & := \langle \nabla\varphi_j, \nabla\varphi_i\rangle
+    = \int_\Omega \nabla\varphi_j(x)\cdot\nabla\varphi_i(x)\,dx, \\
+    b_i(t) & := \langle f(t), \varphi_i\rangle
+    = \int_\Omega f(t,x)\,\varphi_i(x)\,dx.
+\end{align*}
+In matrix form:
+\[
+    M \dot U(t) + A U(t) = b(t).
+\]
+For the initial data, the $L^2$-projection $\Pi_{V_h}u_0$ is defined by
+\[
+    \langle \Pi_{V_h}u_0 - u_0, v_h\rangle = 0 \quad \forall v_h\in V_h.
+\]
+Choosing $v_h = \varphi_i$ and writing $\Pi_{V_h}u_0 = \sum_{j} U_j(0)\varphi_j$ gives
+\[
+    \sum_{j=1}^N M_{ij} U_j(0) = \int_\Omega u_0(x)\,\varphi_i(x)\,dx =: c_i.
+\]
+Thus the initial vector $U(0)$ is determined by the linear system
+\[
+    M U(0) = c.
+\]
+\subsection*{(c) Positive definiteness of the mass matrix $M$}
+Let $\alpha = (\alpha_1,\dots,\alpha_N)^T \in \mathbb{R}^N$. Then
+\[
+    \alpha^T M \alpha
+    = \sum_{i,j=1}^N \alpha_i M_{ij} \alpha_j
+    = \sum_{i,j=1}^N \alpha_i \langle \varphi_j,\varphi_i\rangle \alpha_j
+    = \left\langle \sum_{i=1}^N \alpha_i \varphi_i,\ \sum_{j=1}^N \alpha_j \varphi_j \right\rangle.
+\]
+Define $v_h := \sum_{j=1}^N \alpha_j \varphi_j \in V_h$. Then
+\[
+    \alpha^T M \alpha = \langle v_h, v_h\rangle = \|v_h\|^2 \ge 0.
+\]
+Moreover, if $\alpha^T M \alpha = 0$, then $\|v_h\|^2 = 0$, so $v_h \equiv 0$ in $L^2(\Omega)$.
+Since the $\{\varphi_i\}$ form a basis of $V_h$, $v_h \equiv 0$ implies $\alpha = 0$.
+Hence
+\[
+    \alpha^T M \alpha > 0 \quad \forall \alpha\neq 0,
+\]
+and $M$ is symmetric positive definite.
+\subsection*{(d) Fully discrete backward Euler scheme}
+Let $0 = t_0 < t_1 < \dots < t_N = T$ be a uniform partition with time step
+$\Delta t = t_n - t_{n-1}$. Denote $U^n \approx U(t_n)$ and $u_h^n(x) \approx u_h(t_n,x)$.
+Backward Euler applied to the semi-discrete system $M\dot U + A U = b(t)$ gives
+\[
+    M\frac{U^n - U^{n-1}}{\Delta t} + A U^n = b^n,
+    \qquad b^n := b(t_n).
+\]
+Rearrange:
+\[
+    (M + \Delta t\,A) U^n = M U^{n-1} + \Delta t\, b^n,
+    \qquad n = 1,\dots,N.
+\]
+The initial value is $U^0$ as computed from the $L^2$ projection in (b).
+In variational form: find $u_h^n\in V_h$ such that
+\[
+    \left\langle \frac{u_h^n - u_h^{n-1}}{\Delta t}, v_h\right\rangle
+    + \langle \nabla u_h^n,\nabla v_h\rangle
+    = \langle f(t_n), v_h\rangle
+    \quad \forall v_h\in V_h.
+\]
+\subsection*{(e) Explicit expression for $u_h^n$ in terms of degrees of freedom}
+From (d), define
+\[
+    B := (M + \Delta t\,A)^{-1}M,  \qquad
+    g^n := (M + \Delta t\,A)^{-1} \Delta t\, b^n.
+\]
+Then the recurrence can be written as
+\[
+    U^n = B U^{n-1} + g^n.
+\]
+Unfolding the recursion,
+\[
+    \begin{aligned}
+        U^1 & = B U^0 + g^1,                         \\
+        U^2 & = B U^1 + g^2 = B^2 U^0 + B g^1 + g^2, \\
+            & \ \,\vdots                             \\
+        U^n & = B^n U^0 + \sum_{k=1}^n B^{n-k} g^k.
+    \end{aligned}
+\]
+Thus the degrees of freedom at time $t_n$ are given explicitly by
+\[
+    \boxed{
+        U^n = B^n U^0 + \sum_{k=1}^n B^{n-k} g^k.
+    }
+\]
+The corresponding finite element function at time $t_n$ is
+\[
+    u_h^n(x) = \sum_{j=1}^N U_j^n\,\varphi_j(x),
+\]
+so inserting the expression for $U^n$ we get
+\[
+    u_h^n(x)
+    = \sum_{j=1}^N \Bigl(B^n U^0 + \sum_{k=1}^n B^{n-k} g^k\Bigr)_j \,\varphi_j(x).
+\]
+We are allowed to use that $A$ is positive semidefinite; together with positive
+definiteness of $M$, it implies the eigenvalues of $M^{-1}A$ are nonnegative,
+which is relevant for stability (next part).
+\subsection*{(f) Stability of the fully discrete method for $f=0$}
+Set $f\equiv 0$, hence $b^n = 0$ and $g^n = 0$. The backward Euler scheme becomes
+\[
+    (M + \Delta t\,A) U^n = M U^{n-1}
+    \quad\Leftrightarrow\quad
+    U^n = B U^{n-1},\qquad B := (M + \Delta t\,A)^{-1}M.
+\]
+We show stability in the $L^2$-norm of $u_h^n$, i.e.\ that
+\[
+    \|u_h^n\| \le \|u_h^{n-1}\| \quad \text{for all }n,
+\]
+hence non-increasing energy over time for any $\Delta t > 0$.
+Rather than working directly with $B$, we use the discrete weak form.
+For $f=0$, the fully discrete variational formulation is: find $u_h^n\in V_h$ such that
+\[
+    \left\langle \frac{u_h^n - u_h^{n-1}}{\Delta t}, v_h\right\rangle
+    + \langle \nabla u_h^n,\nabla v_h\rangle = 0
+    \quad \forall v_h\in V_h.
+\]
+Choose $v_h = u_h^n$:
+\[
+    \left\langle \frac{u_h^n - u_h^{n-1}}{\Delta t}, u_h^n\right\rangle
+    + \|\nabla u_h^n\|^2 = 0.
+\]
+Multiply by $\Delta t$:
+\[
+    \langle u_h^n - u_h^{n-1}, u_h^n\rangle
+    + \Delta t\,\|\nabla u_h^n\|^2 = 0.
+\]
+Use the identity
+\[
+    \langle a-b,a\rangle
+    = \frac{1}{2}\bigl(\|a\|^2 - \|b\|^2 + \|a-b\|^2\bigr),
+\]
+with $a=u_h^n$, $b=u_h^{n-1}$, to obtain
+\[
+    \frac{1}{2}\bigl(\|u_h^n\|^2 - \|u_h^{n-1}\|^2 + \|u_h^n - u_h^{n-1}\|^2\bigr)
+    + \Delta t\,\|\nabla u_h^n\|^2 = 0.
+\]
+Rearrange:
+\[
+    \|u_h^n\|^2 - \|u_h^{n-1}\|^2
+    = -\|u_h^n - u_h^{n-1}\|^2 - 2\Delta t\,\|\nabla u_h^n\|^2.
+\]
+The right-hand side is $\le 0$, so
+\[
+    \boxed{
+        \|u_h^n\| \le \|u_h^{n-1}\| \quad \text{for all } n\ge 1,
+    }
+\]
+for any $\Delta t >0$. Repeating this inequality gives
+\[
+    \|u_h^n\| \le \|u_h^0\| \quad \forall n,
+\]
+so the fully discrete backward Euler scheme is unconditionally stable in the $L^2$-norm.
+In matrix terms, this corresponds to the fact that the spectral radius of
+$B = (M + \Delta t\,A)^{-1}M$ is bounded by $1$ when $M$ is positive
+definite and $A$ is positive semidefinite.
+

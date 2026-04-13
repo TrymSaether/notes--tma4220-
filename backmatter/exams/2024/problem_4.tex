@@ -1,0 +1,209 @@
+\section*{[2024 EXAM] Problem 4: Heat equation, energy estimate, semi-disc. t-stepping}
+We are given $u \in H^1\big([0,T],H_0^1(\Omega)\big)$ solving the heat equation in weak form
+\[
+    \langle u_t(t),v\rangle + \langle \nabla u(t),\nabla v\rangle
+    = \langle f(t),v\rangle \quad \forall v\in H_0^1(\Omega),\ t\in(0,T), \tag{\text{heat-weak}}
+\]
+with initial condition
+\[
+    u(0,x) = u_0(x)\in H_0^1(\Omega), \tag{\text{heat-IC}}
+\]
+where $\langle\cdot,\cdot\rangle$ denotes the $L^2(\Omega)$ inner product.
+
+\subsection*{(a) Energy estimate and constant $C$}
+First define the bilinear form
+\[
+    a(u,v) := \langle \nabla u,\nabla v\rangle,
+\]
+on $V := H_0^1(\Omega)$.
+
+\textbf{Coercivity of $a$.}
+For any $v\in H_0^1(\Omega)$,
+\[
+    a(v,v) = \|\nabla v\|_{L^2(\Omega)}^2.
+\]
+By Poincaré inequality, there exists $C_\Omega>0$ such that
+\[
+    \|v\|_{L^2(\Omega)} \le C_\Omega \|\nabla v\|_{L^2(\Omega)},
+\]
+hence
+\[
+    \|v\|_{H^1(\Omega)}^2
+    = \|v\|_{L^2}^2 + \|\nabla v\|_{L^2}^2
+    \le (1+C_\Omega^2)\,\|\nabla v\|_{L^2}^2
+    = (1+C_\Omega^2)\,a(v,v).
+\]
+Equivalently,
+\[
+    a(v,v) \ge \alpha \|v\|_{H^1(\Omega)}^2,\quad
+    \alpha := \frac{1}{1+C_\Omega^2}>0,
+\]
+so $a$ is coercive on $V$.
+\textbf{Energy identity.}
+To derive the estimate, choose $v = u(t)$ in (heat-weak):
+\[
+    \langle u_t(t),u(t)\rangle + \|\nabla u(t)\|_{L^2}^2
+    = \langle f(t),u(t)\rangle.
+\]
+Note that
+\[
+    \langle u_t(t),u(t)\rangle
+    = \frac{1}{2}\frac{d}{dt}\|u(t)\|_{L^2(\Omega)}^2.
+\]
+Therefore,
+\[
+    \frac{1}{2}\frac{d}{dt}\|u(t)\|^2 + \|\nabla u(t)\|^2
+    = \langle f(t),u(t)\rangle.
+\]
+\textbf{Estimate the right-hand side.}
+Using Cauchy--Schwarz,
+\[
+    |\langle f(t),u(t)\rangle|
+    \le \|f(t)\|\,\|u(t)\|.
+\]
+Dropping the nonnegative term $\|\nabla u(t)\|^2$ gives
+\[
+    \frac{1}{2}\frac{d}{dt}\|u(t)\|^2 \le \|f(t)\|\,\|u(t)\|.
+\]
+For times where $\|u(t)\|>0$, divide by $\|u(t)\|$:
+\[
+    \frac{d}{dt}\|u(t)\| \le \|f(t)\|.
+\]
+(When $\|u(t)\|=0$, the inequality still holds by continuity, so it is valid for all $t$.)
+Integrate from $0$ to $t$:
+\[
+    \|u(t)\| - \|u(0)\|
+    \le \int_0^t \|f(s)\|\,ds.
+\]
+Using $u(0)=u_0$ we obtain
+\[
+    \|u(t)\| \le \|u_0\| + \int_0^t \|f(s)\|\,ds.
+\]
+Hence (13) holds with
+\[
+    \boxed{C = 1.}
+\]
+\subsection*{(b) Semi-discrete system: $M$, $A$, $b$, initial data}
+We now restrict to the finite-dimensional space $V_h \subset H_0^1(\Omega)$ and seek
+$u_h \in C^1([0,T];V_h)$ such that
+\[
+    \langle u_{h,t}(t),v_h\rangle + \langle \nabla u_h(t),\nabla v_h\rangle
+    = \langle f(t),v_h\rangle \quad \forall v_h\in V_h,\ t\in(0,T), \tag{\text{semi-discrete}}
+\]
+with
+\[
+    u_h(0,x) = \Pi_{V_h}u_0(x),
+\]
+where $\Pi_{V_h}$ is the $L^2$-projection onto $V_h$.
+Let $\{\varphi_1,\dots,\varphi_N\}$ be a basis of $V_h$, and write
+\[
+    u_h(t,x) = \sum_{j=1}^N U_j(t)\,\varphi_j(x),
+\]
+where $U_j(t)$ are the time-dependent coefficients. Let $U(t) = (U_1(t),\dots,U_N(t))^T\in\mathbb{R}^N$.
+Choose $v_h = \varphi_i$ in (semi-discrete):
+\[
+    \left\langle \sum_{j} U_j'(t)\varphi_j,\varphi_i\right\rangle
+    + \left\langle \nabla\sum_j U_j(t)\varphi_j,\nabla\varphi_i\right\rangle
+    = \langle f(t),\varphi_i\rangle.
+\]
+This gives
+\[
+    \sum_{j=1}^N \underbrace{\langle \varphi_j,\varphi_i\rangle}_{M_{ij}} U_j'(t)
+    + \sum_{j=1}^N \underbrace{\langle \nabla\varphi_j,\nabla\varphi_i\rangle}_{A_{ij}} U_j(t)
+    = \underbrace{\langle f(t),\varphi_i\rangle}_{b_i(t)}.
+\]
+Thus we obtain the ODE system
+\[
+    \boxed{M U'(t) + A U(t) = b(t), \quad t\in(0,T),}
+\]
+where
+\[
+    M_{ij} := \int_\Omega \varphi_j\varphi_i\,dx,
+    \quad
+    A_{ij} := \int_\Omega \nabla\varphi_j\cdot\nabla\varphi_i\,dx,
+    \quad
+    b_i(t) := \int_\Omega f(t,x)\,\varphi_i(x)\,dx.
+\]
+For the initial data, using the $L^2$-projection property
+\[
+    \langle \Pi_{V_h}u_0,\varphi_i\rangle = \langle u_0,\varphi_i\rangle,
+\]
+and
+\[
+    u_h(0,x) = \sum_{j=1}^N U_j(0)\,\varphi_j(x) = \Pi_{V_h}u_0(x),
+\]
+we get
+\[
+    \sum_{j=1}^N M_{ij} U_j(0) = \langle u_0,\varphi_i\rangle,
+\]
+or in vector form
+\[
+    \boxed{M U(0) = b^0,\quad b^0_i := \langle u_0,\varphi_i\rangle.}
+\]
+\subsection*{(c) Positive definiteness of the mass matrix $M$}
+Let $z\in\mathbb{R}^N$ be arbitrary. Set the associated finite element function
+\[
+    z_h(x) := \sum_{j=1}^N z_j \varphi_j(x) \in V_h.
+\]
+Then
+\[
+    z^T M z
+    = \sum_{i,j} z_i M_{ij} z_j
+    = \sum_{i,j} z_i z_j \langle \varphi_j,\varphi_i\rangle
+    = \left\langle \sum_i z_i\varphi_i,\ \sum_j z_j\varphi_j \right\rangle
+    = \langle z_h,z_h\rangle
+    = \|z_h\|_{L^2(\Omega)}^2.
+\]
+If $z\neq 0$, then by linear independence of the basis $\{\varphi_j\}$ we have $z_h\not\equiv 0$, so
+\[
+    \|z_h\|_{L^2(\Omega)}^2 > 0.
+\]
+Therefore
+\[
+    z^T M z > 0 \quad \forall z\neq 0,
+\]
+so $M$ is symmetric positive definite.
+\subsection*{(d) Backward Euler time discretisation and uniqueness of $U_1$}
+We now discretise the ODE system
+\[
+    M U'(t) + A U(t) = b(t)
+\]
+in time by backward Euler.
+Let $0=t_0<t_1<\dots<t_{N_t}=T$ with uniform time step $\tau = t_{n+1}-t_n$. Denote
+\[
+    U^n \approx U(t_n),\qquad b^{n+1} \approx b(t_{n+1}).
+\]
+The backward Euler scheme reads:
+\[
+    M \frac{U^{n+1}-U^n}{\tau} + A U^{n+1} = b^{n+1},\quad n=0,1,\dots
+\]
+Rewriting,
+\[
+    (M + \tau A) U^{n+1} = M U^n + \tau b^{n+1}.
+\]
+For the first step ($n=0$) with given initial data $U^0$ (from part (b)),
+\[
+    \boxed{(M + \tau A) U^1 = M U^0 + \tau b^{1}.}
+\]
+\textbf{Uniqueness of $U^1$.}
+We are told that $A$ is positive semi-definite, i.e.
+\[
+    z^T A z \ge 0 \quad \forall z\in\mathbb{R}^N.
+\]
+We have already shown $M$ is symmetric positive definite. For any $z\in\mathbb{R}^N$,
+\[
+    z^T (M + \tau A) z
+    = z^T M z + \tau\, z^T A z
+    \ge z^T M z.
+\]
+If $z\neq 0$ then $z^T M z > 0$, hence
+\[
+    z^T (M + \tau A) z > 0 \quad \forall z\neq 0.
+\]
+Thus $M+\tau A$ is symmetric positive definite, hence invertible.
+Therefore, the linear system
+\[
+    (M + \tau A) U^1 = M U^0 + \tau b^{1}
+\]
+has a unique solution $U^1\in\mathbb{R}^N$. This is exactly the unique fully discrete solution
+after the first time step. (The same argument shows uniqueness at every time step.)

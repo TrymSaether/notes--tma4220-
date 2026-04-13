@@ -1,0 +1,319 @@
+\documentclass[../../main.tex]{subfiles}
+\begin{document}
+\section{Linær Algebra}
+\label{sec:linear_algebra}
+
+\subsection{Indre Produkt og Hilbert-rom}
+La $V$ være et vektorrom over $\mathbb{R}$ (eller $\mathbb{C}$). Et \emph{indre produkt} på $V$ er en funksjon $\langle \cdot, \cdot \rangle : V \times V \to \mathbb{R}$ som oppfyller:
+\begin{enumerate}
+    \item \textbf{Symmetri:} $\langle u, v \rangle = \langle v, u \rangle$ for alle $u, v \in V$
+    \item \textbf{Linearitet:} $\langle \alpha u + \beta w, v \rangle = \alpha \langle u, v \rangle + \beta \langle w, v \rangle$ for alle $u, v, w \in V$ og $\alpha, \beta \in \mathbb{R}$
+    \item \textbf{Positivitet:} $\langle v, v \rangle \geq 0$ for alle $v \in V$, og $\langle v, v \rangle = 0$ hvis og bare hvis $v = 0$
+\end{enumerate}
+
+Det indre produktet induserer en norm gjennom:
+\begin{equation}
+    \|v\| = \sqrt{\langle v, v \rangle}
+\end{equation}
+
+\begin{definition}{Hilbert-rom}{hilbert_space}
+    Et \emph{Hilbert-rom} $H$ er et vektorrom med indre produkt som er komplett med hensyn til normen indusert av det indre produktet.
+
+    Komplett betyr at enhver Cauchy-følge i $H$ konvergerer til et element i $H$.
+\end{definition}
+
+\subsection{Ortogonalitet og Projeksjoner}
+
+Et sentralt konsept i Hilbert-rom er ortogonalitet, som generaliserer ideen om vinkelrette vektorer.
+
+\begin{definition}{Ortogonalitet}{orthogonality}
+    To elementer $u, v$ i et Hilbert-rom $H$ er \emph{ortogonale} hvis $\langle u, v \rangle = 0$. Vi skriver $u \perp v$.
+
+    For et delsett $S \subseteq H$, definerer vi det ortogonale komplementet:
+    \begin{equation}
+        S^\perp = \{v \in H : \langle v, s \rangle = 0 \text{ for alle } s \in S\}
+    \end{equation}
+\end{definition}
+
+\begin{theorem}{Projeksjonsteoremet}{projection_theorem}
+    La $H$ være et Hilbert-rom og $V \subseteq H$ være et lukket delrom. For ethvert element $u \in H$ eksisterer det en unik \emph{ortogonal projeksjon} $P_V u \in V$ slik at:
+    \begin{equation}
+        \|u - P_V u\| = \min_{v \in V} \|u - v\|
+    \end{equation}
+
+    Projeksjonen karakteriseres av:
+    \begin{equation}
+        u - P_V u \perp V \quad \Leftrightarrow \quad \langle u - P_V u, v \rangle = 0 \text{ for alle } v \in V
+    \end{equation}
+\end{theorem}
+
+\subsection{Riesz-representasjonsteorem}
+Riesz-representasjonsteoremet er et fundamentalt resultat som karakteriserer strukturen til Hilbert-rom og etablerer en fullstendig isomorfi mellom et Hilbert-rom og dets dualrom.
+\begin{theorem}{Riesz-representasjonsteorem}{riesz_representation}
+    La $H$ være et Hilbert-rom med indre produkt $\langle x, y \rangle$ som er \emph{sesquilineært}.
+    For enhver kontinuerlig lineær funksjonell $\varphi \in H^\ast$ eksisterer det et unikt element $f_\varphi \in H$, kalt \emph{Riesz-representasjonen} av $\varphi$, slik at:
+    \begin{equation}
+        \varphi(x) = \langle x, f_\varphi \rangle \quad \text{for alle } x \in H
+    \end{equation}
+    Videre gjelder:
+    \begin{enumerate}
+        \item \(\|\varphi\|_{H^\ast} = \|f_\varphi\|_H\) (isometrisk egenskap)
+        \item \(f_\varphi \in (\ker \varphi)^\perp\) er unik vektor, bestemt ved \(\varphi(f_\varphi) = \|\varphi\|^2\)
+        \item Det er også det unike elementet med minimal norm i \( C := \varphi^{-1}(\|\varphi\|^2) \); det vil si at \( f_\varphi \) er det unike elementet i \( C \) som tilfredsstiller \( \|f_\varphi\| = \inf_{c \in C} \|c\| \).
+    \end{enumerate}
+\end{theorem}
+
+\begin{definition}{Kanonisk Riesz-kart}{riesz_map}
+    \emph{Riesz-kartet} $\Phi : H \to H^\ast$ er den antilineære isometrien definert ved:
+    \begin{equation}
+        \Phi(y)(x) = \langle x, y \rangle \quad \text{for alle } x \in H
+    \end{equation}
+
+    Riesz-representasjonsteoremet fastslår at $\Phi$ er bijektiv når $H$ er komplett, og det inverse kartet er:
+    \begin{equation}
+        \Phi^{-1} : H^\ast \to H, \quad \varphi \mapsto f_\varphi
+    \end{equation}
+\end{definition}
+
+\begin{remark}{Geometrisk tolkning}{riesz_geometry}
+    For en ikke-null lineær funksjonell $\varphi$, danner mengden $C = \varphi^{-1}(\|\varphi\|^2)$ et affint hyperplan parallelt med $\ker \varphi$. Siden $C = f_\varphi + \ker \varphi$, er Riesz-representasjonen $f_\varphi$ det unike punktet i $C$ som ligger nærmest origo.
+
+    For enhver $q \in (\ker \varphi)^\perp \setminus \{0\}$ gjelder:
+    \begin{equation}
+        q = \frac{\|q\|^2}{\overline{\varphi(q)}} \cdot f_\varphi
+    \end{equation}
+\end{remark}
+
+\begin{figure}
+    \centering
+    \input{figures/riesz_representation.tikz}
+    \caption{Geometrisk tolkning av Riesz-representasjonsteoremet. Det affine hyperplanet $C = \varphi^{-1}(\|\varphi\|^2)$ (blå linje) er parallelt med kjernekjernen $\ker \varphi$ (grå linje). Riesz-representasjonen $f_\varphi$ (rød punkt) er det unike punktet i $C$ med minimal avstand til origo.}
+    \label{fig:riesz_representation}
+\end{figure}
+
+\begin{example}{Riesz-representasjon i $L^2$}{riesz_l2_example}
+    I Hilbert-rommet $L^2([0,1])$ med det vanlige indre produktet $\langle f, g \rangle = \int_0^1 f(x)g(x) \, dx$, betrakt den lineære funksjonellen $\varphi(f) = f(1/2)$ (punktevaluering i $x = 1/2$).
+
+    Riesz-representasjonen er Dirac-deltafunksjonen $f_\varphi = \delta_{1/2}$, slik at:
+    \begin{equation}
+        \varphi(f) = f(1/2) = \int_0^1 f(x) \delta_{1/2}(x) \, dx = \langle f, \delta_{1/2} \rangle
+    \end{equation}
+\end{example}
+
+\subsection{Spesielle Matriser}
+\subsubsection{Symmetriske matriser}
+Symmetriske matriser er sentrale i anvendelser grunnet deres egenskaper, spesielt innen lineær algebra og numeriske metoder som brukes i løsning av differensialligninger.
+
+\begin{definition}{Symmetrisk matrise}{symmetric_matrix}
+    En matrise $A \in \mathbb{R}^{n \times n}$ er \emph{symmetrisk} hvis $A = A^T$, dvs. $a_{ij} = a_{ji}$ for alle $i,j$.
+\end{definition}
+
+Symmetriske matriser har flere viktige egenskaper:
+\begin{itemize}
+    \item Alle egenverdier er reelle: $\lambda_i \in \mathbb{R}$ for alle $i$.
+    \item Egenvektorer tilhørende forskjellige egenverdier er ortogonale: $v_i \perp v_j$ hvis $\lambda_i \neq \lambda_j$.
+    \item Matrisen er positivt definit hvis alle egenverdier er positive.
+\end{itemize}
+
+\begin{theorem}{Spektralteoremet for symmetriske matriser}{spectral_theorem}
+    Symmetriske matriser er ortogonalt diagonaliserbare: Det finnes en ortogonal matrise $Q$ ($Q^T Q = I$) slik at
+    \[
+        Q^T A Q = \Lambda = \diag(\lambda_1, \dots, \lambda_n),
+    \]
+    hvor $\Lambda$ er en diagonalmatrise med de reelle egenverdiene $\lambda_1, \dots, \lambda_n$ på diagonalen, og kolonnene i $Q$ er de tilsvarende ortonormerte egenvektorene.
+\end{theorem}
+
+Dette teoremet er grunnleggende for mange numeriske algoritmer, da det tillater diagonaliseringsbaserte løsninger.
+
+\begin{example}{Diagonaliserings av en symmetrisk matrise}{symmetric_example}
+    La
+    \[
+        A = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix}.
+    \]
+    Denne matrisen er symmetrisk. Egenverdiene er $\lambda_1 = 3$ og $\lambda_2 = 1$, med egenvektorer $v_1 = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$ og $v_2 = \begin{pmatrix} 1 \\ -1 \end{pmatrix}$. Normalisering gir ortonormal basis, og diagonaliseringsmatrisen $Q$ fører til $\Lambda = \diag(3, 1)$.
+\end{example}
+
+\begin{figure}
+    \centering
+    \input{figures/symmetric_action.tikz}
+    \caption{Virkningen av en symmetrisk matrise på en sirkel. Transformasjonen strekker og komprimerer kun langs ortogonale akser (egenvektorene), uten rotasjon eller skjæring.}
+    \label{fig:symmetric_action}
+\end{figure}
+
+\subsection{Normer og spektrale egenskaper}
+
+\subsubsection{Vektornormer}
+Normer gir oss en måte å måle \emph{størrelsen} av vektorer og matriser.
+
+\begin{definition}{Vektornorm}{vector_norm}
+    En vektornorm på $\mathbb{R}^n$ er en funksjon $\|\cdot\| : \mathbb{R}^n \to \mathbb{R}$ som tilfredsstiller:
+    \begin{enumerate}
+        \item \textbf{Positivitet:} $\|x\| \geq 0$ for alle $x \in \mathbb{R}^n$, og $\|x\| = 0$ hvis og bare hvis $x = 0$.
+        \item \textbf{Homogenitet:} $\|\alpha x\| = |\alpha| \cdot \|x\|$ for alle $x \in \mathbb{R}^n$ og $\alpha \in \mathbb{R}$.
+        \item \textbf{Trekantulikheten:} $\|x + y\| \leq \|x\| + \|y\|$ for alle $x,y \in \mathbb{R}^n$ (trekantulikheten)
+    \end{enumerate}
+\end{definition}
+
+De mest vanlige vektornormene er $p$-normene:
+
+\begin{align*}
+    \|x\|_1      & = \sum_{i=1}^n |x_i| \tag{taxicab}            \\
+    \|x\|_2      & = \sqrt{\sum_{i=1}^n x_i^2} \tag{euklidisk}   \\
+    \|x\|_\infty & = \max_{1 \leq i \leq n} |x_i| \tag{maksnorm}
+\end{align*}
+
+
+\begin{figure}
+    \centering
+    \input{figures/vector_norms.tikz}
+    \caption{Blå: 1-norm (diamant). Rød: 2-norm (sirkel). Grønn: $\infty$-norm (kvadrat).}
+    \label{fig:vector_norms}
+\end{figure}
+
+\subsubsection{Matrisenormer}
+
+\begin{definition}{Matrisenorm}{matrix_norm}
+    En matrisenorm på $\mathbb{R}^{m \times n}$ er en funksjon $\|\cdot\| : \mathbb{R}^{m \times n} \to \mathbb{R}$ som tilfredsstiller:
+    \begin{enumerate}
+        \item \textbf{Positivitet:} $\|A\| \geq 0$ for alle $A \in \mathbb{R}^{m \times n}$, og $\|A\| = 0$ hvis og bare hvis $A = 0$.
+        \item \textbf{Homogenitet:}
+              $\|\alpha A\| = |\alpha| \cdot \|A\|$ for alle $A \in \mathbb{R}^{m \times n}$ og $\alpha \in \mathbb{R}$.
+        \item \textbf{Trekantulikheten:}
+              $\|A + B\| \leq \|A\| + \|B\|$ for alle $A,B \in \mathbb{R}^{m \times n}$.
+    \end{enumerate}
+\end{definition}
+
+En vanlig matrisenorm er \emph{Frobenius-normen}, som måler matrisen som om den var en \enquote{lang} vektor:
+\[
+    \|A\|_F = \sqrt{\sum_{i=1}^m \sum_{j=1}^n |a_{ij}|^2} = \sqrt{\text{tr}(A^T A)}
+\]
+
+\begin{definition}{Konsistent matrisenorm}{consistent_norm}
+    En matrisenorm $\|\cdot\|$ på $\mathbb{R}^{n \times n}$ kalles konsistent (eller sub-multiplikativ) hvis
+    \[
+        \|AB\| \leq \|A\| \cdot \|B\|
+    \]
+    for alle $A, B \in \mathbb{R}^{n \times n}$.
+\end{definition}
+
+Denne egenskapen er viktig fordi den lar oss \enquote{ta ut} normen når vi har produkter av matriser, noe som er grunnleggende for mange konvergensbevis.
+
+\begin{definition}{Underordnet matrisenorm}{subordinate_norm}
+    Gitt en vektornorm $\|\cdot\|_v$ på $\mathbb{R}^n$, defineres den underordnede matrisenormen $\|\cdot\|_M$ på $\mathbb{R}^{n \times n}$ som
+    \[
+        \|A\|_M = \max_{\|x\|_v = 1} \|Ax\|_v = \max_{x \neq 0} \frac{\|Ax\|_v}{\|x\|_v}
+    \]
+\end{definition}
+
+Intuitivt måler den underordnede normen den maksimale strekningen som matrisen $A$ kan påføre enhver enhetsvektor.
+
+De vanligste underordnede matrisenormene er:
+\begin{align*}
+    \|A\|_1      & = \max_{1 \leq j \leq n} \sum_{i=1}^n |a_{ij}| \quad \text{(maksimal kolonnesum)} \\
+    \|A\|_2      & = \sqrt{\lambda_{\max}(A^T A)} \quad \text{(største singulærverdi)}               \\
+    \|A\|_\infty & = \max_{1 \leq i \leq n} \sum_{j=1}^n |a_{ij}| \quad \text{(maksimal radsum)}
+\end{align*}
+
+Disse normene er praktiske fordi de er relativt enkle å beregne og har direkte tolkninger.
+
+\begin{theorem}{Egenskaper ved underordnede normer}{subordinate_properties}
+    \begin{enumerate}
+        \item Enhver underordnet matrisenorm er konsistent.
+        \item For enhver matrise $A \in \mathbb{R}^{n \times n}$ og vektor $x \in \mathbb{R}^n$, gjelder
+              \[
+                  \|Ax\|_v \leq \|A\|_M \cdot \|x\|_v
+              \]
+    \end{enumerate}
+\end{theorem}
+
+\begin{figure}
+    \centering
+    \input{figures/matrix_norm.tikz}
+    \caption{Den blå sirkelen er enhetskulen i 2-norm, og den røde ellipsen er resultatet av å anvende $A$ på denne enhetskulen. Normen $\|A\|_2 = 2$ er den maksimale strekningen som $A$ påfører.}
+    \label{fig:matrix_norm}
+\end{figure}
+
+\subsubsection{Spektralradius}
+
+\begin{definition}{Spektralradius}{spectral_radius}
+    Spektralradiusen til en matrise $A \in \mathbb{C}^{n \times n}$ er definert som
+    \[
+        \rho(A) = \max\{|\lambda| : \lambda \text{ er en egenverdi av } A\}
+    \]
+    altså den største absoluttverdien av egenverdiene til $A$.
+\end{definition}
+
+Spektralradiusen er et fundamentalt mål på hvordan en matrise oppfører seg ved gjentatt anvendelse.
+
+\begin{theorem}{Spektralradius og matrisenormer}{spectral_radius_norms}
+    La $A \in \mathbb{C}^{n \times n}$ og $\|\cdot\|$ være en konsistent matrisenorm. Da gjelder:
+    \begin{enumerate}
+        \item $\rho(A) \leq \|A\|$
+        \item For enhver $\varepsilon > 0$ finnes det en konsistent matrisenorm $\|\cdot\|_\varepsilon$ slik at $\|A\|_\varepsilon \leq \rho(A) + \varepsilon$
+    \end{enumerate}
+\end{theorem}
+
+Dette betyr at spektralradiusen er den \enquote{best mulige nedre grense} for enhver konsistent matrisenorm.
+
+\begin{remark}{Konvergens av matrisepotenser}{matrix_power_convergence}
+    La $A \in \mathbb{C}^{n \times n}$. Da gjelder følgende:
+    \begin{enumerate}
+        \item $\lim_{k \to \infty} A^k = 0$ hvis og bare hvis $\rho(A) < 1$
+        \item For enhver konsistent matrisenorm $\|\cdot\|$, hvis $\|A\| < 1$, så er $\lim_{k \to \infty} A^k = 0$
+    \end{enumerate}
+\end{remark}
+
+\begin{figure}
+    \centering
+    \input{figures/spectral_radius.tikz}
+    \caption{Spektralradius og konvergens. Når alle egenverdiene ligger innenfor enhetssirkelen ($\rho(A) < 1$), konvergerer sekvensen $A^k$ mot nullmatrisen når $k \to \infty$. Dette er grunnleggende for stabilitetsanalyse av iterative metoder.}
+    \label{fig:spectral_radius}
+\end{figure}
+
+\subsubsection{Gershgorins sirkelteorem}
+Gershgorins sirkelteorem er en praktisk metode for å finne egenverdiene til en matrise ved å konstruere sirkler i det komplekse planet.
+
+\begin{theorem}{Gershgorin's sirkelteorem}{gershgorin}
+    La $A = [a_{ij}] \in \mathbb{C}^{n \times n}$. For hver $i \in \{1,2,\ldots,n\}$, definer Gershgorin-sirkelen
+    \[
+        D_i = \{z \in \mathbb{C} : |z - a_{ii}| \leq r_i\}
+    \]
+    hvor $r_i = \sum_{j=1,j\neq i}^{n} |a_{ij}|$ er summen av absoluttverdiene til de ikke-diagonale elementene i rad $i$.
+
+    Enhver egenverdi av $A$ ligger i minst én av Gershgorin-sirklene, dvs. i unionen
+    \[
+        \cup_{i=1}^{n} D_i
+    \]
+
+    Videre, hvis $k$ av sirklene danner et sammenhengende område som er separert fra de andre $n-k$ sirklene, da inneholder dette området nøyaktig $k$ egenverdier av $A$ (telt med multiplisitet).
+\end{theorem}
+
+Intuitivt forteller dette teoremet oss at diagonalelementene i en matrise gir en god indikasjon på hvor egenverdiene ligger, og at de ikke-diagonale elementene bestemmer hvor langt egenverdiene kan avvike fra diagonalelementene.
+
+\begin{figure}
+    \centering
+    % \input{figures/gershgorin.tikz}
+    \caption{Gershgorin-sirkler for en $3 \times 3$ matrise. Hver sirkel er sentrert i et diagonalt element $a_{ii}$ og har radius lik summen av absoluttverdiene til de ikke-diagonale elementene i rad $i$. Egenverdiene $\lambda_1, \lambda_2, \lambda_3$ må ligge innenfor minst én av sirklene.}
+    \label{fig:gershgorin}
+\end{figure}
+
+\begin{example}{Anvendelse av Gershgorin's teorem}{gershgorin_example}
+    For matrisen
+    \[
+        A = \begin{pmatrix} 3 & 1 & 0 \\ 0.5 & 5 & 2 \\ 0 & 1 & 4 \end{pmatrix}
+    \]
+    kan vi for hver rad $i$ beregne radiusene $r_i$ og sentrene $a_{ii}$:
+    \begin{align*}
+        r_1 & = |1| + |0| = 1,     & \quad a_{11} = 3 \\
+        r_2 & = |0.5| + |2| = 2.5, & \quad a_{22} = 5 \\
+        r_3 & = |1| + |0| = 1,     & \quad a_{33} = 4
+    \end{align*}
+    slik at vi får de tre Gershgorin-sirklene:
+    \begin{align*}
+        D_1 & = \{z \in \mathbb{C} : |z - 3| \leq 1\}   \\
+        D_2 & = \{z \in \mathbb{C} : |z - 5| \leq 2.5\} \\
+        D_3 & = \{z \in \mathbb{C} : |z - 4| \leq 1\}
+    \end{align*}
+    Dette betyr at enhver egenverdi av $A$ må ligge i intervallet $[2,7.5]$ på den reelle aksen.
+\end{example}
+\end{document}

@@ -1,0 +1,205 @@
+
+\subsection*{Triangular elements}
+Let $\mathcal{K}$ be any triangle and $\mathbb{P}_k$ be the set of polynomials (in two variables) of degree $\deg(P) \leq k$.
+The most standard finite element is the \emph{linear ($k=1$) Lagrange element} defined by:
+
+\subsection*{Quadratic Lagrange element ($k=2$)}
+Let $p = \mathbb{P}_2$ and $\mathcal{N} = \{N_1, N_2, N_3, N_4, N_5, N_6\}$ (as $\dim(\mathbb{P}_2) = 6$) where:
+\[
+    N_i(v) =
+    \begin{cases}
+         & v(z_i), \quad i = 1, 2, 3 \text{ (vertices) }           \\
+         & v(z_i), \quad i = 4, 5, 6 \text{ (midpoints of edges) }
+    \end{cases}
+\]
+
+To confirm this is a finite element we need to check that $\mathcal{N}$ determines $\mathbb{P}_2$:
+
+\textbf{Proof:}
+Suppose $p \in \mathbb{P}_2$ vanishes at all nodes $z_i$. Since $p|_{L_1}$ is quadratic in one variable and vanishes at $3$ points, $p|_{L_1} = 0$.
+
+By \emph{(DL)} we have
+\[p = L_1 Q_1\]
+with
+\[\deg(Q_1) = \deg(p) - 1 = 1\]
+
+As
+\[p|_{L_2} = 0\]
+we have
+\[L_1Q_1|_{L_2} = 0\]
+So
+\[Q_1|_{L_2} = 0 \text{ (a.e.)} \text{ since } L_1(z_1) \neq 0\]
+
+except possible at $z_3$.
+
+By continuity of $Q_1$ we have
+\[Q_1|_{L_2} = 0\]
+
+Applying \emph{(DL)} again we find
+\[Q_1 = L_2 Q_2, \text{ with } \deg(Q_2) = \deg(Q_1) - 1 = 0 \implies Q_2 = c\]
+and that
+\[p = c L_1 L_2\]
+Observe that $p(z_6) = 0$ and is not on $L_1, L_2$, so:
+\[p(z_6) = c L_1(z_6) L_2(z_6) = 0 \implies c = 0\]
+since
+\[L_1(z_6), L_2(z_6) \neq 0\]
+
+Thus $p \equiv 0$ and $\mathcal{N}$ determines $\mathbb{P}_2$, so it is a finite element.\qed
+
+
+\subsection*{Cubic Hermite element ($k=3$)}
+Let $\mathbb{P}_3$ be the space of polynomials of total degree $\le 3$ (so $\dim\mathbb{P}_3 = 10$).
+
+In the cubic Hermite triangle we use the notation ``\(\bullet\)'' to denote evaluation of the function at a point, and ``\(\circ\)'' to denote evaluation of the gradient (the center of the circle). Note that each circle corresponds to two distinct nodal variables (the two components of the gradient) but the pictorial representation of the gradient is not unique.
+
+We claim that the set of nodal functionals
+$\mathcal{N} = \{N_1, N_2, \dots, N_{10}\}$ determines $\mathbb{P}_3$.
+
+\textbf{Proof:}
+Let $L_1,L_2,L_3$ be non-trivial linear functions that vanish on the three edges of the triangle. Suppose $P\in\mathbb{P}_3$ and $N_i(P)=0$ for $i=1,2,\dots,10$. Restrict $P$ to the edge $L_1$; by the nodal conditions the two endpoints of $L_1$ (call them $z_2$ and $z_3$) satisfy
+\[P(z_2)=0,\quad P'_{L_1}(z_2)=0,\qquad P(z_3)=0,\quad P'_{L_1}(z_3)=0,\]
+where $P'_{L_1}$ denotes differentiation of $P$ along the straight line $L_1$. Thus $z_2$ and $z_3$ are double roots of the univariate cubic polynomial $P\big|_{L_1}$, and a cubic with four roots must be the zero polynomial, hence $P\equiv0$ along $L_1$. The same argument on $L_2$ and $L_3$ yields $P\equiv0$ on each edge, so by the division lemma there exists a constant $c$ with
+\[P = c\,L_1L_2L_3.\]
+Evaluating at the interior node $z_4$ gives
+\[0 = P(z_4) = c\,L_1(z_4)L_2(z_4)L_3(z_4),\]
+and since $L_i(z_4)\neq0$ for $i=1,2,3$ we conclude $c=0$. Therefore $P\equiv0$, so $\mathcal{N}$ determines $\mathbb{P}_3$. \qed
+\subsection*{Argyris Element ($k=5$)}
+
+Let $P = \mathbb{P}_5$. Consider the $21 (= \dim \mathbb{P}_5)$ DOFS.
+As before, let $\bullet$ denote evaluation at the point and the inner circle denote evaluation of the gradient at the center.
+
+The outer circle denotes evaluation of the three second derivatives at the center.
+
+The arrows represent the evaluation of the normal derivatives at the three
+midpoints.
+
+We claim that $N = \{N_1, N_2, \dots, N_{21}\}$ determines $\mathbb{P}_5$.
+
+\textbf{Proof:}
+Suppose that for some $P \in \mathbb{P}_5$, $N_i(P) = 0$ for $i = 1,2, \dots, 21$.
+
+Let $z_1,z_2,z_3$ denote the vertices of the triangle. For $i=1,2,3$ let $L_i$ be the unique nontrivial affine (linear) function satisfying
+\[
+    L_i(z_i)=1,\qquad L_i|_{\text{edge opposite }z_i}=0.
+\]
+Equivalently, the $L_i$ are the barycentric (or area) coordinates on the triangle, so
+\[
+    L_1+L_2+L_3=1,
+\]
+and each $\nabla L_i$ is constant and orthogonal to the edge opposite $z_i$.
+
+
+The restriction of $P$ to $L_1$ is a fifth order polynomial in one variable with triple roots at $z_2$ and $z_3$.
+
+Hence, $P$ vanishes identically on $L_1$. Similarly, $P$ vanishes on $L_2$ and $L_3$.
+
+Therefore, $P = Q L_1 L_2 L_3$, where $\deg Q = 2$.
+
+Observe that $(\partial_{L_1} \partial_{L_2} P)(z_3) = 0$, where $\partial_{L_1}$ and $\partial_{L_2}$ are the directional derivatives along $L_1$ and $L_2$ respectively.
+Therefore,
+\[
+    0 = (\partial_{L_1} \partial_{L_2} P)(z_3) = Q(z_3) L_3(z_3) \partial_{L_2} L_1 \partial_{L_1} L_2,
+\]
+since $\partial_{L_i} L_i \equiv 0$ and $L_i(z_3) = 0$, $i = 1,2$.
+
+This implies $Q(z_3) = 0$ because $L_3(z_3) \neq 0$, $\partial_{L_2} L_1 \neq 0$ and $\partial_{L_1} L_2 \neq 0$.
+
+Similarly, $Q(z_1) = 0$ and $Q(z_2) = 0$.
+
+Also, since $L_1(m_1) = 0$, $\frac{\partial}{\partial n_1} P(m_1) = Q \frac{\partial L_1}{\partial n_1} L_2 L_3 (m_1)$. Therefore,
+\[
+    0 = \frac{\partial}{\partial n_1} P(m_1) \implies Q(m_1) = 0
+\]
+because $\frac{\partial L_1}{\partial n_1} \neq 0$, $L_2(m_1) \neq 0$ and $L_3(m_1) \neq 0$. Similarly, $Q(m_2) = 0$ and $Q(m_3) = 0$.
+
+So $Q \equiv 0$ by the univariate polynomial argument. Hence, $P \equiv 0$.
+
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{scope}[x={(1cm,0cm)}, y={(0cm,1cm)}, z={(0.5cm,0.5cm)}, scale=0.6]
+            % Draw the tilted triangle in 3D space (rotated around x-axis by ~20 degrees for tilt)
+            \draw[thick, fill=blue!50, fill opacity=0.3] (0,0,0) -- (4,0,0) -- (2,3,0) -- cycle;
+            \draw[thick] (0,0,0) -- (4,0,0) -- (2,3,0) -- cycle;
+            \node[below left] at (0,0,0) {$z_1$};
+            \node[below left] at (4,0,0) {$z_2$};
+            \node[below left] at (2,3,0) {$z_3$};
+            \node[above] at (2,1,0) {$z_4$};
+
+            \filldraw[black] (0,0,0) circle (2pt);
+            \filldraw[black] (4,0,0) circle (2pt);
+            \filldraw[black] (2,3,0) circle (2pt);
+            \filldraw[black] (2,1,0) circle (2pt);
+
+            % Derivative arrows at z1 (0,0,0) - in the local plane directions
+            \draw[->, thick] (0,0,0) -- (0.5,0,0) node[midway, below] {$\partial_x$};
+            \draw[->, thick] (0,0,0) -- (0,0.5,0) node[midway, left] {$\partial_y$};
+
+            % Derivative arrows at z2 (4,0,0)
+            \draw[->, thick] (4,0,0) -- (4.5,0,0) node[midway, below] {$\partial_x$};
+            \draw[->, thick] (4,0,0) -- (4,0.5,0) node[midway, left] {$\partial_y$};
+
+            % Derivative arrows at z3 (2,3,0)
+            \draw[->, thick] (2,3,0) -- (2.5,3,0) node[midway, below] {$\partial_x$};
+            \draw[->, thick] (2,3,0) -- (2,3.5,0) node[midway, left] {$\partial_y$};
+        \end{scope}
+        \begin{scope}[shift={(3,0)}, x={(1cm,0cm)}, y={(0cm,1cm)}, scale=0.6]
+            \draw[thick, fill=red!50, fill opacity=0.3] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+            \draw[thick] (0, 0) -- (4, 0) -- (2, 3) -- cycle;
+            \node[below] at (0, 0) {$z_1$};
+            \node[below] at (4, 0) {$z_2$};
+            \node[above] at (2, 3) {$z_3$};
+            \node[below] at (2, 0) {$z_4$};
+            \node[right] at (3, 1.5) {$z_5$};
+            \node[left] at (1, 1.5) {$z_6$};
+
+            \filldraw[black] (0, 0) circle (2pt);
+            \filldraw[black] (4, 0) circle (2pt);
+            \filldraw[black] (2, 3) circle (2pt);
+            \filldraw[black] (2, 0) circle (2pt);
+            \filldraw[black] (3, 1.5) circle (2pt);
+            \filldraw[black] (1, 1.5) circle (2pt);
+
+            % dashed lines between midpoints
+            \draw[dashed, thick, color=red] (2, 0) -- (3, 1.5) -- (1, 1.5) -- cycle;
+            % Include labels for edges L_i
+            \node[below] at (2, -0.5) {$L_1$};
+            \node[above right=4pt] at (3, 1.5) {$L_2$};
+            \node[above left=4pt] at (1, 1.5) {$L_3$};
+        \end{scope}
+        \begin{scope}[shift={(6,0)}, x={(1cm,0cm)}, y={(0cm,1cm)}, scale=0.6]
+            % Argyris triangle base
+            \draw[thick, fill=green!50, fill opacity=0.25] (0,0) -- (4,0) -- (2,3) -- cycle;
+            \draw[thick] (0,0) -- (4,0) -- (2,3) -- cycle;
+
+            % Vertices and nodal marks (value, gradient, and second derivatives)
+            \foreach \pt/\i in {(0,0)/1,(4,0)/2,(2,3)/3} {
+                \filldraw[black] \pt circle (2pt);                % function value (dot)
+                \draw[black, thick] \pt circle (6pt);             % inner circle: gradient (two DOFs)
+                \draw[black, thick] \pt circle (11pt);            % outer circle: second derivatives (three DOFs)
+                \node[below right] at \pt {$z_{\i}$};
+            }
+
+            % interior vertex (value)
+            \filldraw[black] (2,1) circle (2pt) node[above] {$z_4$};
+
+            % midpoints of edges and normal-derivative arrows (one DOF each)
+            \coordinate (m1) at (2,0);      % midpoint of edge z1-z2
+            \coordinate (m2) at (3,1.5);    % midpoint of edge z2-z3
+            \coordinate (m3) at (1,1.5);    % midpoint of edge z3-z1
+
+            \foreach \m in {(m1),(m2),(m3)}{
+                \filldraw[black] \m circle (1.8pt);
+            }
+            % midpoints m_i
+            \node[above] at (m1) {$m_1$};
+            \node[below left] at (m2) {$m_2$};
+            \node[below right] at (m3) {$m_3$};
+
+            % Normal derivative arrows (pointing outward from triangle)
+            \draw[->, thick] (m1) -- ($(m1)+(0,-0.55)$) node[midway,right] {$\partial_{n_1}$};
+            \draw[->, thick] (m2) -- ($(m2)+(0.4,0.3)$) node[midway,below right] {$\partial_{n_2}$};
+            \draw[->, thick] (m3) -- ($(m3)+(-0.4,0.3)$) node[midway,below left] {$\partial_{n_3}$};
+        \end{scope}
+    \end{tikzpicture}
+\end{center}

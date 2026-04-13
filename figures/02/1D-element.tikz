@@ -1,0 +1,7 @@
+\begin{tikzpicture}
+    \draw[->, thick] (-2, 0) -- (2, 0) node[anchor=north west] {$x$};
+
+    \node[below] at (-1, 0) {$a$};
+    \node[below] at (1, 0) {$b$};
+    \draw[dashed, very thick, color=blue] (-1, 0) -- (1, 0);
+\end{tikzpicture}

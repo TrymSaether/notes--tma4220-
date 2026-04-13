@@ -1,0 +1,281 @@
+\section*{[2023 PREP EXAM] Problem 1: Weak form of Poisson eq. with Neumann BCs}
+
+Let $u \in H^2(\Omega)$ solve
+\[
+    \begin{cases}
+        \Delta u = f                  & \text{in } \Omega \subset \mathbb{R}^3, \\
+        \nabla u \cdot \mathbf{n} = 0 & \text{on } \partial\Omega,
+    \end{cases}
+\]
+for some $f \in L^2(\Omega)$, where $\mathbf{n}$ is the outward unit normal on $\partial\Omega$.
+\subsection*{(a) Define $L^2(\Omega)$ and $H^2(\Omega)$}
+Let $\Omega \subset \mathbb{R}^3$ be open and bounded.
+\textbf{$L^2(\Omega)$.}
+We define
+\[
+    L^2(\Omega)
+    := \bigg\{ u : \Omega \to \mathbb{R} \text{ measurable } \,\bigg|\, \int_\Omega |u(x)|^2\,dx < \infty \bigg\}.
+\]
+It is a Hilbert space with inner product and norm
+\[
+    \langle u,v\rangle_{L^2(\Omega)} := \int_\Omega u(x)v(x)\,dx,
+    \qquad
+    \|u\|_{L^2(\Omega)} := \left(\int_\Omega |u(x)|^2\,dx\right)^{1/2}.
+\]
+\textbf{$H^2(\Omega)$.}
+For a multiindex $\alpha = (\alpha_1,\alpha_2,\alpha_3)\in \mathbb{N}_0^3$ with $|\alpha| = \alpha_1+\alpha_2+\alpha_3$, the weak derivative $D^\alpha u$ (if it exists) is required to be in $L^2(\Omega)$.
+We define
+\[
+    H^2(\Omega)
+    := \Big\{ u \in L^2(\Omega) \;\Big|\; D^\alpha u \in L^2(\Omega)\ \text{for all } \alpha \text{ with }|\alpha|\le 2\Big\}.
+\]
+The norm is
+\[
+    \|u\|_{H^2(\Omega)}^2
+    := \sum_{|\alpha|\le 2} \|D^\alpha u\|_{L^2(\Omega)}^2.
+\]
+\subsection*{(b) Weak formulation: identify $a(u,v)$ and $g(v)$}
+We want to write the Poisson equation in the form
+\[
+    a(u,v) = g(v) \quad \forall v \in V,
+\]
+for a suitable Hilbert space $V$.
+
+\textbf{Step 1: Multiply by a test function and integrate.}
+Take $v \in C^\infty(\overline{\Omega})$. Multiply $\Delta u = f$ by $v$ and integrate:
+\[
+    \int_\Omega \Delta u \, v\,dx = \int_\Omega f v\,dx.
+\]
+\textbf{Step 2: Integration by parts.}
+Green's identity gives
+\[
+    \int_\Omega \Delta u\,v\,dx
+    = - \int_\Omega \nabla u \cdot \nabla v\,dx
+    + \int_{\partial\Omega} (\nabla u\cdot \mathbf{n})\, v\,ds.
+\]
+Using the Neumann boundary condition $\nabla u \cdot \mathbf{n} = 0$ on $\partial\Omega$, the boundary term vanishes:
+\[
+    \int_{\partial\Omega} (\nabla u \cdot \mathbf{n})\,v\,ds = 0.
+\]
+Thus
+\[
+    - \int_\Omega \nabla u \cdot \nabla v\,dx
+    = \int_\Omega f v\,dx,
+\]
+or equivalently
+\[
+    \int_\Omega \nabla u \cdot \nabla v\,dx
+    = - \int_\Omega f v\,dx.
+\]
+\textbf{Step 3: Define $a$ and $g$.}
+We set
+\[
+    a(u,v) := \int_\Omega \nabla u \cdot \nabla v\,dx,
+    \qquad
+    g(v) := -\int_\Omega f v\,dx.
+\]
+Then the weak formulation is:
+\begin{quote}
+    \emph{Find $u \in V$ such that}
+    \[
+        a(u,v) = g(v) \quad \forall v \in V.
+    \]
+\end{quote}
+\subsection*{(c) Natural choice of $V$ and justification}
+From the weak form
+\[
+    \int_\Omega \nabla u \cdot \nabla v\,dx = -\int_\Omega f v\,dx,
+\]
+we require $u,v$ to have square-integrable gradients, so $u,v \in H^1(\Omega)$.
+There is no Dirichlet condition on $u$ or $v$, only a Neumann condition on $\nabla u$. For a pure Neumann problem, constants lie in the kernel:
+\[
+    a(c,v) = \int_\Omega \nabla c \cdot \nabla v\,dx = 0 \quad \forall v.
+\]
+Therefore $u$ is only unique up to an additive constant. To obtain uniqueness and a Poincar\'e inequality, we restrict to the mean-zero subspace
+\[
+    V := H^1_\star(\Omega)
+    := \left\{ v \in H^1(\Omega) \,\bigg|\, \int_\Omega v(x)\,dx = 0 \right\}.
+\]
+On $H^1_\star(\Omega)$, a Neumann-type Poincar\'e inequality holds:
+\[
+    \|v\|_{L^2(\Omega)} \le C_\Omega \|\nabla v\|_{L^2(\Omega)}
+    \quad \forall v \in H^1_\star(\Omega).
+\]
+Thus the natural choice is
+\[
+    V = H^1_\star(\Omega),
+\]
+which removes the constant kernel and gives the coercivity needed later.
+\subsection*{(d) Symmetry and $V$-ellipticity of $a$}
+We consider
+\[
+    a(u,v) = \int_\Omega \nabla u \cdot \nabla v\,dx,
+    \qquad V = H^1_\star(\Omega),
+\]
+with the norm
+\[
+    \|v\|_V^2 := \|v\|_{L^2(\Omega)}^2 + \|\nabla v\|_{L^2(\Omega)}^2.
+\]
+\textbf{Symmetry.}
+For any $u,v \in V$,
+\[
+    a(u,v) = \int_\Omega \nabla u \cdot \nabla v\,dx
+    = \int_\Omega \nabla v \cdot \nabla u\,dx
+    = a(v,u),
+\]
+so $a$ is symmetric.
+
+\textbf{Ellipticity (coercivity).}
+A bilinear form $a:V\times V \to \mathbb{R}$ is $V$-elliptic if
+\[
+    \exists \alpha>0:\quad a(v,v) \ge \alpha \|v\|_V^2 \quad \forall v\in V.
+\]
+Here
+\[
+    a(v,v) = \int_\Omega |\nabla v|^2\,dx = \|\nabla v\|_{L^2(\Omega)}^2.
+\]
+Using the Poincar\'e inequality on $H^1_\star(\Omega)$,
+\[
+    \|v\|_{L^2(\Omega)}^2 \le C_\Omega^2 \|\nabla v\|_{L^2(\Omega)}^2,
+\]
+we get
+\[
+    \|v\|_V^2
+    = \|v\|_{L^2(\Omega)}^2 + \|\nabla v\|_{L^2(\Omega)}^2
+    \le C_\Omega^2 \|\nabla v\|_{L^2}^2 + \|\nabla v\|_{L^2}^2
+    = (1 + C_\Omega^2)\|\nabla v\|_{L^2}^2
+    = (1 + C_\Omega^2)a(v,v).
+\]
+Hence
+\[
+    a(v,v) \ge \frac{1}{1 + C_\Omega^2}\,\|v\|_V^2
+    \quad \forall v\in V.
+\]
+Thus $a$ is $V$-elliptic with constant
+\[
+    \alpha = \frac{1}{1+C_\Omega^2}>0.
+\]
+We also note continuity:
+\[
+    |a(u,v)| = \left|\int_\Omega \nabla u\cdot\nabla v\,dx\right|
+    \le \|\nabla u\|_{L^2}\|\nabla v\|_{L^2}
+    \le \|u\|_V \|v\|_V.
+\]
+\subsection*{(e) Existence \& uniqueness for sym. $V$-elliptic $a(\cdot, \cdot)$; well-posed}
+Let $V$ be a Hilbert space with inner product $\langle\cdot,\cdot\rangle_V$ and norm $\|\cdot\|_V$, and let
+\[
+    a:V\times V \to \mathbb{R}
+\]
+be bilinear, symmetric, continuous and $V$-elliptic:
+\[
+    |a(u,v)| \le M \|u\|_V \|v\|_V,\qquad
+    a(v,v) \ge \alpha \|v\|_V^2,\quad \forall u,v\in V,
+\]
+for some $M,\alpha>0$.
+Let $g \in V^\ast$ be a bounded linear functional.
+We want to prove: there exists a unique $u \in V$ such that
+\[
+    a(u,v) = g(v) \quad \forall v \in V.
+\]
+\textbf{Step 1: Define $T:V\to V$ via Riesz.}
+For each fixed $u\in V$, define the functional
+\[
+    \ell_u(v) := a(u,v) \quad \forall v\in V.
+\]
+By continuity of $a$, $\ell_u$ is a bounded linear functional, so $\ell_u\in V^\ast$.
+By the Riesz representation theorem, there exists a unique $T u \in V$ such that
+\[
+    a(u,v) = \ell_u(v) = \langle T u, v\rangle_V \quad \forall v\in V.
+\]
+This defines a linear operator $T:V\to V$, $u\mapsto T u$.
+Similarly, for $g\in V^\ast$ there exists a unique $f\in V$ such that
+\[
+    g(v) = \langle f,v\rangle_V \quad \forall v\in V.
+\]
+The variational problem $a(u,v)=g(v)$ for all $v$ is equivalent to
+\[
+    \langle T u, v\rangle_V = \langle f,v\rangle_V \quad\forall v\in V,
+\]
+i.e.
+\[
+    T u = f.
+\]
+\textbf{Step 2: Properties of $T$.}
+\begin{itemize}
+    \item \emph{Linearity:} From bilinearity of $a$ and uniqueness in Riesz, $T$ is linear.
+    \item \emph{Self-adjointness:} Symmetry of $a$ implies
+          \[
+              \langle T u, v\rangle_V = a(u,v) = a(v,u) = \langle T v, u\rangle_V = \langle u, T v\rangle_V,
+          \]
+          so $T$ is self-adjoint.
+    \item \emph{Coercivity inequality:} For any $u\in V$,
+          \[
+              a(u,u) = \langle T u, u\rangle_V \ge \alpha \|u\|_V^2.
+          \]
+          On the other hand,
+          \[
+              |\langle T u, u\rangle_V| \le \|T u\|_V\|u\|_V.
+          \]
+          Hence
+          \[
+              \alpha \|u\|_V^2 \le \|T u\|_V\|u\|_V
+              \quad\Rightarrow\quad
+              \|T u\|_V \ge \alpha \|u\|_V \quad \forall u\in V.
+          \]
+          In particular, if $T u = 0$, then $\alpha \|u\|_V \le 0$ and hence $u=0$. So $T$ is injective and
+          \[
+              \|u\|_V \le \frac{1}{\alpha}\|T u\|_V.
+          \]
+\end{itemize}
+\textbf{Step 3: Surjectivity of $T$.}
+The inequality $\|u\|_V \le \alpha^{-1}\|T u\|_V$ implies that $\mathrm{Range}(T)$ is closed and that $T^{-1}$ is bounded on $\mathrm{Range}(T)$.
+Since $T$ is self-adjoint, we have the orthogonal decomposition
+\[
+    (\mathrm{Range}(T))^\perp = \ker(T).
+\]
+We already know $\ker(T) = \{0\}$ (injectivity), hence
+\[
+    (\mathrm{Range}(T))^\perp = \{0\},
+\]
+which implies $\mathrm{Range}(T)$ is dense in $V$. Being both dense and closed, $\mathrm{Range}(T)$ must be all of $V$:
+\[
+    \mathrm{Range}(T) = V.
+\]
+Thus $T:V\to V$ is bijective, with bounded inverse.
+
+\textbf{Step 4: Existence, uniqueness, and stability.}
+Since $T$ is bijective, for any $f\in V$ there exists a unique $u\in V$ such that $T u = f$, i.e.
+\[
+    a(u,v) = g(v) \quad\forall v\in V
+\]
+has a unique solution.
+Moreover, we have the stability estimate
+\[
+    \alpha \|u\|_V^2 \le a(u,u) = g(u) \le \|g\|_{V^\ast}\|u\|_V,
+\]
+so
+\[
+    \|u\|_V \le \frac{1}{\alpha}\|g\|_{V^\ast}.
+\]
+Thus the problem is well posed (existence, uniqueness, and continuous dependence on $g$).
+\textbf{Application to the Neumann problem.}
+In our concrete case:
+\[
+    V = H^1_\star(\Omega),\qquad
+    a(u,v) = \int_\Omega \nabla u \cdot \nabla v\,dx,\qquad
+    g(v) = -\int_\Omega f v\,dx.
+\]
+We have shown that $a$ is symmetric, continuous, and $V$-elliptic, and
+\[
+    |g(v)| = \left|\int_\Omega f v\,dx\right|
+    \le \|f\|_{L^2(\Omega)}\|v\|_{L^2(\Omega)}
+    \le C_\Omega \|f\|_{L^2(\Omega)}\|\nabla v\|_{L^2(\Omega)}
+    \le C \|f\|_{L^2(\Omega)} \|v\|_V,
+\]
+so $g$ is bounded on $V$.
+Therefore, there exists a unique $u \in H^1_\star(\Omega)$ such that
+\[
+    \int_\Omega \nabla u \cdot \nabla v\,dx = -\int_\Omega f v\,dx
+    \quad \forall v \in H^1_\star(\Omega),
+\]
+and the weak formulation is well posed. In terms of the original Poisson problem with Neumann boundary conditions, the solution is unique up to an additive constant; fixing the mean (e.g.\ $\int_\Omega u = 0$) yields uniqueness in $H^1_\star(\Omega)$.

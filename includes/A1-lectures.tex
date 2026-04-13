@@ -1,3 +1,5 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
 \chapter{Lectures}
 
 \section{Lecture 6: 04.09.2025}
@@ -388,12 +390,11 @@ With the last basis function given by:
 
 Now we have defined $V_h$, we can study the error.
 
-\begin{theorem}{}{}
+\begin{theorem}{1D interpolation error estimate for linear finite elements}{}
     Let $h = \max_i h_i$, $w \in C^2([0, 1]) \cap V_h^1$ and the interpolant $I w$. Then:
     \[
         \|w - Iw\|_V \leq \frac{h}{\sqrt{2}} \|w''\|_{L^2}
     \]
-
 \end{theorem}
 \begin{proof}
     We begin by restricting to an arbitrary element $I_i$ noting:
@@ -475,7 +476,7 @@ This follows immediately from $V_h^1 \subset V_h^k$. This is not an optimal erro
 
 \subsection{Existence and uniqueness}
 
-\paragraph{Functional analysis recap:} Recall the function space:
+\textbf{Functional analysis recap:} Recall the function space:
 \[
     C^m(\Omega) = \{f \in C^0(\Omega) : D^{\mathbf{k}} f \in C^0(\Omega) \quad \forall |\mathbf{k}| \leq m\}
 \]
@@ -534,8 +535,16 @@ The sequence $\{f_i\}_{i=1}^\infty$ is a Cauchy sequence if:
         \|u\|_\infty     & = \inf\{C : |u(x)| \leq C \text{ a.e. in } \Omega\}
     \end{align*}
 \end{definition}
+\subsection{Hölder's inequality}
 
-\paragraph{Inequalities in $L^p$ spaces:}
+\begin{theorem}{Hölder's inequality}{holders-inequality}
+    For $1 \leq p, q \leq \infty$ with $\frac{1}{p} + \frac{1}{q} = 1$ we have:
+    \[
+        \|uv\|_1 \leq \|u\|_p \|v\|_q
+    \]
+\end{theorem}
+
+\textbf{Inequalities in $L^p$ spaces:}
 \begin{itemize}
     \item \textbf{Hölder's inequality:} For $1 \leq p, q \leq \infty$ with $\frac{1}{p} + \frac{1}{q} = 1$ we have:
           \[
@@ -547,7 +556,7 @@ The sequence $\{f_i\}_{i=1}^\infty$ is a Cauchy sequence if:
           \]
 \end{itemize}
 
-\paragraph{Hilbert spaces} is an inner product space which is complete w.r.t. the norm induced by the inner product $\langle \cdot, \cdot \rangle^{\frac12} = \|\cdot\|$.
+\textbf{Hilbert spaces} is an inner product space which is complete w.r.t. the norm induced by the inner product $\langle \cdot, \cdot \rangle^{\frac12} = \|\cdot\|$.
 
 \begin{theorem}{Hilbert projection}{hilbert-projection}
     Let $\mathcal{M} \subset V$ be a closed subspace of a Hilbert space $V$. Then:
@@ -756,7 +765,7 @@ The weak form is given by seeking $u \in V$ s.t.
 \begin{align*}
     a(u, v) & = \int_\Omega \nabla u \cdot \nabla v \, dx \\
     g(v)    & = \int_\Omega f v \, dx                     \\
-    a(u, v) & = g(v) \quad \forall v \in V \tag{MP2}
+    a(u, v) & = g(v) \quad \forall v \in V \tag{MProblem 2}
 \end{align*}
 
 \subsection{V-ellipticity}
@@ -884,6 +893,103 @@ Note that if $a(\cdot, \cdot)$ is symmetric and $V$-elliptic it's norm is equiva
 To apply Lax-Milgram we need to show continuity and coercivity.
 To show coercivity we need the following result:
 \begin{lemma}{Poincaré inequality}{poincare-inequality}
+    Let $\Omega \subset \mathbb{R}^n$ be a bounded domain, and let $u \in H_0^1(\Omega)$.
+    Then there exists a constant $C>0$ depending only on $\Omega$ such that
+    \[
+        \|u\|_{L^2(\Omega)} \le C \|\nabla u\|_{L^2(\Omega)} .
+    \]
+\end{lemma}
+
+\begin{proof}
+    \textbf{Step 1: First prove the result for $u \in C_0^\infty(\Omega)$.}
+
+    Since $u$ vanishes on $\partial \Omega$, the vector field $u^2 x$ also has zero
+    trace on $\partial \Omega$. We compute its divergence explicitly:
+    \[
+        \nabla \cdot (u^2 x)
+        = \sum_{i=1}^n \partial_{x_i}(u^2 x_i)
+        = \sum_{i=1}^n \big( 2u \, \partial_{x_i}u \, x_i + u^2\big)
+        = n u^2 + 2u \, (\nabla u \cdot x).
+    \]
+    Rearranging gives the useful identity
+    \[
+        u^2
+        = \frac{1}{n}\,\nabla \cdot (u^2 x)
+        - \frac{2}{n}\,u(\nabla u \cdot x).
+    \]
+
+    \textbf{Step 2: Integrate over $\Omega$.}
+
+    Integrating the previous identity over $\Omega$ yields
+    \[
+        \int_\Omega u^2 \, dx
+        = \frac{1}{n} \int_\Omega \nabla \cdot (u^2 x) \, dx
+        - \frac{2}{n} \int_\Omega u (\nabla u \cdot x) \, dx.
+    \]
+
+    By the divergence theorem, and using $u=0$ on $\partial\Omega$,
+    \[
+        \int_\Omega \nabla\cdot(u^2 x)\,dx
+        = \int_{\partial\Omega} (u^2 x)\cdot n\, ds
+        = 0.
+    \]
+    Hence
+    \[
+        \|u\|_{L^2(\Omega)}^2
+        = -\frac{2}{n} \int_\Omega u(\nabla u \cdot x)\,dx.
+    \]
+
+    \textbf{Step 3: Estimate the remaining integral using Cauchy--Schwarz.}
+
+    Since $\Omega$ is bounded, denote
+    \[
+        R := \max_{x\in\Omega} |x| < \infty.
+    \]
+    Then
+    \[
+        \Big|\int_\Omega u(\nabla u \cdot x)\,dx\Big|
+        \le R \int_\Omega |u||\nabla u|\,dx
+        \le R \|u\|_{L^2(\Omega)} \|\nabla u\|_{L^2(\Omega)}.
+    \]
+    Thus
+    \[
+        \|u\|_{L^2(\Omega)}^2
+        \le \frac{2R}{n}\, \|u\|_{L^2(\Omega)} \|\nabla u\|_{L^2(\Omega)}.
+    \]
+
+    \textbf{Step 4: Divide out the nonzero term.}
+
+    If $u\equiv 0$ the inequality is trivial. Otherwise divide both sides by
+    $\|u\|_{L^2(\Omega)}$:
+    \[
+        \|u\|_{L^2(\Omega)} \le \frac{2R}{n}\,\|\nabla u\|_{L^2(\Omega)}.
+    \]
+
+    \textbf{Step 5: Extend to all $u\in H_0^1(\Omega)$.}
+
+    Since $C_0^\infty(\Omega)$ is dense in $H_0^1(\Omega)$, there exists a sequence
+    $u_k\in C_0^\infty(\Omega)$ such that
+    \[
+        u_k \to u \quad\text{in } H_0^1(\Omega).
+    \]
+    Thus
+    \[
+        \|u_k\|_{L^2(\Omega)} \to \|u\|_{L^2(\Omega)},\qquad
+        \|\nabla u_k\|_{L^2(\Omega)} \to \|\nabla u\|_{L^2(\Omega)}.
+    \]
+    Passing to the limit in the inequality for each $u_k$ gives the desired result for all
+    $u\in H_0^1(\Omega)$.
+
+        \textbf{Intuition.}
+    The inequality says: if a function is \emph{forced to be zero on the boundary},
+    then the only way for it to have large size inside is if its slope (gradient) is also large.
+    A way to picture this is stretching a rubber membrane pinned at the boundary:
+    the membrane cannot bulge into the domain without having tension, i.e.\ a large gradient.
+
+\end{proof}
+
+
+\begin{lemma}{Poincaré inequality}{poincare-inequality}
     Suppose $\Omega \subset \mathbb{R}^n$ is bounded and $u \in H_0^1(\Omega)$. Then $\exists C > 0$ s.t.
     \[
         \|u\|_0 \leq C \|\nabla u\|_0
@@ -900,10 +1006,11 @@ To show coercivity we need the following result:
     \end{align*}
     Through Hölder's inequality:
     \begin{align*}
-        \|u\|_0^2 & = \int_\Omega u^2 \, dx = \frac{1}{n} \int_\Omega \nabla \cdot (u^2 \symbf{x}) \, dx - \frac{2}{n} \int_\Omega u (\nabla u \cdot \symbf{x}) \, dx           \\
-                  & = \underbrace{\frac{1}{n} \int_{\partial \Omega} \mathbf{n} \cdot (u^2 \symbf{x}) \, ds}_{= 0} - \frac{2}{n} \int_\Omega u (\nabla u \cdot \symbf{x}) \, dx \\
-                  & \overset{\text{Hölder}}{\leq} \frac{2}{n} \max_{\symbf{x} \in \Omega} |\symbf{x}| \int_\Omega |u \nabla u| \, dx                                            \\
-                  & \leq \frac{2}{n} \max_{\symbf{x} \in \Omega} \sqrt{\int_\Omega u^2 \, dx} \sqrt{\int_\Omega |\nabla u|^2 \, dx}
+        \|u\|_0^2 & = \int_\Omega u^2 \, dx = \frac{1}{n} \int_\Omega \nabla \cdot (u^2 \symbf{x}) \, dx - \frac{2}{n} \int_\Omega u (\nabla u \cdot \symbf{x}) \, dx                                  \\
+                  & = \overbrace{\frac{1}{n} \int_{\partial \Omega} \mathbf{n} \cdot (u^2 \symbf{x}) \, ds}^{0} - \frac{2}{n} \overbrace{\int_\Omega u (\nabla u \cdot \symbf{x}) \, dx}^{\mathcal{I}} \leq \frac{2}{n} \abs{\mathcal{I}}                                                                                                                                                 \\
+                  & \leq \frac{2}{n} \max_{\symbf{x} \in \Omega} |\symbf{x}| \int_\Omega |u \nabla u| \, dx                                                                   \\
+                  & \overset{\text{Hölder}}{\leq}
+                  \frac{2}{n} \max_{\symbf{x} \in \Omega} |\symbf{x}| \sqrt{\int_\Omega |u|^2 \, dx} \sqrt{\int_\Omega |\nabla u|^2 \, dx}
     \end{align*}
     Giving us:
     \[
@@ -913,8 +1020,8 @@ To show coercivity we need the following result:
     Then the inequality holds for each $k$ and $\|u_k\|_0 \to \|u\|_0$ and $\|\nabla u_k\|_0 \to \|\nabla u\|_0$ as $k \to \infty$ completing the proof.\qed
 \end{proof}
 
-\subsection{Application of Lax-Milgram to (MP2)}
-For (MP2) we need that:
+\subsection{Application of Lax-Milgram to (MProblem 2)}
+For (MProblem 2) we need that:
 \[
     a(u, v) = \int_\Omega \nabla u \cdot \nabla v \, dx
 \]
@@ -933,7 +1040,7 @@ For \textbf{coercivity} we use the Poincaré inequality \ref{lem:poincare-inequa
 \[
     a(u, u) = \|\nabla u\|_0^2 \geq \frac{1}{C^2 + 1} \left(\|u\|_0^2 + \|\nabla u\|_0^2\right) = \frac{\|u\|_1^2}{C^2 + 1}
 \]
-We can employ \emph{Lax-Milgram \ref{thm:lax-milgram}} and conclude there's a unique solution to (MP2).
+We can employ \emph{Lax-Milgram \ref{thm:lax-milgram}} and conclude there's a unique solution to (MProblem 2).
 
 We have existence/uniqueness, now we want to know how accurate a discrete approximation $u_h \in V_h \subset V$ is, which leads to \emph{Céa's lemma}.
 \subsection{Céa's lemma Vol. 2 (Approximation error)}
@@ -1063,7 +1170,7 @@ We abuse notation referring to $L$ as \emph{the hyperplane}.
     \[
         P(\substack{\hat{x} \\ x_n}) = \sum_{j=1}^d \sum_{|\hat{i}| \leq d - j} C_{\hat{i}j} \hat{x}^{\hat{i}} x_n^j = x_n \underbrace{\sum_{j=1}^d \sum_{|\hat{i}| \leq d - j} C_{\hat{i}j} \hat{x}^{\hat{i}} x_n^{j-1}}_{Q(\substack{\hat{x} \\ x_n})} = x_n Q(\substack{\hat{x} \\ x_n}) = L(x) Q(x)
     \]
-    where $\deg(Q) = d - 1$.\qed
+    where $\deg(Q) = d - 1$.
 \end{proof}
 
 We begin focusing on \textbf{triangular elements:}
@@ -1104,13 +1211,10 @@ The most standard finite element is the \emph{linear ($k=1$) Lagrange element} d
 Let's check this satisfies the definition of a finite element, to do this we need to show that $\mathcal{N}$ determines $\mathcal{P}_1$:
 \begin{proof}[Proof that $\mathcal{N}=\{N_1, N_2, N_3\}$ determines $\mathcal{P}_1$]
 
-    \medskip
 
     Let $L_1, L_2, L_3$ be linear functions describing the lines/edges of the triangle $\mathcal{K}$.
-    \medskip
-    Suppose we have a polynomial $P \in \mathcal{P}_1$ which vanishes on the nodes $z_1, z_2, z_3$.
-    \medskip
-    Since $P|_{L_1} = 0$ is linear in one variable and vanishes at two points, $P$ must vanish on the entire line $L_1$ s.t. $P|_{L_1} = 0$.
+        Suppose we have a polynomial $P \in \mathcal{P}_1$ which vanishes on the nodes $z_1, z_2, z_3$.
+        Since $P|_{L_1} = 0$ is linear in one variable and vanishes at two points, $P$ must vanish on the entire line $L_1$ s.t. $P|_{L_1} = 0$.
     By \emph{Deconstruction lemma \ref{lem:deconstruction-lemma}} we have $P = L_1 c$ where $c$ is a constant (since $\deg(P) = 1$).
 
     \[
@@ -1175,21 +1279,41 @@ Another valid element could be as follows:
             \draw[dashed, thick, color=blue] (2, 0) -- (3, 1.5) -- (1, 1.5) -- cycle;
 
             % Include labels for edges L_i
-            \node[below] at (2, 0.5) {$L_1$};
-            \node[right] at (2.5, 2) {$L_2$};
-            \node[left] at (1.5, 1.5) {$L_3$};
+            \node[below] at (2, -0.5) {$L_1$};
+            \node[above right=4pt] at (3, 1.5) {$L_2$};
+            \node[above left=4pt] at (1, 1.5) {$L_3$};
         \end{tikzpicture}
     \end{center}
+
     To confirm this is a finite element we need to check that $\mathcal{N}$ determines $\mathcal{P}_2$:
 
     Suppose $P \in \mathcal{P}_2$ vanishes at all nodes $z_i$. Since $P|_{L_1}$ is quadratic in one variable and vanishes at $3$ points, $P|_{L_1} = 0$.
 
-    By \emph{(DL)} we have $P = L_1 Q_1$ with $\deg(Q_1) = \deg(P) - 1 = 1$.
-    As $P|_{L_2} = 0$ we have $L_1Q_1|_{L_2} = 0$. So $Q_1|_{L_2} = 0$ (a.e.) as $L_1(z_1) \neq 0$ except possible at $z_3$.
-    By continuity of $Q_1$ we have $Q_1|_{L_2} = 0$.
+    By \emph{(DL)} we have
+    \[P = L_1 Q_1\]
+    with
+    \[\deg(Q_1) = \deg(P) - 1 = 1\]
 
-    Applying \emph{(DL)} again we find $Q_1 = L_2 Q_2$ with $\deg(Q_2) = \deg(Q_1) - 1 = 0$.
-    $\implies Q_2$ is a constant ($c$) and $P = c L_1 L_2$. Observe that $P(z_6) = 0$ and is not on $L_1$ or $L_2$, so $P(z_6) = c L_1(z_6) L_2(z_6) = 0 \implies c = 0$ as $L_1(z_6), L_2(z_6) \neq 0$.
+    As
+    \[P|_{L_2} = 0\]
+    we have
+    \[L_1Q_1|_{L_2} = 0\]
+    So
+    \[Q_1|_{L_2} = 0 \text{ (a.e.)} \text{ since } L_1(z_1) \neq 0\]
+
+    except possible at $z_3$.
+
+    By continuity of $Q_1$ we have
+    \[Q_1|_{L_2} = 0\]
+
+    Applying \emph{(DL)} again we find
+    \[Q_1 = L_2 Q_2, \text{ with } \deg(Q_2) = \deg(Q_1) - 1 = 0 \implies Q_2 = c\]
+    and that
+    \[P = c L_1 L_2\]
+    Observe that $P(z_6) = 0$ and is not on $L_1, L_2$, so:
+    \[P(z_6) = c L_1(z_6) L_2(z_6) = 0 \implies c = 0\]
+    since
+    \[L_1(z_6), L_2(z_6) \neq 0\]
 
     Thus $P \equiv 0$ and $\mathcal{N}$ determines $\mathcal{P}_2$, so it is a finite element.\qed
 
@@ -1275,15 +1399,15 @@ Abridged version to skip some technical details:
 
 Showing this is an FE by assuming $p \in \mathbb{P}_3$ s.t.
 \[
-N_i(p) = 0 \quad \forall \, i
+    N_i(p) = 0 \quad \forall \, i
 \]
 
 Restricting to $L_1$ then:
 \[
-\begin{cases}
-& p(z_2)= p'(z_2) = 0 \\
-& p(z_3) = p'(z_3) = 0
-\end{cases}
+    \begin{cases}
+         & p(z_2)= p'(z_2) = 0  \\
+         & p(z_3) = p'(z_3) = 0
+    \end{cases}
 \]
 where the derivative is along the edge.
 \begin{center}
@@ -1311,11 +1435,11 @@ The only cubic polynomial with 4 roots is $0$: $p\lvert_{L_1} \equiv 0$ and the 
 By (DL) we have:
 
 \[
-\begin{aligned}
-    p &= c L_1 L_2 L_3 &\\
-    L_i(z_4) &\neq 0 & i = 1,2,3 \\
-    p(z_4) &= 0 \implies c = 0 &\implies \boxed{p = 0}
-\end{aligned}
+    \begin{aligned}
+        p        & = c L_1 L_2 L_3    &                        \\
+        L_i(z_4) & \neq 0             & i = 1,2,3              \\
+        p(z_4)   & = 0 \implies c = 0 & \implies \boxed{p = 0}
+    \end{aligned}
 \]
 For a more complete proof one has to show in detail that $p = L_i Q_i$ and that if $p(x) = 0$ and $L_i \neq Q_i$ (a.e.).
 
@@ -1346,13 +1470,13 @@ Then the Hermite element can be drawn as follows (where the arrows is its deriva
 \end{center}
 \textbf{In general} the Hermite elements have $\frac12(k+1)(k+2) \, DoF = \# \, Nodes$  where the nodal variables are:
 \[
-N_i =
-\begin{cases}
-    3 \text{ Vertices}\\
-    6 \text{ Derivatives}\\
-    3(k-3) \text{ Edges} \\
-    \frac12(k-2)(k-1) \text{ Interior}
-\end{cases}
+    N_i =
+    \begin{cases}
+        3 \text{ Vertices}    \\
+        6 \text{ Derivatives} \\
+        3(k-3) \text{ Edges}  \\
+        \frac12(k-2)(k-1) \text{ Interior}
+    \end{cases}
 \]
 
 % The Hermite element is not usually preferedover Lagrange
@@ -1415,3 +1539,5 @@ N_i =
 % The family is non degenerate if 75 SO s t
 % TE Tu and 410,1
 % diamLB 2g diam T
+
+\end{document}

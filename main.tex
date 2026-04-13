@@ -1,15 +1,15 @@
 \documentclass[a4paper,10pt]{book}
-\input{tex/preamble}
-\input{tex/macros}
+\input{preamble}
 
 \begin{document}
 \frontmatter
 \input{frontmatter/titlepage}
 \tableofcontents
 \mainmatter
-\include{chapters/01-introduction}
-\include{chapters/02-fem}
-%\backmatter
-%\appendix
-%\include{backmatter/A1-lectures}
+\input{chapters/01-introduction}
+\input{chapters/02-fem}
+
+\backmatter
+\appendix
+\input{backmatter/A1-lectures}
 \end{document}

@@ -1,0 +1,337 @@
+\section*{[2023 EXAM] Problem 1: Poisson, Weak form, well-posed}
+We are given $u\in H^2(\Omega)$ solving the Poisson problem
+\[
+  \begin{cases}
+    - \Delta u = f & \text{in } \Omega \subset \mathbb{R}^3, \\
+    u = 0          & \text{on } \partial\Omega,
+  \end{cases}
+  \tag{\text{strong}}
+\]
+for some $f\in L^2(\Omega)$.
+Throughout, $\langle\cdot,\cdot\rangle$ denotes the $L^2(\Omega)$ inner product
+\[
+  \langle u,v\rangle := \displaystyle\int_\Omega u\,v\,dx,
+\]
+and $\langle\cdot,\cdot\rangle_V$ denotes the inner product of a general Hilbert space $V$.
+\subsection*{(a) Definition of $L^2(\Omega)$ and $H^2(\Omega)$}
+We first recall the notion of weak derivative.
+\textbf{Weak derivative.}
+Let $\alpha=(\alpha_1,\alpha_2,\alpha_3)\in\mathbb{N}_0^3$ be a multi--index with
+$|\alpha| := \alpha_1+\alpha_2+\alpha_3$.
+For $u\in L^1_{\mathrm{loc}}(\Omega)$, a function $w\in L^1_{\mathrm{loc}}(\Omega)$ is called
+the \emph{weak derivative} $D^\alpha u$ of order $\alpha$ if
+\[
+  \int_\Omega u\, D^\alpha\varphi\,dx
+  = (-1)^{|\alpha|}\int_\Omega w\,\varphi\,dx
+  \quad\forall\varphi\in C_c^\infty(\Omega).
+\]
+If such a $w$ exists, it is unique (up to sets of measure zero).
+
+\textbf{$L^2(\Omega)$:}
+The space $L^2(\Omega)$ is
+\[
+  L^2(\Omega)
+  := \left\{ u : \Omega\to\mathbb{R} \text{ measurable } :
+  \int_\Omega |u(x)|^2\,dx < \infty \right\},
+\]
+equipped with the norm
+\[
+  \|u\|_{L^2(\Omega)} := \left(\int_\Omega |u|^2\,dx\right)^{1/2}
+\]
+and inner product $\langle u,v\rangle = \int_\Omega u v\,dx$.
+
+\textbf{$H^2(\Omega)$:}
+The Sobolev space $H^2(\Omega)$ is
+\[
+  H^2(\Omega)
+  := \Bigl\{
+  u \in L^2(\Omega) \;:\;
+  D^\alpha u \in L^2(\Omega)
+  \text{ for all multi--indices } \alpha \text{ with } |\alpha|\le 2
+  \Bigr\},
+\]
+with norm
+\[
+  \|u\|_{H^2(\Omega)}^2
+  := \sum_{|\alpha|\le 2} \|D^\alpha u\|_{L^2(\Omega)}^2.
+\]
+Thus $H^2(\Omega)$ consists of all $L^2$--functions whose weak derivatives up to order $2$
+also lie in $L^2(\Omega)$.
+\subsection*{(b) Weak formulation: spaces, bilinear form and linear functional}
+We now derive the weak formulation of (strong) of the abstract form
+\[
+  a(u,v) = g(v)
+  \quad\forall v\in V,
+  \tag{2}
+\]
+by identifying a Hilbert space $V$, a bilinear form $a(\cdot,\cdot)$ and a bounded linear
+functional $g$.
+
+\textbf{Step 1: Multiply by a test function and integrate.}
+Let $v\in C_c^\infty(\Omega)$ (later we extend to $H^1_0(\Omega)$ by density).
+Multiply (strong) by $v$ and integrate over $\Omega$:
+\[
+  \int_\Omega (-\Delta u)\,v\,dx
+  = \int_\Omega f\,v\,dx.
+\]
+\textbf{Step 2: Integration by parts and boundary condition.}
+Using integration by parts (Green's identity),
+\[
+  \int_\Omega (-\Delta u)\,v\,dx
+  = \int_\Omega \nabla u\cdot\nabla v\,dx
+  - \int_{\partial\Omega} \frac{\partial u}{\partial n}\,v\,ds.
+\]
+Here $\dfrac{\partial u}{\partial n} = \nabla u\cdot n$ is the normal derivative.
+Because $u=0$ on $\partial\Omega$, we may choose test functions $v$ that also
+vanish on $\partial\Omega$, that is $v\in H^1_0(\Omega)$; then the boundary integral is zero:
+\[
+  \int_\Omega (-\Delta u)\,v\,dx
+  = \int_\Omega \nabla u\cdot\nabla v\,dx
+  \quad\forall v\in H^1_0(\Omega).
+\]
+Thus the weak form is:
+\[
+  \int_\Omega \nabla u\cdot\nabla v\,dx
+  = \int_\Omega f\,v\,dx
+  \quad\forall v\in H^1_0(\Omega).
+\]
+\textbf{Step 3: Identify $V$, $a(\cdot,\cdot)$ and $g$.}
+We choose
+\[
+  V := H^1_0(\Omega),
+\]
+with inner product
+\[
+  \langle v,w\rangle_V := \int_\Omega \nabla v\cdot\nabla w\,dx,
+  \qquad
+  \|v\|_V := \|\nabla v\|_{L^2(\Omega)}.
+\]
+(For $H^1_0(\Omega)$ this is equivalent to the usual $H^1$--norm by Poincaré.)
+Define
+\[
+  a(u,v) := \int_\Omega \nabla u\cdot\nabla v\,dx,
+  \qquad
+  g(v) := \int_\Omega f\,v\,dx.
+\]
+Then the weak formulation of (strong) is indeed:
+\[
+  \boxed{
+    \text{Find } u\in V \text{ such that }
+    a(u,v) = g(v)\quad \forall v\in V.
+  }
+\]
+\textbf{Boundedness of $g$.}
+For $v\in V$,
+\[
+  |g(v)|
+  = \left|\int_\Omega f\,v\,dx\right|
+  \le \|f\|_{L^2(\Omega)}\,\|v\|_{L^2(\Omega)}.
+\]
+By the Poincaré inequality (given in the problem),
+\[
+  \|v\|_{L^2(\Omega)} \le C_\Omega \|\nabla v\|_{L^2(\Omega)} = C_\Omega \|v\|_V,
+\]
+so
+\[
+  |g(v)|
+  \le C_\Omega \|f\|_{L^2(\Omega)}\,\|v\|_V,
+\]
+hence $g\in V^\ast$ is a bounded linear functional.
+\subsection*{(c) Ellipticity in $H^1_0(\Omega)$ and symmetry of $a(\cdot,\cdot)$}
+We show that $a$ is $V$--elliptic on $V=H^1_0(\Omega)$ and symmetric.
+\textbf{Symmetry.}
+For any $u,v\in V$,
+\[
+  a(u,v)
+  = \int_\Omega \nabla u\cdot\nabla v\,dx
+  = \int_\Omega \nabla v\cdot\nabla u\,dx
+  = a(v,u),
+\]
+so $a$ is symmetric.
+\textbf{Definition (V--elliptic).}
+A bilinear form $a:V\times V\to\mathbb{R}$ is called $V$--elliptic (or coercive) if there
+exists $\alpha>0$ such that
+\[
+  a(v,v) \ge \alpha\,\|v\|_V^2 \quad\forall v\in V.
+\]
+\textbf{Ellipticity on $H^1_0(\Omega)$.}
+We have chosen the norm
+\[
+  \|v\|_V = \|\nabla v\|_{L^2(\Omega)}.
+\]
+Then, for $v\in V$,
+\[
+  a(v,v)
+  = \int_\Omega |\nabla v|^2\,dx
+  = \|\nabla v\|_{L^2(\Omega)}^2
+  = \|v\|_V^2.
+\]
+Hence $a$ is $V$--elliptic with constant
+\[
+  \alpha = 1.
+\]
+(If we instead used the full $H^1$--norm, $a$ would still be elliptic by the Poincaré
+inequality, with a different constant $\alpha>0$.)
+Thus $a$ is symmetric and $H^1_0$--elliptic.
+\subsection*{(d) Existence and uniqueness via Riesz (abstract Lax--Milgram)}
+Let $V$ be a Hilbert space with inner product $\langle\cdot,\cdot\rangle_V$ and norm
+$\|\cdot\|_V$.
+Let $a:V\times V\to\mathbb{R}$ be a bilinear form satisfying:
+\begin{itemize}
+  \item \emph{Boundedness:}
+        there exists $M>0$ such that
+        \[
+          |a(u,v)| \le M\,\|u\|_V\,\|v\|_V
+          \quad\forall u,v\in V;
+        \]
+  \item \emph{Symmetry:}
+        $a(u,v) = a(v,u)$ for all $u,v\in V$;
+  \item \emph{V--ellipticity:}
+        there exists $\alpha>0$ such that
+        \[
+          a(v,v) \ge \alpha\,\|v\|_V^2
+          \quad\forall v\in V.
+        \]
+\end{itemize}
+Let $g\in V^\ast$ be a bounded linear functional.
+We want to prove that there is a unique $u\in V$ such that
+\[
+  a(u,v) = g(v)\quad\forall v\in V,
+\]
+i.e.\ that the abstract weak problem (2) is well posed.
+
+\textbf{Step 1: Use Riesz representation to represent $g$.}
+By the Riesz representation theorem (given in the problem), for the functional
+$g\in V^\ast$ there exists a unique $w\in V$ such that
+\[
+  g(v) = \langle w,v\rangle_V \quad\forall v\in V.
+\]
+\textbf{Step 2: Associate $a(\cdot,\cdot)$ with a linear operator $A:V\to V$.}
+For each fixed $u\in V$, the map
+\[
+  v \mapsto a(u,v)
+\]
+is a bounded linear functional on $V$ (by the boundedness assumption).
+By Riesz, there exists a unique element $Au \in V$ such that
+\[
+  a(u,v) = \langle Au,v\rangle_V \quad\forall v\in V.
+\]
+This defines a linear operator $A:V\to V$ by assigning $u\mapsto Au$.
+
+
+\emph{Properties of $A$:}
+\begin{itemize}
+  \item $A$ is linear and bounded, since
+        \[
+          \|Au\|_V
+          = \sup_{\|v\|_V=1} |\langle Au,v\rangle_V|
+          = \sup_{\|v\|_V=1} |a(u,v)|
+          \le M \|u\|_V.
+        \]
+  \item $A$ is symmetric (self--adjoint w.r.t.\ $\langle\cdot,\cdot\rangle_V$), because
+        \[
+          \langle Au,v\rangle_V = a(u,v) = a(v,u) = \langle Av,u\rangle_V
+          \quad\forall u,v\in V.
+        \]
+  \item Coercivity (ellipticity) translates into
+        \[
+          \langle Au,u\rangle_V = a(u,u) \ge \alpha\,\|u\|_V^2 \quad\forall u\in V.
+        \]
+\end{itemize}
+\textbf{Step 3: Show $A$ is invertible.}
+First, $A$ is injective: if $Au=0$, then
+\[
+  0 = \langle Au,u\rangle_V = a(u,u) \ge \alpha\|u\|_V^2.
+\]
+Thus $\|u\|_V=0$ and hence $u=0$.
+Next, show that the range $\mathcal{R}(A)$ is all of $V$.
+From coercivity we have, for all $u\in V$,
+\[
+  \alpha\|u\|_V^2 \le \langle Au,u\rangle_V \le \|Au\|_V\,\|u\|_V,
+\]
+so if $u\neq 0$,
+\[
+  \|Au\|_V \ge \alpha\|u\|_V.
+\]
+This implies that $A$ is bounded below:
+\[
+  \|Au\|_V \ge \alpha\|u\|_V \quad\forall u\in V.
+\]
+Hence $\mathcal{R}(A)$ is closed in $V$.
+Consider the orthogonal complement of the range:
+\[
+  \mathcal{R}(A)^\perp
+  = \{ z\in V : \langle Au,z\rangle_V = 0 \ \forall u\in V\}.
+\]
+For $z\in \mathcal{R}(A)^\perp$ we have
+\[
+  0 = \langle Au,z\rangle_V = a(u,z) \quad\forall u\in V.
+\]
+Since $a$ is symmetric, $a(u,z) = a(z,u)$, hence
+\[
+  a(z,u) = 0 \quad\forall u\in V.
+\]
+In particular, taking $u=z$ gives
+\[
+  a(z,z) = 0.
+\]
+By ellipticity,
+\[
+  0 = a(z,z) \ge \alpha\|z\|_V^2 \quad\Rightarrow\quad z=0.
+\]
+Thus $\mathcal{R}(A)^\perp = \{0\}$.
+But in a Hilbert space we always have
+\[
+  \overline{\mathcal{R}(A)} = (\mathcal{R}(A)^\perp)^\perp.
+\]
+Since $\mathcal{R}(A)$ is closed and $\mathcal{R}(A)^\perp = \{0\}$, it follows that
+\[
+  \mathcal{R}(A) = V.
+\]
+Therefore $A:V\to V$ is bijective (injective and surjective), hence invertible and
+$\|A^{-1}\| \le \alpha^{-1}$.
+
+\textbf{Step 4: Solve the variational problem.}
+We must find $u\in V$ such that
+\[
+  a(u,v) = g(v) \quad\forall v\in V.
+\]
+Using the Riesz representation $g(v) = \langle w,v\rangle_V$ and the operator identity
+$a(u,v) = \langle Au,v\rangle_V$, this becomes
+\[
+  \langle Au,v\rangle_V = \langle w,v\rangle_V \quad\forall v\in V.
+\]
+By uniqueness of Riesz representatives, this is equivalent to
+\[
+  Au = w.
+\]
+Since $A$ is invertible, there exists a unique $u\in V$ solving $Au=w$, hence a unique
+$u\in V$ solving
+\[
+  a(u,v) = g(v)\quad\forall v\in V.
+\]
+Thus: For any bounded, symmetric, V--elliptic bilinear form $a(\cdot,\cdot)$ and any $g \in V^\ast$,
+\[
+  \boxed{
+    \text{ there is a unique } u\in V \text{ with } a(u,v)=g(v)\ \forall v \in V.
+  }
+\]
+
+\textbf{Application to the weak form in (b).}
+In part (b) we showed that
+\[
+  a(u,v) = \int_\Omega \nabla u\cdot\nabla v\,dx
+\]
+is symmetric and $V$--elliptic on $V=H^1_0(\Omega)$, and that
+\[
+  g(v) = \int_\Omega f v\,dx
+\]
+is a bounded linear functional on $V$. Therefore, by the abstract result just proved,
+there exists a unique $u\in H^1_0(\Omega)$ solving
+\[
+  \int_\Omega \nabla u\cdot\nabla v\,dx
+  = \int_\Omega f v\,dx
+  \quad\forall v\in H^1_0(\Omega).
+\]
+Hence the weak formulation derived in (b) is \emph{well posed} (it has a unique solution
+depending continuously on $f$).

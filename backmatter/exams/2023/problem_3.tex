@@ -1,0 +1,386 @@
+\section*{[2023 EXAM] Problem 3: Heat eq., Ritz proj., semi-disc. t-step.}
+We consider the semi-discrete (in space) heat equation: find
+\[
+    u_h \in C^1([0,T];V_h) \quad\text{such that}
+\]
+\[
+    \langle u_{h,t}(t),v_h\rangle + \langle \nabla u_h(t),\nabla v_h\rangle
+    = \langle f(t),v_h\rangle
+    \quad\forall v_h\in V_h,\ t\in(0,T), \tag{\text{sd-heat}}
+\]
+with initial condition
+\[
+    u_h(0,x) = \Pi_{V_h}u_0(x), \tag{\text{sd-IC}}
+\]
+where $\Pi_{V_h}:H^1(\Omega)\to V_h$ is the $L^2$ projection and $V_h\subset H_0^1(\Omega)$.
+
+We also define the elliptic bilinear form
+\[
+    a(v,\chi) := \langle \nabla v,\nabla \chi\rangle = \int_\Omega \nabla v\cdot\nabla\chi\,dx.
+\]
+
+The Ritz (elliptic) projection $R_h:H_0^1(\Omega)\to V_h$ is defined by
+\[
+    a(R_h v - v,\chi) = 0\quad\forall \chi\in V_h. \tag{\text{Ritz-def}}
+\]
+
+We are also given:
+\begin{itemize}
+\item \emph{Energy-norm (``$H^1$'') estimate for $R_h$}:
+For $u_0\in H^s(\Omega)\cap H_0^1(\Omega)$,
+\[
+    \|\nabla(u_0 - R_h u_0)\|_{L^2(\Omega)} \le C h^{s-1} |u_0|_{H^s(\Omega)}.\tag{\text{Ritz-H1}}
+\]
+
+\item \emph{Elliptic regularity}: For $\phi\in L^2(\Omega)$, let $\psi\in H^2(\Omega)\cap H_0^1(\Omega)$
+solve $-\Delta\psi = \phi$ in $\Omega$, then
+\[
+    \|\psi\|_{H^2(\Omega)} \le C_k \|\phi\|_{L^2(\Omega)}. \tag{\text{elliptic-reg}}
+\]
+
+\item \emph{Regularity assumption on initial data}: There exists $r\ge2$ and $C$ such that for
+$u_0\in H^s(\Omega)\cap H_0^1(\Omega)$ with $1\le s\le r$,
+\[
+    \inf_{\chi\in V_h}
+    \{\|u_0 - \chi\|_{L^2(\Omega)} + h\|\nabla(u_0 - \chi)\|_{L^2(\Omega)}\} \tag{\text{regularity-initial}}
+    \;\le\;C h^s |u_0|_{H^s(\Omega)}.
+\]
+\end{itemize}
+
+\subsection*{(a) Stability of the Ritz projection}
+
+We must show
+\[
+    \|\nabla R_h v\|_{L^2(\Omega)} \le \|\nabla v\|_{L^2(\Omega)}\quad\forall v\in H_0^1(\Omega).
+\]
+
+Take $\chi = R_h v\in V_h$ in (Ritz-def):
+\[
+    a(R_h v - v, R_h v) = 0.
+\]
+Expanding $a$,
+\[
+    a(R_h v, R_h v) - a(v,R_h v) = 0
+    \quad\Longrightarrow\quad
+    a(R_h v,R_h v) = a(v,R_h v).
+\]
+In terms of gradients,
+\[
+    \|\nabla R_h v\|_{L^2(\Omega)}^2
+    = \langle \nabla v,\nabla R_h v\rangle
+    \le \|\nabla v\|_{L^2(\Omega)}\,\|\nabla R_h v\|_{L^2(\Omega)}
+\]
+by Cauchy--Schwarz.
+
+If $\|\nabla R_h v\|_{L^2(\Omega)}=0$, then the desired inequality is trivial.
+Otherwise, divide by $\|\nabla R_h v\|_{L^2(\Omega)}$ to obtain
+\[
+    \|\nabla R_h v\|_{L^2(\Omega)} \le \|\nabla v\|_{L^2(\Omega)}.
+\]
+Thus the Ritz projection is stable in the $H^1$-seminorm.
+
+\subsection*{(b) Optimal $L^2$-error for the Ritz projection}
+
+We must show that for $u_0\in H^s(\Omega)\cap H_0^1(\Omega)$,
+\[
+    \|u_0 - R_h u_0\|_{L^2(\Omega)} \le C h^s \|u_0\|_{H^s(\Omega)}. \tag{\text{Ritz-L2-goal}}
+\]
+This is an Aubin--Nitsche-type argument.
+
+Let
+\[
+    e_0 := u_0 - R_h u_0 \in H_0^1(\Omega),
+\]
+and consider the dual problem
+\[
+    \begin{cases}
+        -\Delta \psi = e_0 & \text{in }\Omega,         \\
+        \psi = 0           & \text{on }\partial\Omega.
+    \end{cases}
+\]
+By elliptic regularity (elliptic-reg),
+\[
+    \|\psi\|_{H^2(\Omega)} \le C_k \|e_0\|_{L^2(\Omega)}.
+\]
+
+\textbf{Step 1: Representation of $\|e_0\|^2$.}
+Using the dual solution,
+\[
+    \|e_0\|_{L^2(\Omega)}^2
+    = \langle e_0, e_0\rangle
+    = \int_\Omega e_0(-\Delta\psi)\,dx
+    = \int_\Omega \nabla e_0\cdot\nabla\psi\,dx
+    = a(e_0,\psi),
+\]
+where we used integration by parts and $\psi=0$ on $\partial\Omega$.
+
+\textbf{Step 2: Use orthogonality of the Ritz projection.}
+From the definition (Ritz-def),
+\[
+    a(R_h u_0 - u_0,\chi) = 0\quad\forall \chi\in V_h.
+\]
+Equivalently,
+\[
+    a(e_0,\chi) = 0\quad\forall \chi\in V_h.
+\]
+In particular, taking $\chi = R_h\psi\in V_h$,
+\[
+    a(e_0,R_h\psi) = 0.
+\]
+Hence
+\[
+    \|e_0\|_{L^2(\Omega)}^2
+    = a(e_0,\psi)
+    = a(e_0,\psi - R_h\psi).
+\]
+
+\textbf{Step 3: Estimate using Cauchy--Schwarz and energy estimate.}
+Using Cauchy--Schwarz in $H_0^1$,
+\[
+    \|e_0\|_{L^2(\Omega)}^2
+    \le \|\nabla e_0\|_{L^2(\Omega)}\;\|\nabla(\psi - R_h\psi)\|_{L^2(\Omega)}.
+\]
+
+Apply the (given) $H^1$-estimate (Ritz-H1) to $\psi$ with $s=2$:
+\[
+    \|\nabla(\psi - R_h\psi)\|_{L^2(\Omega)}
+    \le C h^{2-1}|\psi|_{H^2(\Omega)}
+    \le C h \|\psi\|_{H^2(\Omega)}
+    \le C h \|e_0\|_{L^2(\Omega)},
+\]
+using elliptic regularity in the last step.
+
+Thus
+\[
+    \|e_0\|_{L^2(\Omega)}^2
+    \le C h\,\|\nabla e_0\|_{L^2(\Omega)}\,\|e_0\|_{L^2(\Omega)}.
+\]
+If $e_0\neq 0$, divide by $\|e_0\|_{L^2(\Omega)}$:
+\[
+    \|e_0\|_{L^2(\Omega)} \le C h\,\|\nabla e_0\|_{L^2(\Omega)}. \tag{\text{L2-vs-H1}}
+\]
+If $e_0=0$, (Ritz-L2-goal) is trivial.
+
+\textbf{Step 4: Combine with the $H^1$-estimate for $u_0$.}
+From (Ritz-H1) applied to $u_0$,
+\[
+    \|\nabla e_0\|_{L^2(\Omega)}
+    = \|\nabla(u_0 - R_h u_0)\|_{L^2(\Omega)}
+    \le C h^{s-1}|u_0|_{H^s(\Omega)}
+    \le C h^{s-1}\|u_0\|_{H^s(\Omega)}.
+\]
+Substitute into (L2-vs-H1):
+\[
+    \|e_0\|_{L^2(\Omega)}
+    \le C h\,(C h^{s-1}\|u_0\|_{H^s(\Omega)})
+    \le C h^s \|u_0\|_{H^s(\Omega)}.
+\]
+This is exactly (Ritz-L2-goal). Hence the Ritz projection converges
+optimally in $L^2(\Omega)$.
+
+\subsection*{(c) A priori error estimate for the semi-discrete heat equation (L$^2$-version)}
+
+We split the error into an \emph{elliptic} (Ritz) part and a \emph{parabolic} part:
+\[
+    u_h(t) - u(t) = \underbrace{u_h(t) - R_h u(t)}_{:=\theta(t)}
+    + \underbrace{R_h u(t) - u(t)}_{:=\rho(t)}.
+\]
+
+We will prove the first of the two stated results:
+if $u\in C^1([0,T];H^s(\Omega))$ solves the continuous heat equation and $u_h$ solves
+(sd-heat)--(sd-IC), then (under the initial-data assumption (regularity-initial))
+\[
+    \|u_h(t) - u(t)\|_{L^2(\Omega)}
+    \le \|\Pi_{V_h}u_0 - u_0\|_{L^2(\Omega)}
+    + C h^s\Bigl(\|u_0\|_{H^s(\Omega)} + \int_0^t \|u_\tau(\tau)\|_{L^2(\Omega)}\,d\tau\Bigr). \tag{\text{L2-parabolic-goal}}
+\]
+
+\textbf{Continuous problem.}
+The continuous weak problem is: find $u:[0,T]\to H_0^1(\Omega)$ such that
+\[
+    \langle u_t(t),v\rangle + a(u(t),v) = \langle f(t),v\rangle
+    \quad\forall v\in H_0^1(\Omega),\ t\in(0,T),
+\]
+with initial condition $u(0)=u_0$.
+
+Since $V_h\subset H_0^1(\Omega)$, this holds in particular for all $v_h\in V_h$.
+
+\textbf{Step 1: Equation for $\theta$.}
+Subtract the continuous and semi-discrete equations for test functions $v_h\in V_h$:
+
+From (sd-heat):
+\[
+    \langle u_{h,t},v_h\rangle + a(u_h,v_h) = \langle f,v_h\rangle.
+\]
+From the continuous equation with $v=v_h$:
+\[
+    \langle u_t,v_h\rangle + a(u,v_h) = \langle f,v_h\rangle.
+\]
+Subtract:
+\[
+    \langle u_{h,t} - u_t, v_h\rangle + a(u_h - u, v_h) = 0.
+\]
+
+Using the splitting $u_h - u = \theta + \rho$ and $u_{h,t} - u_t = \theta_t + \rho_t$, we obtain
+\[
+    \langle \theta_t + \rho_t, v_h\rangle + a(\theta + \rho, v_h) = 0.
+\]
+
+By the Ritz orthogonality $a(R_h u - u,\chi)=0$ for all $\chi\in V_h$, we have
+\[
+    a(\rho,v_h) = a(R_h u - u,v_h) = 0\quad\forall v_h\in V_h.
+\]
+Therefore
+\[
+    \langle \theta_t,v_h\rangle + a(\theta,v_h)
+    = -\langle \rho_t,v_h\rangle \quad\forall v_h\in V_h.\tag{\text{theta-eq}}
+\]
+
+\textbf{Step 2: Energy estimate for $\theta$.}
+
+In (theta-eq), choose $v_h = \theta(t)\in V_h$:
+\[
+    \langle \theta_t(t),\theta(t)\rangle + a(\theta(t),\theta(t))
+    = -\langle \rho_t(t),\theta(t)\rangle.
+\]
+Note
+\[
+    \langle \theta_t,\theta\rangle = \frac12 \frac{d}{dt}\|\theta(t)\|_{L^2(\Omega)}^2,
+    \qquad
+    a(\theta,\theta) = \|\nabla\theta\|_{L^2(\Omega)}^2 \ge 0.
+\]
+Hence
+\[
+    \frac12\frac{d}{dt}\|\theta(t)\|_{L^2}^2 + \|\nabla\theta(t)\|_{L^2}^2
+    = -\langle \rho_t(t),\theta(t)\rangle
+    \le \|\rho_t(t)\|_{L^2}\,\|\theta(t)\|_{L^2}.
+\]
+Dropping the nonnegative $\|\nabla\theta\|^2$ term gives
+\[
+    \frac12\frac{d}{dt}\|\theta(t)\|_{L^2}^2
+    \le \|\rho_t(t)\|_{L^2}\,\|\theta(t)\|_{L^2}.
+\]
+
+For times where $\|\theta(t)\|_{L^2}\neq 0$, divide by $\|\theta(t)\|_{L^2}$ to obtain
+\[
+    \frac{d}{dt}\|\theta(t)\|_{L^2}
+    \le \|\rho_t(t)\|_{L^2}.
+\]
+(If $\|\theta(t)\|=0$, the inequality also holds by continuity.)
+Integrating from $0$ to $t$ yields
+\[
+    \|\theta(t)\|_{L^2}
+    \le \|\theta(0)\|_{L^2} + \int_0^t \|\rho_\tau(\tau)\|_{L^2}\,d\tau.\tag{\text{theta-bound}}
+\]
+
+\textbf{Step 3: Initial value for $\theta$.}
+
+At $t=0$,
+\[
+    \theta(0) = u_h(0) - R_h u(0) = \Pi_{V_h}u_0 - R_h u_0,
+\]
+so by the triangle inequality,
+\[
+    \|\theta(0)\|_{L^2}
+    \le \|\Pi_{V_h}u_0 - u_0\|_{L^2}
+    + \|u_0 - R_h u_0\|_{L^2}. \tag{\text{theta0}}
+\]
+Using the $L^2$ Ritz estimate (Ritz-L2-goal),
+\[
+    \|u_0 - R_h u_0\|_{L^2} \le C h^s \|u_0\|_{H^s}.
+\]
+Thus
+\[
+    \|\theta(0)\|_{L^2}
+    \le \|\Pi_{V_h}u_0 - u_0\|_{L^2}
+    + C h^s \|u_0\|_{H^s}.\tag{\text{theta0-final}}
+\]
+
+\textbf{Step 4: Bound $\rho_t$.}
+
+Recall $\rho(t) = R_h u(t) - u(t)$, so
+\[
+    \rho_t(t) = R_h u_t(t) - u_t(t).
+\]
+Applying the $L^2$ Ritz estimate (Ritz-L2-goal) to $u_t(t)$:
+\[
+    \|\rho_t(t)\|_{L^2}
+    = \|R_h u_t(t) - u_t(t)\|_{L^2}
+    \le C h^s \|u_t(t)\|_{H^s}.
+\]
+Hence
+\[
+    \int_0^t \|\rho_\tau(\tau)\|_{L^2}\,d\tau
+    \le C h^s \int_0^t \|u_\tau(\tau)\|_{H^s}\,d\tau.
+\]
+Since $\|u_\tau\|_{H^s} \ge \|u_\tau\|_{L^2}$, this implies
+\[
+    \int_0^t \|\rho_\tau(\tau)\|_{L^2}\,d\tau
+    \le C h^s \int_0^t \|u_\tau(\tau)\|_{L^2}\,d\tau.
+    \tag{\text{rho-t-bound}}
+\]
+
+\textbf{Step 5: Bound $\rho(t)$ itself.}
+
+Using the $L^2$ Ritz error estimate on $u(t)$,
+\[
+    \|\rho(t)\|_{L^2}
+    = \|R_h u(t) - u(t)\|_{L^2}
+    \le C h^s \|u(t)\|_{H^s}.
+\]
+By the fundamental theorem of calculus,
+\[
+    u(t) = u_0 + \int_0^t u_\tau(\tau)\,d\tau,
+\]
+and by the triangle inequality in $H^s$,
+\[
+    \|u(t)\|_{H^s}
+    \le \|u_0\|_{H^s} + \int_0^t \|u_\tau(\tau)\|_{H^s}\,d\tau
+    \le \|u_0\|_{H^s} + \int_0^t \|u_\tau(\tau)\|_{L^2}\,d\tau.
+\]
+Thus
+\[
+    \|\rho(t)\|_{L^2}
+    \le C h^s\Bigl(\|u_0\|_{H^s} + \int_0^t \|u_\tau(\tau)\|_{L^2}\,d\tau\Bigr). \tag{\text{rho-bound}}
+\]
+
+\textbf{Step 6: Collect estimates.}
+
+From (theta-bound), (theta0-final), and (rho-t-bound),
+\[
+    \|\theta(t)\|_{L^2}
+    \le \|\Pi_{V_h}u_0 - u_0\|_{L^2}
+    + C h^s\|u_0\|_{H^s}
+    + C h^s \int_0^t \|u_\tau(\tau)\|_{L^2}\,d\tau.
+\]
+
+Finally,
+\[
+    \|u_h(t) - u(t)\|_{L^2}
+    \le \|\theta(t)\|_{L^2} + \|\rho(t)\|_{L^2},
+\]
+and using (rho-bound) we obtain
+\[
+    \|u_h(t) - u(t)\|_{L^2}
+    \le \|\Pi_{V_h}u_0 - u_0\|_{L^2}
+    + C h^s\Bigl(\|u_0\|_{H^s}
+    + \int_0^t \|u_\tau(\tau)\|_{L^2}\,d\tau\Bigr),
+\]
+which is exactly (L2-parabolic-goal).
+
+\emph{Remark on the regularity assumption (regularity-initial).}
+Since $\Pi_{V_h}$ is the $L^2$-projection, it is a best approximation in $L^2$:
+\[
+    \|\Pi_{V_h}u_0 - u_0\|_{L^2}
+    \le \|u_0 - \chi\|_{L^2} \quad\forall\chi\in V_h.
+\]
+Therefore, from (regularity-initial),
+\[
+    \|\Pi_{V_h}u_0 - u_0\|_{L^2}
+    \le \inf_{\chi\in V_h}\|u_0 - \chi\|_{L^2}
+    \le \inf_{\chi\in V_h}
+    \bigl( \|u_0 - \chi\|_{L^2}
+    + h\|\nabla(u_0 - \chi)\|_{L^2}\bigr)
+    \le C h^s |u_0|_{H^s}.
+\]
+Thus the first term in (L2-parabolic-goal) is also $O(h^s)$.

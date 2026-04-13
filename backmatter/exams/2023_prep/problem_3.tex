@@ -1,0 +1,278 @@
+\section*{[2023 PREP EXAM] Problem 3: Weak formulation, Cea's lemma, Convergence Order}
+We are given the weak formulation: find $u \in H^1_0(\Omega)$ such that
+\[
+  a(u,v) = \langle f,v\rangle
+  \quad \forall v \in H^1_0(\Omega), \tag{\text{weak}}
+\]
+where
+\[
+  a(u,v) := \langle \nabla u,\nabla v\rangle + c \,\langle u,v\rangle,
+  \qquad
+  \langle g,h\rangle := \int_\Omega g h \, dx,
+\]
+and $c > 0$ is a constant (the interesting case is $c \ge 0$, but $c>0$ simplifies
+ellipticity).
+We denote $V := H^1_0(\Omega)$ and use the norm
+\[
+  \|v\|_V := \bigl(\|\nabla v\|_{L^2(\Omega)}^2 + \|v\|_{L^2(\Omega)}^2\bigr)^{1/2}
+  = \|v\|_{H^1(\Omega)}.
+\]
+\subsection*{(a) Strong form and boundary conditions}
+Assume $u \in H^1_0(\Omega) \cap H^2(\Omega)$ solves (weak).
+For any $v \in C_c^\infty(\Omega)$ (smooth with compact support in $\Omega$)
+we have
+\[
+  \int_\Omega \nabla u \cdot \nabla v \, dx
+  + c \int_\Omega u v \, dx
+  = \int_\Omega f v \, dx.
+\]
+By integration by parts (Green's formula) and using that $v$ vanishes near
+$\partial\Omega$,
+\[
+  \int_\Omega \nabla u \cdot \nabla v \, dx
+  = - \int_\Omega \Delta u \, v \, dx.
+\]
+Hence
+\[
+  -\int_\Omega \Delta u \, v \, dx
+  + c \int_\Omega u v \, dx
+  = \int_\Omega f v \, dx
+  \quad \forall v \in C_c^\infty(\Omega).
+\]
+This is
+\[
+  \int_\Omega \bigl(-\Delta u + c u - f\bigr) v \, dx = 0
+  \quad \forall v \in C_c^\infty(\Omega).
+\]
+Since $C_c^\infty(\Omega)$ is dense in $L^2(\Omega)$, it follows that
+\[
+  -\Delta u + c u = f \quad \text{a.e. in } \Omega.
+\]
+The homogeneous Dirichlet boundary condition is encoded in the space
+$H^1_0(\Omega)$: by definition, $H^1_0(\Omega)$ is the closure of
+$C_c^\infty(\Omega)$ in $H^1(\Omega)$, and its elements have vanishing trace on
+$\partial \Omega$. Thus
+\[
+  u = 0 \quad \text{on } \partial\Omega
+\]
+in the trace sense.
+
+\textbf{Strong form:}
+\[
+  \boxed{
+    \begin{cases}
+      -\Delta u + c u = f & \text{in } \Omega,         \\
+      u = 0               & \text{on } \partial\Omega.
+    \end{cases}
+  }
+\]
+\subsection*{(b) Definition of $V$-ellipticity}
+Let $V$ be a Hilbert space with norm $\|\cdot\|_V$ and inner product
+$\langle \cdot,\cdot \rangle_V$.
+A bilinear form $a : V \times V \to \mathbb{R}$ is called \emph{$V$-elliptic}
+(or coercive) if there exists a constant $\alpha > 0$ such that
+\[
+  a(v,v) \;\ge\; \alpha \, \|v\|_V^2
+  \quad \forall v \in V.
+\]
+In our case, $V = H^1_0(\Omega)$ and
+\[
+  a(v,v)
+  = \|\nabla v\|_{L^2(\Omega)}^2 + c \|v\|_{L^2(\Omega)}^2,
+\]
+so $a$ is $V$-elliptic with respect to $\|\cdot\|_V$ (one can show this
+explicitly using the Poincaré inequality to relate $\|v\|_{L^2}$ and
+$\|\nabla v\|_{L^2}$).
+
+\subsection*{(c) Discrete form $u_h$ and uniqueness}
+Let $V_h \subset V = H^1_0(\Omega)$ be a finite-dimensional subspace (for
+example, a Lagrange finite element space).
+The Galerkin (finite element) approximation of (weak) is:
+
+\emph{Find $u_h \in V_h$ such that}
+\[
+  a(u_h, v_h) = \langle f, v_h\rangle
+  \quad \forall v_h \in V_h. \tag{\text{discrete}}
+\]
+We show that (discrete) has a unique solution.
+\textbf{Continuity of $a$.}
+For any $w,v \in V$,
+\[
+  |a(w,v)|
+  = \bigl|\langle \nabla w,\nabla v\rangle + c\langle w,v\rangle \bigr|
+  \le \|\nabla w\|_0 \|\nabla v\|_0 + |c| \|w\|_0 \|v\|_0
+  \le C_a \|w\|_V \|v\|_V,
+\]
+where $\|\cdot\|_0 := \|\cdot\|_{L^2(\Omega)}$ and
+$C_a := 1 + |c|$ is a continuity constant for $a$ on $V$.
+\textbf{Ellipticity of $a$.}
+For any $v \in V$,
+\[
+  a(v,v) = \|\nabla v\|_0^2 + c \|v\|_0^2.
+\]
+Using the Poincaré inequality
+$\|v\|_0 \le C_P \|\nabla v\|_0$ for $v \in H^1_0(\Omega)$, we obtain
+\[
+  \|v\|_V^2
+  = \|\nabla v\|_0^2 + \|v\|_0^2
+  \le (1 + C_P^2) \|\nabla v\|_0^2.
+\]
+Thus
+\[
+  a(v,v) \ge \|\nabla v\|_0^2
+  \ge \frac{1}{1 + C_P^2} \,\|v\|_V^2.
+\]
+Hence $a$ is $V$-elliptic with constant
+\[
+  \alpha := \frac{1}{1 + C_P^2} > 0.
+\]
+\textbf{Boundedness of the right-hand side.}
+Define $g : V \to \mathbb{R}$ by
+\[
+  g(v) := \langle f,v\rangle = \int_\Omega f v \, dx.
+\]
+By the Cauchy--Schwarz inequality,
+\[
+  |g(v)| \le \|f\|_0 \|v\|_0 \le \|f\|_0 \|v\|_V,
+\]
+so $g$ is a bounded linear functional on $V$, hence also on $V_h$.
+
+\textbf{Application of Lax--Milgram on $V_h$.}
+Since $V_h$ is a (finite-dimensional) subspace of $V$,
+$a$ is still continuous and $V$-elliptic on $V_h$, with the same constants
+$C_a$ and $\alpha$.
+Therefore, by the Lax--Milgram theorem on the Hilbert space $V_h$ with
+bilinear form $a$ and functional $g$, there exists a unique
+$u_h \in V_h$ such that (discrete) holds.
+Thus the discretisation has a unique solution.
+
+\subsection*{(d) Cea's lemma}
+We consider the continuous problem: find $u \in V$ such that
+\[
+  a(u,v) = g(v) \quad \forall v \in V,
+\]
+and the discrete problem: find $u_h \in V_h$ such that
+\[
+  a(u_h, v_h) = g(v_h) \quad \forall v_h \in V_h.
+\]
+\textbf{Galerkin orthogonality.}
+Subtracting the two equations for any $v_h \in V_h$ gives
+\[
+  a(u - u_h, v_h) = 0 \quad \forall v_h \in V_h.
+\]
+This is the \emph{Galerkin orthogonality}.
+
+\textbf{Proof of Cea's lemma.}
+Let $v_h \in V_h$ be arbitrary. Consider the error $e := u - u_h$.
+By $V$-ellipticity,
+\[
+  \alpha \|e\|_V^2 \le a(e,e).
+\]
+We write
+\[
+  a(e,e) = a(e, u - u_h) = a(e, u - v_h + v_h - u_h)
+  = a(e, u - v_h) + a(e, v_h - u_h).
+\]
+But $v_h - u_h \in V_h$, so by Galerkin orthogonality
+$a(e, v_h - u_h) = 0$. Hence
+\[
+  a(e,e) = a(e, u - v_h).
+\]
+Using continuity of $a$,
+\[
+  |a(e, u - v_h)|
+  \le C_a \|e\|_V \, \|u - v_h\|_V.
+\]
+Combining with ellipticity:
+\[
+  \alpha \|e\|_V^2
+  \le C_a \|e\|_V \, \|u - v_h\|_V.
+\]
+If $e = 0$ we are done; otherwise, divide by $\|e\|_V$:
+\[
+  \|u - u_h\|_V \le \frac{C_a}{\alpha} \|u - v_h\|_V
+  \quad \forall v_h \in V_h.
+\]
+Taking the minimum over all $v_h \in V_h$ yields
+\[
+  \boxed{
+    \|u - u_h\|_V
+    \le \frac{C_a}{\alpha}
+    \min_{v_h \in V_h} \|u - v_h\|_V.
+  }
+\]
+This is Cea's lemma, with constant
+\[
+  C = \frac{C_a}{\alpha}.
+\]
+\subsection*{(e) Convergence Ord. for Lagr. el. when $u \in C^\infty$}
+We are given the interpolation estimate (for a family of meshes $\{ \mathcal{T}_h \}$ and
+Lagrange elements of degree $k$):
+If $u \in H^{k+1}(\Omega)$, then for $0 \le s \le k+1$,
+\[
+  \left(
+  \sum_{T \in \mathcal{T}_h}
+  \|u - I_h u\|_{H^s(T)}^2
+  \right)^{1/2}
+  \le C h^{k+1 - s} |u|_{H^{k+1}(\Omega)},
+\]
+where $I_h : C^0(\Omega) \to V_h$ is the interpolant and $h$ is the mesh size.
+We are interested in the energy norm, i.e.\ $s = 1$:
+\[
+  \|u - I_h u\|_{H^1(\Omega)}
+  \le C h^{k} |u|_{H^{k+1}(\Omega)}.
+\]
+By Cea's lemma,
+\[
+  \|u - u_h\|_V
+  \le \frac{C_a}{\alpha} \min_{v_h \in V_h} \|u - v_h\|_V
+  \le \frac{C_a}{\alpha} \|u - I_h u\|_V.
+\]
+Thus
+\[
+  \|u - u_h\|_{H^1(\Omega)}
+  \le C' h^k |u|_{H^{k+1}(\Omega)},
+\]
+where $C' := \frac{C_a}{\alpha} C$ is independent of $h$.
+If $u \in C^\infty(\Omega)$, then $u \in H^{k+1}(\Omega)$ for all $k$, so the
+error in the $H^1$ (energy) norm behaves like
+\[
+  \boxed{
+    \|u - u_h\|_{H^1(\Omega)} = \mathcal{O}(h^k).
+  }
+\]
+Thus the finite element method with degree-$k$ Lagrange elements converges
+with order $k$ in the energy norm for smooth solutions.
+\subsection*{(f) Optimal polynomial degree when $u \in H^3(\Omega)$}
+Now assume only $u \in H^3(\Omega)$.
+The interpolation estimate requires $u \in H^{k+1}(\Omega)$ to guarantee
+$H^1$-error of order $h^k$:
+\[
+  \|u - I_h u\|_{H^1(\Omega)}
+  \le C h^k |u|_{H^{k+1}(\Omega)}.
+\]
+Since we only know $u \in H^3(\Omega)$, we can safely take $k+1 \le 3$, i.e.
+$k \le 2$.
+\begin{itemize}
+  \item For $k = 1$ (linear elements), we can use $u \in H^2(\Omega)$ and get
+        \[
+          \|u - u_h\|_{H^1(\Omega)} \le C h^1 |u|_{H^2(\Omega)},
+        \]
+        i.e.\ order $h$.
+  \item For $k = 2$ (quadratic elements), we can use $u \in H^3(\Omega)$ and get
+        \[
+          \|u - u_h\|_{H^1(\Omega)} \le C h^2 |u|_{H^3(\Omega)},
+        \]
+        i.e.\ order $h^2$.
+\end{itemize}
+For $k \ge 3$ we would need $u \in H^{k+1}(\Omega)$ to justify the
+$h^k$-rate, which may fail when $u$ is only known to be in $H^3(\Omega)$.
+Hence the highest provable convergence rate (based on the given regularity
+$u \in H^3(\Omega)$) is $h^2$, achieved by quadratic Lagrange elements
+($k = 2$).
+
+\textbf{Conclusion:} The optimal polynomial degree is
+\[
+  \boxed{\hat{k} = 2,}
+\]
+i.e.\ quadratic Lagrange elements.

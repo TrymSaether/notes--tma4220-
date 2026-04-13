@@ -1,0 +1,317 @@
+\section*{[2023 PREP EXAM] Problem 6: (Mixed formulation, ellipt., well-pos.)}
+Let $u \in H^2(\Omega)$ solve
+\[
+    \begin{cases}
+        \Delta u = f & \text{in } \Omega \subset \mathbb{R}^3, \\
+        u = 0        & \text{on } \partial\Omega,
+    \end{cases} \tag{PDE-strong}
+\]
+with $f \in H^{-1}(\Omega)$.
+We introduce the auxiliary variable
+\[
+    \sigma := \nabla u.
+\]
+\subsection*{(a) Mixed formulation and identification of $a,b,F$}
+With $\sigma = \nabla u$ we can rewrite (PDE-strong) as the first-order system
+\[
+    \begin{cases}
+        \sigma - \nabla u = 0   & \text{in } \Omega,         \\
+        \nabla \cdot \sigma = f & \text{in } \Omega,         \\
+        u = 0                   & \text{on } \partial\Omega.
+    \end{cases}
+\]
+We now derive a mixed weak formulation of the form
+\[
+    \begin{cases}
+        a(\sigma,w) + b(w,u) = 0 & \forall w \in W, \\
+        b(\sigma,v) = F(v)       & \forall v \in V,
+    \end{cases}
+    \tag{\text{mixed-abstract}}
+\]
+and identify $a$, $b$ and $F$.
+We choose $W$ and $V$ so that the terms make sense; a natural choice for the Poisson problem
+is
+\[
+    W := H(\mathrm{div};\Omega)
+    := \bigl\{ \tau \in L^2(\Omega)^3 : \mathrm{div} \tau \in L^2(\Omega) \bigr\},
+    \qquad
+    V := L^2(\Omega),
+\]
+with inner products
+\[
+    (\tau,w) := \int_\Omega \tau\cdot w \,dx,
+    \qquad
+    (v,z) := \int_\Omega v z \,dx.
+\]
+\textbf{First equation (from $\sigma = \nabla u$).}
+Multiply $\sigma - \nabla u = 0$ by $w \in W$ and integrate:
+\[
+    (\sigma, w) - (\nabla u, w) = 0.
+\]
+Integrate the second term by parts:
+\[
+    (\nabla u, w)
+    = \int_\Omega \nabla u \cdot w\,dx
+    = -\int_\Omega u\,\mathrm{div} w\,dx + \int_{\partial\Omega} u\,w\cdot n \,ds.
+\]
+Since $u=0$ on $\partial\Omega$, the boundary term vanishes, hence
+\[
+    (\nabla u, w) = - (u, \mathrm{div} w).
+\]
+Therefore
+\[
+    (\sigma, w) + (u, \mathrm{div} w) = 0
+    \quad \forall w\in W.
+\]
+Comparing with the abstract form $a(\sigma,w) + b(w,u) = 0$ we set
+\[
+    a(\sigma,w) := (\sigma,w)_{L^2(\Omega)^3},
+    \qquad
+    b(w,u) := (\mathrm{div} w, u)_{L^2(\Omega)}.
+\]
+(We used symmetry of the $L^2$ inner product: $(u,\mathrm{div} w) = (\mathrm{div} w,u)$.)
+\textbf{Second equation (from $\mathrm{div}\sigma = f$).}
+Multiply $\mathrm{div} \sigma = f$ by $v \in V$ and integrate:
+\[
+    (\mathrm{div}\sigma, v) = (f,v).
+\]
+Thus
+\[
+    b(\sigma,v) := (\mathrm{div} \sigma, v),
+    \qquad
+    F(v) := (f,v),
+\]
+so that
+\[
+    b(\sigma,v) = F(v) \quad \forall v\in V.
+\]
+
+\textbf{Summary for (a):}
+\[
+    \boxed{
+        \begin{aligned}
+            a(\sigma,w) & := \int_\Omega \sigma\cdot w\,dx, \\
+            b(w,u)      & := \int_\Omega (\mathrm{div} w)\,u\,dx,   \\
+            F(v)        & := \int_\Omega f\,v\,dx,
+        \end{aligned}}
+\]
+and the mixed problem reads: find $(\sigma,u)\in W\times V$ such that
+\[
+    \begin{cases}
+        (\sigma,w) + (\mathrm{div} w, u) = 0 & \forall w \in W, \\
+        (\mathrm{div}\sigma, v) = (f,v)      & \forall v \in V.
+    \end{cases}
+\]
+(If $f\in H^{-1}(\Omega)$ we interpret $F(v) = \langle f,v\rangle_{H^{-1},H_0^1}$;
+for part (c) with $V=L^2(\Omega)$ we can assume $f\in L^2(\Omega)$ so that
+$F(v)=(f,v)$ is a bounded functional on $V$.)
+\subsection*{(b) Ellipticity of $(a,b)$ over $W\times V$}
+We are given the abstract mixed problem (mixed-abstract):
+\[
+    \begin{cases}
+        a(\sigma,w) + b(w,u) = 0 & \forall w\in W, \\
+        b(\sigma,v) = F(v)       & \forall v\in V,
+    \end{cases}
+\]
+with Hilbert spaces $W$ and $V$.
+The pair $(a,b)$ is said to be \emph{elliptic over $W\times V$} (for the mixed problem) if:
+\begin{itemize}
+    \item $a : W\times W \to \mathbb{R}$ and $b : W\times V \to \mathbb{R}$ are
+          \emph{bounded} bilinear forms, i.e.\ there exist constants $C_a,C_b>0$ such that
+          \[
+              |a(w_1,w_2)| \le C_a \|w_1\|_W \|w_2\|_W
+              \quad\forall w_1,w_2\in W,
+          \]
+          \[
+              |b(w,v)| \le C_b \|w\|_W \|v\|_V
+              \quad\forall w\in W,\ \forall v\in V.
+          \]
+    \item $a$ is \emph{coercive on the kernel of $b$}.
+          Define
+          \[
+              \widetilde W
+              := \{ w\in W : b(w,v) = 0 \ \forall v\in V\}.
+          \]
+          Then there exists $\alpha>0$ such that
+          \[
+              a(w,w) \ge \alpha \|w\|_W^2
+              \quad\forall w\in \widetilde W.
+          \]
+    \item $b$ satisfies an \emph{inf--sup condition} (Babu\v ska--Brezzi condition):
+          there exists $\beta>0$ such that
+          \[
+              \inf_{0\neq v\in V}
+              \sup_{0\neq w\in W}
+              \frac{b(w,v)}{\|w\|_W \|v\|_V}
+              \;\ge\; \beta.
+          \]
+\end{itemize}
+Under these conditions (together with boundedness of $F$), the given well-posedness theorem
+guarantees existence and uniqueness of the solution $(\sigma,u)\in W\times V$ of (mixed-abstract).
+\subsection*{(c) Well-posedness for $W = H(\mathrm{div};\Omega)$ and $V = L^2(\Omega)$}
+We now take
+\[
+    W := H(\mathrm{div};\Omega)
+    = \{\tau \in L^2(\Omega)^3 : \mathrm{div} \tau \in L^2(\Omega)\},
+    \quad
+    V := L^2(\Omega),
+\]
+with norms
+\[
+    \|\tau\|_W^2 := \|\tau\|_{L^2(\Omega)}^2 + \|\mathrm{div} \tau\|_{L^2(\Omega)}^2,
+    \qquad
+    \|v\|_V := \|v\|_{L^2(\Omega)}.
+\]
+We already identified
+\[
+    a(\sigma,w) = (\sigma,w)_{L^2(\Omega)^3},
+    \qquad
+    b(w,u) = (\mathrm{div} w, u)_{L^2(\Omega)}.
+\]
+We show that the hypotheses of the well-posedness theorem are satisfied.
+\textbf{1. Boundedness of $a$ and $b$.}
+For $a$:
+\[
+    |a(\sigma,w)|
+    = |(\sigma,w)|
+    \le \|\sigma\|_{L^2}\,\|w\|_{L^2}
+    \le \|\sigma\|_W\,\|w\|_W,
+\]
+so $a$ is bounded on $W\times W$.
+For $b$:
+\[
+    |b(w,u)|
+    = |(\mathrm{div} w,u)|
+    \le \|\mathrm{div} w\|_{L^2}\,\|u\|_{L^2}
+    \le \|w\|_W\,\|u\|_V,
+\]
+so $b$ is bounded on $W\times V$.
+\textbf{2. Coercivity of $a$ on $\widetilde W$.}
+Compute the kernel
+\[
+    \widetilde W := \{ w\in W : b(w,v) = 0\ \forall v\in V\}.
+\]
+The condition $b(w,v)=0$ for all $v\in L^2(\Omega)$ means
+\[
+    (\mathrm{div} w,v) = 0 \quad\forall v\in L^2(\Omega),
+\]
+hence $\mathrm{div} w = 0$ in $L^2(\Omega)$, i.e.
+\[
+    \widetilde W
+    = \{ w\in H(\mathrm{div};\Omega) : \mathrm{div} w = 0\}.
+\]
+For $w\in\widetilde W$,
+\[
+    a(w,w)
+    = (\sigma,\sigma)\big|_{\sigma=w}
+    = \int_\Omega |w|^2\,dx
+    = \|w\|_{L^2(\Omega)}^2.
+\]
+But for $w\in\widetilde W$ we have $\mathrm{div} w = 0$, so the $H(\mathrm{div})$-norm reduces to
+\[
+    \|w\|_W^2 = \|w\|_{L^2}^2 + \|\mathrm{div} w\|_{L^2}^2 = \|w\|_{L^2}^2.
+\]
+Therefore
+\[
+    a(w,w) = \|w\|_{L^2(\Omega)}^2 = \|w\|_W^2
+    \quad\forall w\in\widetilde W,
+\]
+so $a$ is coercive on $\widetilde W$ with coercivity constant $\alpha = 1$:
+\[
+    a(w,w) \ge \alpha\|w\|_W^2 \quad\forall w\in\widetilde W.
+\]
+\textbf{3. Inf--sup condition for $b$.}
+We must show that there exists $\beta>0$ such that
+\[
+    \inf_{0\neq v\in V}
+    \sup_{0\neq w\in W}
+    \frac{b(w,v)}{\|w\|_W \|v\|_V}
+    \ge \beta.
+\]
+Let $v\in V=L^2(\Omega)$, $v\neq 0$. Consider the auxiliary Dirichlet problem
+\[
+    \begin{cases}
+        - \Delta \phi = v & \text{in } \Omega,         \\
+        \phi = 0          & \text{on } \partial\Omega.
+    \end{cases}
+\]
+For a sufficiently regular domain $\Omega$ and $v\in L^2(\Omega)$, standard elliptic
+regularity gives a unique solution
+\[
+    \phi \in H^2(\Omega)\cap H_0^1(\Omega),
+\]
+with estimate
+\[
+    \|\phi\|_{H^2(\Omega)} \le C \|v\|_{L^2(\Omega)}.
+\]
+Define
+\[
+    w_v := -\nabla\phi.
+\]
+Because $\phi\in H^2$, we have $\nabla\phi \in H^1(\Omega)^3$, hence
+$w_v\in H^1(\Omega)^3 \subset H(\mathrm{div};\Omega)$ and
+\[
+    \mathrm{div} w_v = -\Delta\phi = v.
+\]
+Then
+\[
+    b(w_v,v)
+    = (\mathrm{div} w_v, v)
+    = (v,v) = \|v\|_{L^2}^2.
+\]
+Next, estimate $\|w_v\|_W$:
+\[
+    \|w_v\|_W^2
+    = \|w_v\|_{L^2}^2 + \|\mathrm{div} w_v\|_{L^2}^2
+    = \|\nabla\phi\|_{L^2}^2 + \|v\|_{L^2}^2
+    \le C\|\phi\|_{H^2}^2 + \|v\|_{L^2}^2
+    \le C'\|v\|_{L^2}^2.
+\]
+Thus
+\[
+    \|w_v\|_W \le C'' \|v\|_{L^2}.
+\]
+Therefore,
+\[
+    \sup_{0\neq w\in W}
+    \frac{b(w,v)}{\|w\|_W}
+    \ge \frac{b(w_v,v)}{\|w_v\|_W}
+    = \frac{\|v\|_{L^2}^2}{\|w_v\|_W}
+    \ge \frac{\|v\|_{L^2}^2}{C''\|v\|_{L^2}}
+    = \frac{1}{C''}\|v\|_{L^2}.
+\]
+Divide by $\|v\|_V = \|v\|_{L^2}$:
+\[
+    \sup_{0\neq w\in W}
+    \frac{b(w,v)}{\|w\|_W\|v\|_V}
+    \;\ge\; \frac{1}{C''}.
+\]
+Since this bound is uniform in $v\neq 0$, we have an inf--sup constant
+\[
+    \beta := \frac{1}{C''} > 0
+\]
+such that
+\[
+    \inf_{0\neq v\in V}
+    \sup_{0\neq w\in W}
+    \frac{b(w,v)}{\|w\|_W\|v\|_V}
+    \ge \beta.
+\]
+\textbf{4. Conclusion.}
+We have shown:
+\begin{itemize}
+    \item $a$ and $b$ are bounded,
+    \item $a$ is coercive on $\widetilde W = \{ w\in H(\mathrm{div};\Omega) : \mathrm{div} w = 0\}$,
+    \item $b$ satisfies the inf--sup condition with constant $\beta>0$.
+\end{itemize}
+Therefore, by the stated well-posedness theorem, for any bounded linear functional
+$F\in V^\ast$ there exists a \emph{unique} pair $(\sigma,u)\in W\times V$ solving the mixed
+system
+\[
+    \begin{cases}
+        a(\sigma,w) + b(w,u) = 0 & \forall w\in W, \\
+        b(\sigma,v) = F(v)       & \forall v\in V.
+    \end{cases}
+\]
+In particular, with $F(v)=(f,v)$ for $f\in L^2(\Omega)$, this yields a unique mixed
+solution corresponding to the Poisson equation (PDE-strong).
